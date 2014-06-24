@@ -18,12 +18,14 @@
 #define  DOP_MSG     0x04
 #define  DGPS_MSG    0x31
 
-#define LONG(X)    *(long*)(&data[X])
-#define ULONG(X)   *(unsigned long*)(&data[X])
-#define INT(X)     *(int*)(&data[X])
-#define UINT(X)    *(unsigned int*)(&data[X])
-
 namespace GPS_UBX {
+
+extern long time;
+extern float longitude;
+extern float latitude;
+extern float groundSpeed;
+extern float course;
+extern uint8_t fix;
 
 void enableMsg (unsigned char id, boolean enable);
 

@@ -30,10 +30,25 @@ void setup() {
   GPS_UBX::init();
 }
 
-void loop() {
-  GPS_UBX::read();
+uint32_t gpsTimer;
 
- /* if ( MPU6000::newdata ) {
+void loop() {
+  if ( millis() - gpsTimer > 25 ) {
+  	for ( uint8_t i = 0 ; i < 255 ; i++ )
+		GPS_UBX::read();
+	gpsTimer = millis();
+	
+	if (true) {
+		Serial.print(GPS_UBX::time,DEC);Serial.print(" ");
+		Serial.print(GPS_UBX::fix,DEC);Serial.print(" ");
+		Serial.print(GPS_UBX::longitude,8);Serial.print(" ");
+		Serial.print(GPS_UBX::latitude,8);Serial.print(" ");
+		Serial.print(GPS_UBX::groundSpeed,1);Serial.print(" ");
+		Serial.print(GPS_UBX::course,2);Serial.println(" ");
+	}
+  }
+
+  if ( MPU6000::newdata ) {
     diagnosticTimer = micros();
     
     dt = (micros()-timer)/1000000.0f;
@@ -58,7 +73,7 @@ void loop() {
      * or 4.9 ms or 0.0049 s. A flight loop should run at 100 Hz so this
      * would leave 5.1 ms for other stuff if run on the flight computer.
      */
-    /*if (false) {
+    if (false) {
       Serial.print("Time: ");Serial.println(micros()-diagnosticTimer);
     }
     
@@ -66,7 +81,7 @@ void loop() {
 		Serial.println(HMC5883::heading);
 	  }
   
-	  if (false) {
+	  if (true) {
 		Serial.print(filter.roll*180/3.14159);Serial.print(" ");
 		Serial.print(filter.pitch*180/3.14159);Serial.print(" ");
 		Serial.print(filter.yaw*180/3.14159);Serial.print(" ");
@@ -81,5 +96,5 @@ void loop() {
 		Serial.print(MPU6000::gyroX);Serial.print(" ");
 		Serial.print(-MPU6000::gyroZ);Serial.println(" ");
 	  }
-  }*/
+  }
 }

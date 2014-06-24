@@ -98,12 +98,6 @@ namespace MPU6000 {
     // MPU6000_SPI_write(MPUREG_PWR_MGMT_1,MPU_CLK_SEL_PLLGYROZ);
     delay(1);
     
-	uint8_t me = SPI_read(MPUREG_WHOAMI);
-    Serial.println(me,DEC);
-    
-    me = SPI_read(MPUREG_PRODUCT_ID);
-    Serial.println(me,DEC);
-    
     // MPU_INT is connected to INT 6. Enable interrupt on INT6
     attachInterrupt(6,data_int,RISING);
     

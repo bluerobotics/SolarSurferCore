@@ -1,5 +1,10 @@
 #include "GPS_UBX.h"
 
+#define LONG(X)    *(long*)(&data[X])
+#define ULONG(X)   *(unsigned long*)(&data[X])
+#define INT(X)     *(int*)(&data[X])
+#define UINT(X)    *(unsigned int*)(&data[X])
+
 namespace {
 	unsigned char  state, lstate, code, id, chk1, chk2, ck1, ck2;
 	unsigned int  length, idx, cnt;
@@ -10,6 +15,13 @@ namespace {
 }
 
 namespace GPS_UBX {
+
+long time;
+float longitude;
+float latitude;
+float groundSpeed;
+float course;
+uint8_t fix;
 
 void enableMsg (unsigned char id, boolean enable) {
   //               MSG   NAV   < length >  NAV
@@ -91,30 +103,34 @@ void read() {
           switch (code) {
             case 0x01:      // NAV-
               // Add blank line between time groups
-              if (lastTime != ULONG(0)) {
+              time = ULONG(0);
+              /*if (lastTime != ULONG(0)) {
                 lastTime = ULONG(0);
                 Serial.print("\nTime: ");
                 Serial.println(ULONG(0), DEC);
-              }
-              Serial.print("NAV-");
+              }*/
+              //Serial.print("NAV-");
               switch (id) {
                 case 0x02:  // NAV-POSLLH
-                  Serial.print("POSLLH: lon = ");
-                  printLatLon(LONG(4));
+                  longitude = LONG(4)/10000000.0f;
+                  latitude = LONG(8)/10000000.0f;
+                  /*Serial.print("POSLLH: lon = ");
+				  Serial.print(longitude,10);
                   Serial.print(", lat = ");
-                  printLatLon(LONG(8));
+                  Serial.print(latitude,10);
                   Serial.print(", vAcc = ");
                   Serial.print(ULONG(24), DEC);
                   Serial.print(" mm, hAcc = ");
                   Serial.print(ULONG(20), DEC);
-                  Serial.print(" mm");
+                  Serial.print(" mm");*/
                  break;
                 case 0x03:  // NAV-STATUS
-                  Serial.print("STATUS: gpsFix = ");
-                  Serial.print(data[4], DEC);
+                  fix = data[4];
+                  /*Serial.print("STATUS: gpsFix = ");
+                  Serial.print(fix, DEC);
                   if (data[5] & 2) {
                     Serial.print(", dgpsFix");
-                  }
+                  }*/
                   break;
                 case 0x04:  // NAV-DOP
                   Serial.print("DOP:    gDOP = ");
@@ -139,15 +155,17 @@ void read() {
                   Serial.print(data[47], DEC);
                   break;
                 case 0x12:  // NAV-VELNED
-                  Serial.print("VELNED: gSpeed = ");
-                  Serial.print(ULONG(20), DEC);
+                  groundSpeed = ULONG(20); // cm/s
+                  course = (float) LONG(24)/100000; // deg
+                  /*Serial.print("VELNED: gSpeed = ");
+                  Serial.print(groundSpeed, 1);
                   Serial.print(" cm/sec, sAcc = ");
                   Serial.print(ULONG(28), DEC);
                   Serial.print(" cm/sec, heading = ");
-                  Serial.print((float) LONG(24) / 100000, 2);
+                  Serial.print(course, 2);
                   Serial.print(" deg, cAcc = ");
                   Serial.print((float) LONG(32) / 100000, 2);
-                  Serial.print(" deg");
+                  Serial.print(" deg");*/
                   break;
                 case 0x31:  // NAV-DGPS
                   Serial.print("DGPS:   age = ");
@@ -208,10 +226,10 @@ void read() {
                 default:
                   printHex(id);
               }
-              Serial.println();
+              //Serial.println();
               break;
             case 0x05:      // ACK-
-              Serial.print("ACK-");
+              /*Serial.print("ACK-");
               switch (id) {
                 case 0x00:  // ACK-NAK
                 Serial.print("NAK: ");
@@ -223,7 +241,7 @@ void read() {
               printHex(data[0]);
               Serial.print(" ");
               printHex(data[1]);
-              Serial.println();
+              Serial.println();*/
               break;
           }
         }
