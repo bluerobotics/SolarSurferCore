@@ -6,7 +6,6 @@
  *
  */
 #include <WProgram.h>
-#include <PString.h>
  
 #define MAX_LENGTH 512
 

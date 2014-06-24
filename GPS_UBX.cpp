@@ -251,21 +251,6 @@ void read() {
   }
 }
 
-void printLatLon (long val) {
-  char buffer[14];
-  PString str(buffer, sizeof(buffer));
-  str.print(val, DEC);
-  char len = str.length();
-  char ii = 0;
-  while (ii < (len - 7)) {
-    Serial.write(buffer[ii++]);
-  }
-  Serial.write('.');
-  while (ii < len) {
-    Serial.write(buffer[ii++]);
-  }
-}
-
 void printHex (unsigned char val) {
   if (val < 0x10)
     Serial.print("0");
