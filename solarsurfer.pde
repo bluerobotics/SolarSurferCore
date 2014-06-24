@@ -1,7 +1,13 @@
+//#include <FastSerial.h>
+//FastSerialPort0(Serial);
+//FastSerialPort1(Serial1);
+//FastSerialPort2(Serial2);
+//FastSerialPort3(Serial3);
 #include <WProgram.h>
 #include "MPU6000.h"
 #include "HMC5883.h"
 #include "DCM.h"
+#include "GPS_UBX.h"
 
 DCM filter;
 
@@ -21,10 +27,13 @@ void setup() {
   MPU6000::init();
   HMC5883::init();
   filter.init();
+  GPS_UBX::init();
 }
 
 void loop() {
-  if ( MPU6000::newdata ) {
+  GPS_UBX::read();
+
+ /* if ( MPU6000::newdata ) {
     diagnosticTimer = micros();
     
     dt = (micros()-timer)/1000000.0f;
@@ -49,7 +58,7 @@ void loop() {
      * or 4.9 ms or 0.0049 s. A flight loop should run at 100 Hz so this
      * would leave 5.1 ms for other stuff if run on the flight computer.
      */
-    if (false) {
+    /*if (false) {
       Serial.print("Time: ");Serial.println(micros()-diagnosticTimer);
     }
     
@@ -57,7 +66,7 @@ void loop() {
 		Serial.println(HMC5883::heading);
 	  }
   
-	  if (true) {
+	  if (false) {
 		Serial.print(filter.roll*180/3.14159);Serial.print(" ");
 		Serial.print(filter.pitch*180/3.14159);Serial.print(" ");
 		Serial.print(filter.yaw*180/3.14159);Serial.print(" ");
@@ -72,5 +81,5 @@ void loop() {
 		Serial.print(MPU6000::gyroX);Serial.print(" ");
 		Serial.print(-MPU6000::gyroZ);Serial.println(" ");
 	  }
-  }
+  }*/
 }
