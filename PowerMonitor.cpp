@@ -1,3 +1,4 @@
+#include "EasyTransfer.h"
 #include "PowerMonitor.h"
 
 PowerMonitor::PowerMonitor(Stream *_stream) {

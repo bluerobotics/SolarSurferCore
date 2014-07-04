@@ -1,12 +1,16 @@
 #include <WProgram.h>
 
+struct PowerMonitorStruct {
+	float voltage[4];
+	float current[4];
+}
+
 class PowerMonitor {
 	private:
 	Stream *stream;
 
 	public:
-	float voltage[4];
-	float current[4];
+	PowerMonitorStruct data;
 	
 	PowerMonitor(Stream *_stream);
 	
