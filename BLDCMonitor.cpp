@@ -2,7 +2,7 @@
 #include "EasyTransfer.h"
 
 BLDCMonitor::BLDCMonitor(Stream *_stream) {
-	stream = serial;
+	stream = _stream;
 }
 	
 void BLDCMonitor::init() {

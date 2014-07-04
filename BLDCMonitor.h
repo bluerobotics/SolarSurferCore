@@ -6,7 +6,7 @@ struct BLDCMonitorStruct {
 	float currentA;
 	float currentB;
 	float voltage;
-}
+};
 
 class BLDCMonitor {
 	private:

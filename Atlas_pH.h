@@ -6,7 +6,7 @@
  */
 
 #include <WProgram.h>
-#include <SoftwareSerial.h>
+#include <NewSoftSerial.h>
  
 #define PH_SERIAL_RX 2
 #define PH_SERIAL_TX 3
@@ -42,7 +42,7 @@ namespace Atlas_pH {
 
 	void init();
 	
-	void sendCommand(uint8_t command[]);
+	void sendCommand(const char *command);
 	
 	void sendCommandTemperature( float tempC );
 	

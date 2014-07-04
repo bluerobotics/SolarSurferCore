@@ -3,7 +3,7 @@
 struct PowerMonitorStruct {
 	float voltage[4];
 	float current[4];
-}
+};
 
 class PowerMonitor {
 	private:
