@@ -37,12 +37,6 @@
 #define PH_COMMAND_BAUD_RATE_57600 "Z7"
 #define PH_COMMAND_BAUD_RATE_115200 "Z8"
  
-namespace {
- 	SoftwareSerial phSerial(PH_SERIAL_RX,PH_SERIAL_TX);
- 	uint8_t ph_data[PH_DATA_BUFFER_LENGTH];
- 	long timeOfLastCommand;
-}
- 
 namespace Atlas_pH {
 	float pH;
 
