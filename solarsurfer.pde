@@ -1,8 +1,3 @@
-//#include <FastSerial.h>
-//FastSerialPort0(Serial);
-//FastSerialPort1(Serial1);
-//FastSerialPort2(Serial2);
-//FastSerialPort3(Serial3);
 #include <WProgram.h>
 #include "MPU6000.h"
 #include "HMC5883.h"
