@@ -3,6 +3,10 @@
 #include "HMC5883.h"
 #include "DCM.h"
 #include "GPS_UBX.h"
+#include "APM.h"
+#include "Navigator.h"
+#include "Helmsman.h"
+#include "Thruster.h"
 
 DCM filter;
 
@@ -19,32 +23,32 @@ void setup() {
   pinMode(40,OUTPUT);
   digitalWrite(40,HIGH);
   
+  APM::init();
   MPU6000::init();
   HMC5883::init();
   filter.init();
   GPS_UBX::init();
+  Thruster::init();
 }
 
-uint32_t gpsTimer;
-
-void loop() {
-  if ( millis() - gpsTimer > 25 ) {
-  	for ( uint8_t i = 0 ; i < 255 ; i++ )
-		GPS_UBX::read();
-	gpsTimer = millis();
+void updateNavigationSensors() {
+	static uint32_t gpsTimer;
+	if ( millis() - gpsTimer > 25 ) {
+		for ( uint8_t i = 0 ; i < 255 ; i++ )
+			GPS_UBX::read();
+		gpsTimer = millis();
 	
-	if (true) {
-		Serial.print(GPS_UBX::time,DEC);Serial.print(" ");
-		Serial.print(GPS_UBX::fix,DEC);Serial.print(" ");
-		Serial.print(GPS_UBX::longitude,8);Serial.print(" ");
-		Serial.print(GPS_UBX::latitude,8);Serial.print(" ");
-		Serial.print(GPS_UBX::groundSpeed,1);Serial.print(" ");
-		Serial.print(GPS_UBX::course,2);Serial.println(" ");
+		if (false) {
+			Serial.print(GPS_UBX::time,DEC);Serial.print(" ");
+			Serial.print(GPS_UBX::fix,DEC);Serial.print(" ");
+			Serial.print(GPS_UBX::longitude,8);Serial.print(" ");
+			Serial.print(GPS_UBX::latitude,8);Serial.print(" ");
+			Serial.print(GPS_UBX::groundSpeed,1);Serial.print(" ");
+			Serial.print(GPS_UBX::course,2);Serial.println(" ");
+		}
 	}
-  }
-
-  if ( MPU6000::newdata ) {
-    diagnosticTimer = micros();
+	
+	if ( MPU6000::newdata ) {
     
     dt = (micros()-timer)/1000000.0f;
     timer = micros();
@@ -64,32 +68,42 @@ void loop() {
     filter.accelerationCorrection();
     filter.convertDCMtoEuler();
     
-    /** Loop timer. According to experimentation, the loop takes 4900 us 
-     * or 4.9 ms or 0.0049 s. A flight loop should run at 100 Hz so this
-     * would leave 5.1 ms for other stuff if run on the flight computer.
-     */
     if (false) {
-      Serial.print("Time: ");Serial.println(micros()-diagnosticTimer);
-    }
-    
-    if (false) {
-		Serial.println(HMC5883::heading);
-	  }
-  
-	  if (true) {
-		Serial.print(filter.roll*180/3.14159);Serial.print(" ");
-		Serial.print(filter.pitch*180/3.14159);Serial.print(" ");
-		Serial.print(filter.yaw*180/3.14159);Serial.print(" ");
-		Serial.print(HMC5883::heading*180/3.14159);Serial.println(" ");
+			Serial.println(HMC5883::heading);
 	  }
   
 	  if (false) {
-		Serial.print(-MPU6000::accelY);Serial.print(" ");
-		Serial.print(-MPU6000::accelX);Serial.print(" ");
-		Serial.print(-MPU6000::accelZ);Serial.print(" ");
-		Serial.print(MPU6000::gyroY);Serial.print(" ");
-		Serial.print(MPU6000::gyroX);Serial.print(" ");
-		Serial.print(-MPU6000::gyroZ);Serial.println(" ");
+			Serial.print(filter.roll*180/3.14159);Serial.print(" ");
+			Serial.print(filter.pitch*180/3.14159);Serial.print(" ");
+			Serial.print(filter.yaw*180/3.14159);Serial.print(" ");
+			Serial.print(HMC5883::heading*180/3.14159);Serial.println(" ");
+	  }
+  
+	  if (false) {
+			Serial.print(-MPU6000::accelY);Serial.print(" ");
+			Serial.print(-MPU6000::accelX);Serial.print(" ");
+			Serial.print(-MPU6000::accelZ);Serial.print(" ");
+			Serial.print(MPU6000::gyroY);Serial.print(" ");
+			Serial.print(MPU6000::gyroX);Serial.print(" ");
+			Serial.print(-MPU6000::gyroZ);Serial.println(" ");
 	  }
   }
+}
+
+void loop() {
+  updateNavigationSensors();
+  
+  Location current;
+  current.latitude = GPS_UBX::latitude;
+  current.longitude = GPS_UBX::longitude;
+  
+  Location wp;
+  wp.latitude = 21.3114; // Hawaii
+  wp.longitude = -157.7964; // Hawaii
+  
+  float desiredHeading = Navigator::getHeadingToLocation(&current,&wp);
+
+  Helmsman::setHeading(desiredHeading);
+  Helmsman::setPower(100);
+  Helmsman::execute(filter.yaw,60.0);
 }
