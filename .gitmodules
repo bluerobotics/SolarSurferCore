@@ -1,0 +1,3 @@
+[submodule "struct"]
+	path = struct
+	url = git://github.com/rjehangir/struct.git
