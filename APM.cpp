@@ -1,5 +1,41 @@
 #include "APM.h"
 
+// Variable definition for Input Capture interrupt
+volatile uint16_t ICR4_old;
+volatile uint8_t PPM_Counter=0;
+volatile uint16_t PWM_RAW[8] = {2400,2400,2400,2400,2400,2400,2400,2400};
+volatile uint8_t radio_status=0;
+
+//////////////////////////////////////////////////////
+//   Input Capture Interrupt ICP4 => PPM signal read
+//////////////////////////////////////////////////////
+ISR(TIMER4_CAPT_vect)  
+{
+	static const uint8_t NUM_CHANNELS = 8;
+  uint16_t Pulse;
+  uint16_t Pulse_Width;
+  
+  Pulse=ICR4;
+  if (Pulse<ICR4_old) {    // Take care of the overflow of Timer4 (TOP=40000)
+    Pulse_Width=(Pulse + 40000)-ICR4_old;  //Calculating pulse 
+  } else {
+    Pulse_Width=Pulse-ICR4_old;            //Calculating pulse 
+  }
+  if (Pulse_Width>8000) {   // SYNC pulse?
+    PPM_Counter=0;
+  } else {
+    if (PPM_Counter < NUM_CHANNELS) {         // Valid pulse channel?
+          PWM_RAW[PPM_Counter++]=Pulse_Width;     // Saving pulse.
+
+          if (PPM_Counter >= NUM_CHANNELS) {
+            radio_status = 1;
+      }
+    }
+
+  }
+  ICR4_old = Pulse;
+}
+
 namespace APM {
 	void init() {
 		/*
@@ -95,5 +131,28 @@ namespace APM {
 			case 10: return OCR3A/2;  //ch10, PE3
 		} 
 		return 0;
+	}
+	
+	uint16_t inputCh(uint8_t channel)
+	{
+			uint16_t result;
+
+			// we need to stop interrupts to be sure we get a correct 16 bit value
+			cli();
+			result = PWM_RAW[channel];
+			sei();
+
+			// Because timer runs at 0.5us we need to do value/2
+			result >>= 1;
+
+			// Limit values to a valid range
+			result = constrain(result,1000,2000);
+			radio_status = 0; // Radio channel read
+			return result;
+	}
+	
+	uint8_t getRadioInputState()
+	{
+		return radio_status;
 	}
 }
