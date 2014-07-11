@@ -2,6 +2,7 @@
 
 namespace APM {
 	void init() {
+		/*
 		//Init PWM Timer 1
 		pinMode(11,OUTPUT); //     (PB5/OC1A)
 		pinMode(12,OUTPUT); //OUT2 (PB6/OC1B)
@@ -25,6 +26,7 @@ namespace APM {
 		OCR3B = 3000; //PE4, OUT7
 		OCR3C = 3000; //PE5, OUT6
 		ICR3 = 40000; //50hz freq
+		*/
 	
 		// Init PWM Timer 5
 		pinMode(44,OUTPUT);  //OUT1 (PL5/OC5C)
@@ -40,10 +42,10 @@ namespace APM {
 	
 		// Init PPM input and PWM Timer 4
 		pinMode(49, INPUT);  // ICP4 pin (PL0) (PPM input)
-		pinMode(7,OUTPUT);   //OUT5 (PH4/OC4B)
+		/*pinMode(7,OUTPUT);   //OUT5 (PH4/OC4B)
 		pinMode(8,OUTPUT);   //OUT4 (PH5/OC4C)
 	
-		TCCR4A =((1<<WGM40)|(1<<WGM41)|(1<<COM4C1)|(1<<COM4B1)|(1<<COM4A1));  
+		TCCR4A =((1<<WGM40)|(1<<WGM41)|(1<<COM4C1)|(1<<COM4B1)|(1<<COM4A1)); */ 
 		//Prescaler set to 8, that give us a resolution of 0.5us
 		// Input Capture rising edge
 		TCCR4B = ((1<<WGM43)|(1<<WGM42)|(1<<CS41)|(1<<ICES4));
