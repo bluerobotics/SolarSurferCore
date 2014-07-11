@@ -19,6 +19,7 @@ namespace GPS_UBX {
 long time;
 float longitude;
 float latitude;
+float altitude;
 float groundSpeed;
 float course;
 uint8_t fix;
@@ -115,7 +116,7 @@ void read() {
                   longitude = LONG(4)/10000000.0f;
                   latitude = LONG(8)/10000000.0f;
                   /*Serial.print("POSLLH: lon = ");
-				  Serial.print(longitude,10);
+				          Serial.print(longitude,10);
                   Serial.print(", lat = ");
                   Serial.print(latitude,10);
                   Serial.print(", vAcc = ");

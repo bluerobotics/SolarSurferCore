@@ -2,15 +2,23 @@
 #define SATCOMMESSAGE_H
 
 #include <WProgram.h>
+#include "struct/struct.h"
 
 namespace SatcomMessage {
-	void init(Stream* _stream);
+	const static uint8_t status = 1;
+	const static uint8_t image = 2;
 
-	void beginTransfer(uint8_t messageId);
+	void init();
 
-	void send(float value);
+	void getTelemPacket(uint8_t packetType);
 
-	void endTransfer();
+	template <class T>
+	void addToPacket(T item, uint8_t buffer[], uint8_t &address) {
+		for ( uint8_t i = 0 ; i < sizeof(T) ; i++ ) {
+      buffer[address+i] = reinterpret_cast<uint8_t*>(&item)[i];
+    }
+		address =+ sizeof(T);
+	}
 }
 
 #endif
