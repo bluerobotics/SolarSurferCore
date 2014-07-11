@@ -1,9 +1,9 @@
-#ifndef SATCOM_H
-#define SATCOM_H
+#ifndef SATCOMMESSAGE_H
+#define SATCOMMESSAGE_H
 
 #include <WProgram.h>
 
-namespace Satcom {
+namespace SatcomMessage {
 	void init(Stream* _stream);
 
 	void beginTransfer(uint8_t messageId);

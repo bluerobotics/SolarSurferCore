@@ -1,4 +1,4 @@
-#include "Satcom.h"
+#include "SatcomMessage.h"
 #include "struct/struct.h"
 #include <util/crc16.h>
 
@@ -8,7 +8,7 @@ namespace {
 	Stream *stream;
 }
 
-namespace Satcom {
+namespace SatcomMessage {
 	void init(Stream *_stream) {
 		stream = _stream;
 	}
