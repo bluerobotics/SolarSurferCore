@@ -22,9 +22,10 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <WString.h> // for FlashString
+#include <WString.h> // for String
 #include <Stream.h> // for Stream
-#include "Arduino.h"
+#include <WProgram.h>
+//#include "Arduino.h"
 
 #define ISBD_LIBRARY_REVISION           1
 
@@ -53,7 +54,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define ISBD_NO_SLEEP_PIN        11
 
 extern bool ISBDCallback() __attribute__ ((weak));
-typedef const __FlashStringHelper *FlashString;
+//typedef const __StringHelper *String;
 
 class IridiumSBD
 {
@@ -135,18 +136,18 @@ private:
    int  doSBDRB(uint8_t *rxBuffer, size_t *prxBufferSize); // in/out
    void power(bool on);
 
-   void send(FlashString str, bool beginLine = true, bool endLine = true);
+   void send(String str, bool beginLine = true, bool endLine = true);
    void send(const char *str);
    void send(uint16_t n);
 
    bool cancelled();
 
-   void dbg(FlashString str);
+   void dbg(String str);
    void dbg(const char *str);
    void dbg(uint16_t n);
    void dbg(char c);
 
-   void console(FlashString str);
+   void console(String str);
    void console(const char *str);
    void console(uint16_t n);
    void console(char c);
