@@ -1,3 +1,6 @@
+#ifndef THRUSTER_H
+#define THRUSTER_H
+
 #include <WProgram.h>
 
 namespace Thruster {
@@ -10,3 +13,5 @@ namespace Thruster {
 	
 	int16_t get(uint8_t thruster);
 }
+
+#endif

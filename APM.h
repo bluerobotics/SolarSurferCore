@@ -1,3 +1,6 @@
+#ifndef APM_H
+#define APM_H
+
 #include <WProgram.h>
 
 namespace APM {
@@ -7,3 +10,5 @@ namespace APM {
 	
 	int16_t getPWM(uint8_t channel);
 }
+
+#endif

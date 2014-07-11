@@ -116,6 +116,8 @@ void loop() {
   Helmsman::setPower(60);
   Helmsman::execute(degrees(filter.yaw),60.0);
   
+  float distance = Navigator::getDistanceToLocation(&current,&wp);
+  
   static long printTimer;
   
   if (true && millis()-printTimer > 250) {
@@ -134,6 +136,7 @@ void loop() {
 		Serial.println("");
   	Serial.print("Desired Heading: ");Serial.println(degrees(desiredHeading));
   	Serial.print("Current Heading: ");Serial.println(degrees(filter.yaw));
+  	Serial.print("Distance to WP:  ");Serial.print(distance,1);Serial.println(" m");
   	Serial.println("");
   	Serial.print("Left Thruster:  ");Serial.println(Thruster::get(Thruster::left));
   	Serial.print("Right Thruster: ");Serial.println(Thruster::get(Thruster::right));

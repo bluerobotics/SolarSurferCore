@@ -1,3 +1,6 @@
+#ifndef HELMSMAN_H
+#define HELMSMAN_H
+
 #include <WProgram.h>
 
 namespace Helmsman {
@@ -7,3 +10,5 @@ namespace Helmsman {
   
   void execute(float heading, float power);
 }
+
+#endif

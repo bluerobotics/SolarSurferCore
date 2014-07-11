@@ -10,4 +10,19 @@ namespace Navigator {
 		float x = cos(lat1)*sin(lat2) - sin(lat1)*cos(lat2)*cos(lon2-lon1);
 		return atan2(y,x);
 	}
+	
+	float getDistanceToLocation(Location *current, Location *waypoint) {
+		static const float radiusEarth = 6371000.0f; // meters
+		
+		float lat1 = radians(current->latitude);
+		float lon1 = radians(current->longitude);
+		float lat2 = radians(waypoint->latitude);
+		float lon2 = radians(waypoint->longitude);
+		
+		float a,c;
+		
+		a = sin((lat2-lat1)/2)*sin((lat2-lat1)/2)+cos(lat1)*cos(lat2)*sin((lon2-lon1)/2)*sin((lon2-lon1)/2);
+		c = 2*atan2(sqrt(a),sqrt(1-a));
+		return radiusEarth*c;
+	}
 }
