@@ -5,11 +5,11 @@
 namespace {
 	uint8_t buffer[128];
 	uint8_t length;
-	Stream* stream;
+	Stream *stream;
 }
 
 namespace Satcom {
-	void init(Stream* _stream) {
+	void init(Stream *_stream) {
 		stream = _stream;
 	}
 
