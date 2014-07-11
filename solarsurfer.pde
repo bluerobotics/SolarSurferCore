@@ -128,17 +128,17 @@ void loop() {
 		Serial.print("[H");     // cursor to home command
 		Serial.println("SolarSurfer Live Data");
 		Serial.println("=====================");
-		Serial.print("Lat: ");Serial.println(GPS_UBX::latitude);
-		Serial.print("Lon: ");Serial.println(GPS_UBX::longitude);		
+		Serial.print("Lat: ");Serial.print(GPS_UBX::latitude,6);Serial.println(" deg");
+		Serial.print("Lon: ");Serial.print(GPS_UBX::longitude,6);Serial.println(" deg");		
 		Serial.println("");
-		Serial.print("Roll: ");Serial.print(degrees(filter.roll));Serial.print(" ");
-		Serial.print("Pitch: ");Serial.println(degrees(filter.pitch));				
+		Serial.print("Roll: ");Serial.print(degrees(filter.roll));Serial.println(" deg ");
+		Serial.print("Pitch: ");Serial.print(degrees(filter.pitch));Serial.println(" deg");				
 		Serial.println("");
-  	Serial.print("Desired Heading: ");Serial.println(degrees(desiredHeading));
-  	Serial.print("Current Heading: ");Serial.println(degrees(filter.yaw));
+  	Serial.print("Desired Heading: ");Serial.print(degrees(desiredHeading));Serial.println(" deg");
+  	Serial.print("Current Heading: ");Serial.print(degrees(filter.yaw));Serial.println(" deg");
   	Serial.print("Distance to WP:  ");Serial.print(distance,1);Serial.println(" m");
   	Serial.println("");
-  	Serial.print("Left Thruster:  ");Serial.println(Thruster::get(Thruster::left));
-  	Serial.print("Right Thruster: ");Serial.println(Thruster::get(Thruster::right));
+  	Serial.print("Left Thruster:  ");Serial.print(Thruster::get(Thruster::left));Serial.println(" us");
+  	Serial.print("Right Thruster: ");Serial.print(Thruster::get(Thruster::right));Serial.println(" us");
   }
 }
