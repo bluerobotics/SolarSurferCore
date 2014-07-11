@@ -62,6 +62,9 @@ namespace HMC5883 {
   
   void calculate(float roll, float pitch);
   
+  void applyDeclination(float declination);
+  
+  void calibrateOffsets();
 }
 
 #endif

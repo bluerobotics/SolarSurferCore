@@ -76,4 +76,22 @@ namespace APM {
 			case 10: OCR3A=pwm; break;  //ch10, PE3
 		} 
 	}
+	
+	int16_t getPWM(uint8_t channel) {
+		switch(channel)
+		{
+			case 0:  return OCR5B/2;  //ch0
+			case 1:  return OCR5C/2;  //ch1
+			case 2:  return OCR1B/2;  //ch2
+			case 3:  return OCR1C/2;  //ch3
+			case 4:  return OCR4C/2;  //ch4
+			case 5:  return OCR4B/2;  //ch5
+			case 6:  return OCR3C/2;  //ch6
+			case 7:  return OCR3B/2;  //ch7
+			case 8:  return OCR5A/2;  //ch8,  PL3
+			case 9:  return OCR1A/2;  //ch9,  PB5
+			case 10: return OCR3A/2;  //ch10, PE3
+		} 
+		return 0;
+	}
 }

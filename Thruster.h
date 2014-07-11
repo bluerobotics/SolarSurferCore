@@ -7,4 +7,6 @@ namespace Thruster {
 	void init();
 	
 	void set(uint8_t thruster, int16_t setting);
+	
+	int16_t get(uint8_t thruster);
 }

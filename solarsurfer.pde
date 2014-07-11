@@ -29,6 +29,11 @@ void setup() {
   filter.init();
   GPS_UBX::init();
   Thruster::init();
+  
+  if (false) {
+	  HMC5883::calibrateOffsets();
+	}
+	HMC5883::set_offset(101, 20, 101);
 }
 
 void updateNavigationSensors() {
@@ -56,6 +61,7 @@ void updateNavigationSensors() {
     MPU6000::read();
     HMC5883::read();
     HMC5883::calculate(filter.roll,filter.pitch);
+    HMC5883::applyDeclination(12.4);
     filter.updateMeasurements(MPU6000::gyroY,
 			      MPU6000::gyroX,
 			      -MPU6000::gyroZ,
@@ -73,10 +79,10 @@ void updateNavigationSensors() {
 	  }
   
 	  if (false) {
-			Serial.print(filter.roll*180/3.14159);Serial.print(" ");
-			Serial.print(filter.pitch*180/3.14159);Serial.print(" ");
-			Serial.print(filter.yaw*180/3.14159);Serial.print(" ");
-			Serial.print(HMC5883::heading*180/3.14159);Serial.println(" ");
+			Serial.print(degrees(filter.roll));Serial.print(" ");
+			Serial.print(degrees(filter.pitch));Serial.print(" ");
+			Serial.print(degrees(filter.yaw));Serial.print(" ");
+			Serial.print(degrees(HMC5883::heading));Serial.println(" ");
 	  }
   
 	  if (false) {
@@ -101,9 +107,35 @@ void loop() {
   wp.latitude = 21.3114; // Hawaii
   wp.longitude = -157.7964; // Hawaii
   
+  wp.latitude = 33.870696; // The house across from me
+  wp.longitude = -118.368667; // The house across from me
+  
   float desiredHeading = Navigator::getHeadingToLocation(&current,&wp);
 
-  Helmsman::setHeading(desiredHeading);
-  Helmsman::setPower(100);
-  Helmsman::execute(filter.yaw,60.0);
+  Helmsman::setHeading(degrees(desiredHeading));
+  Helmsman::setPower(60);
+  Helmsman::execute(degrees(filter.yaw),60.0);
+  
+  static long printTimer;
+  
+  if (true && millis()-printTimer > 250) {
+  	printTimer = millis();
+		Serial.write(27);       // ESC command
+		Serial.print("[2J");    // clear screen command
+		Serial.write(27);
+		Serial.print("[H");     // cursor to home command
+		Serial.println("SolarSurfer Live Data");
+		Serial.println("=====================");
+		Serial.print("Lat: ");Serial.println(GPS_UBX::latitude);
+		Serial.print("Lon: ");Serial.println(GPS_UBX::longitude);		
+		Serial.println("");
+		Serial.print("Roll: ");Serial.print(degrees(filter.roll));Serial.print(" ");
+		Serial.print("Pitch: ");Serial.println(degrees(filter.pitch));				
+		Serial.println("");
+  	Serial.print("Desired Heading: ");Serial.println(degrees(desiredHeading));
+  	Serial.print("Current Heading: ");Serial.println(degrees(filter.yaw));
+  	Serial.println("");
+  	Serial.print("Left Thruster:  ");Serial.println(Thruster::get(Thruster::left));
+  	Serial.print("Right Thruster: ");Serial.println(Thruster::get(Thruster::right));
+  }
 }

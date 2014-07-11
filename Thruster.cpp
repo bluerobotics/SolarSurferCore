@@ -16,4 +16,14 @@ namespace Thruster {
 				break;
 		}
 	}
+	
+	int16_t get(uint8_t thruster) {
+		switch (thruster) {
+			case Thruster::left:
+				return APM::getPWM(0);
+			case Thruster::right:
+				return APM::getPWM(1);
+		}
+		return 0;
+	}
 }

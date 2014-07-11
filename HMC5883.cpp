@@ -33,8 +33,8 @@ namespace HMC5883 {
   // set mag offsets
   void set_offset(int offsetx, int offsety, int offsetz)
   {
-    mag_offset[0] = offsetx;
-    mag_offset[1] = offsety;
+    mag_offset[0] = offsety;
+    mag_offset[1] = offsetx;
     mag_offset[2] = offsetz;
   }
   
@@ -58,11 +58,13 @@ namespace HMC5883 {
     Wire.endTransmission(); //end transmission
     
     if (i==6){  // All bytes received?
-    // MSB byte first, then LSB
-    mag_y = ((((int)buff[0]) << 8) | buff[1])*1 + mag_offset[0];    // X axis
-    mag_x = ((((int)buff[4]) << 8) | buff[5])*-1 + mag_offset[1];    // Y axis
-    mag_z = ((((int)buff[2]) << 8) | buff[3])*1 + mag_offset[2];    // Z axis
+			// MSB byte first, then LSB
+			mag_y = ((((int)buff[0]) << 8) | buff[1])*1 - mag_offset[0];    // X axis
+			mag_x = ((((int)buff[4]) << 8) | buff[5])*-1 - mag_offset[1];    // Y axis
+			mag_z = ((((int)buff[2]) << 8) | buff[3])*1 - mag_offset[2];    // Z axis
     }
+    
+    
   }
   
   void calculate(float roll, float pitch)
@@ -86,4 +88,53 @@ namespace HMC5883 {
     // Magnetic Heading
     heading = atan2(-Head_Y,Head_X);
   }
+  
+  void applyDeclination(float declination) {
+  	heading = heading + radians(declination);
+  	if (heading > PI) {
+  		heading -= 2.0f*PI;
+  	} else if ( heading < -PI ) {
+  		heading += 2.0f*PI;
+  	}
+  }
+  
+  void calibrateOffsets() {
+  	Serial.println("Calibrating in 3...");
+  	delay(1000);
+  	Serial.println("Calibrating in 2...");
+  	delay(1000);
+  	Serial.println("Calibrating in 1...");
+  	delay(1000);
+  	Serial.println("Calibrating now. Move board all over the place.");
+  	
+  	int16_t minx = 0;
+  	int16_t maxx = 0;
+  	int16_t miny = 0;
+  	int16_t maxy = 0;
+  	int16_t minz = 0;
+  	int16_t maxz = 0;
+  	
+  	for ( uint16_t i = 0 ; i < 600 ; i++ ) {
+  		read();
+  		
+  		if ( mag_x < minx ) { minx = mag_x; }
+  		if ( mag_y < miny ) { miny = mag_y; }
+  		if ( mag_z < minz ) { minz = mag_z; }
+  		if ( mag_x > maxx ) { maxx = mag_x; }
+  		if ( mag_y > maxy ) { maxy = mag_y; }
+  		if ( mag_z > maxz ) { maxz = mag_z; }
+  		
+  		Serial.println(i,DEC);
+  		delay(50);
+  	}
+  	
+  	Serial.print("x_offset: ");Serial.println((maxx+minx)/2);
+  	Serial.print("y_offset: ");Serial.println((maxy+miny)/2);
+  	Serial.print("z_offset: ");Serial.println((maxz+minz)/2);
+  	Serial.println("");
+  	Serial.println("Starting 30 second delay.");
+  	delay(30000);
+  }
 }
+
+
