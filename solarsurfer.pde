@@ -156,5 +156,7 @@ void loop() {
   	}
   	Serial.print("RC Steering:  ");Serial.print(RemoteControl::getSteering());Serial.println("");
   	Serial.print("RC Power:     ");Serial.print(RemoteControl::getPower());Serial.println("");
+  	//Serial.println(APM::inputCh(0));
+  	//Serial.println(APM::inputCh(1));
   }
 }

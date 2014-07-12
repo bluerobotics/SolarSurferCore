@@ -1,7 +1,7 @@
 #include "APM.h"
 
 // Variable definition for Input Capture interrupt
-volatile uint16_t ICR4_old;
+volatile uint16_t ICR5_old;
 volatile uint8_t PPM_Counter=0;
 volatile uint16_t PWM_RAW[8] = {2400,2400,2400,2400,2400,2400,2400,2400};
 volatile uint8_t radio_status=0;
@@ -9,17 +9,16 @@ volatile uint8_t radio_status=0;
 //////////////////////////////////////////////////////
 //   Input Capture Interrupt ICP4 => PPM signal read
 //////////////////////////////////////////////////////
-ISR(TIMER4_CAPT_vect)  
-{
+ISR(TIMER5_CAPT_vect) {
 	static const uint8_t NUM_CHANNELS = 8;
   uint16_t Pulse;
   uint16_t Pulse_Width;
   
-  Pulse=ICR4;
-  if (Pulse<ICR4_old) {    // Take care of the overflow of Timer4 (TOP=40000)
-    Pulse_Width=(Pulse + 40000)-ICR4_old;  //Calculating pulse 
+  Pulse=ICR5;
+  if (Pulse<ICR5_old) {    // Take care of the overflow of Timer4 (TOP=40000)
+    Pulse_Width=(Pulse + 40000)-ICR5_old;  //Calculating pulse 
   } else {
-    Pulse_Width=Pulse-ICR4_old;            //Calculating pulse 
+    Pulse_Width=Pulse-ICR5_old;            //Calculating pulse 
   }
   if (Pulse_Width>8000) {   // SYNC pulse?
     PPM_Counter=0;
@@ -33,7 +32,7 @@ ISR(TIMER4_CAPT_vect)
     }
 
   }
-  ICR4_old = Pulse;
+  ICR5_old = Pulse;
 }
 
 namespace APM {
@@ -64,8 +63,20 @@ namespace APM {
 		OCR3C = 3000; //PE5, OUT6
 		ICR3 = 40000; //50hz freq
 		*/
+		
+		// Set up PPM capture
+		pinMode(48,INPUT);		
+		
+		TCNT5 = 0;
+		TIFR5 = 0;
+		
+		TCCR5A = _BV(WGM50) | _BV(WGM51);
+		TCCR5B |= _BV(WGM53) | _BV(WGM52) | _BV(CS51) | _BV(ICES5);
+		OCR5A = 40000-1;
+		
+		TIMSK5 |= _BV(ICIE5);
 	
-		// Init PWM Timer 5
+		/*// Init PWM Timer 5
 		pinMode(44,OUTPUT);  //OUT1 (PL5/OC5C)
 		pinMode(45,OUTPUT);  //OUT0 (PL4/OC5B)
 		pinMode(46,OUTPUT);  //     (PL3/OC5A)
@@ -79,10 +90,10 @@ namespace APM {
 	
 		// Init PPM input and PWM Timer 4
 		pinMode(49, INPUT);  // ICP4 pin (PL0) (PPM input)
-		/*pinMode(7,OUTPUT);   //OUT5 (PH4/OC4B)
+		pinMode(7,OUTPUT);   //OUT5 (PH4/OC4B)
 		pinMode(8,OUTPUT);   //OUT4 (PH5/OC4C)
 	
-		TCCR4A =((1<<WGM40)|(1<<WGM41)|(1<<COM4C1)|(1<<COM4B1)|(1<<COM4A1)); */ 
+		TCCR4A =((1<<WGM40)|(1<<WGM41)|(1<<COM4C1)|(1<<COM4B1)|(1<<COM4A1));
 		//Prescaler set to 8, that give us a resolution of 0.5us
 		// Input Capture rising edge
 		TCCR4B = ((1<<WGM43)|(1<<WGM42)|(1<<CS41)|(1<<ICES4));
@@ -93,7 +104,7 @@ namespace APM {
 	
 		//TCCR4B |=(1<<ICES4); //Changing edge detector (rising edge). 
 		//TCCR4B &=(~(1<<ICES4)); //Changing edge detector. (falling edge)
-		TIMSK4 |= (1<<ICIE4); // Enable Input Capture interrupt. Timer interrupt mask
+		TIMSK4 |= (1<<ICIE4); // Enable Input Capture interrupt. Timer interrupt mask*/
 	}
 		
 	void outputPWM(uint8_t channel, int16_t pwm) {
