@@ -9,6 +9,8 @@ namespace Helmsman {
   void setPower(float power);
   
   void execute(float heading, float power);
+
+  void executeManual(float steering, float power);
 }
 
 #endif

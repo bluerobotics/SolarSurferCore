@@ -7,6 +7,7 @@
 #include "Navigator.h"
 #include "Helmsman.h"
 #include "Thruster.h"
+#include "RemoteControl.h"
 
 DCM filter;
 
@@ -29,6 +30,7 @@ void setup() {
   filter.init();
   GPS_UBX::init();
   Thruster::init();
+  RemoteControl::init();
   
   if (false) {
 	  HMC5883::calibrateOffsets();
@@ -98,6 +100,7 @@ void updateNavigationSensors() {
 
 void loop() {
   updateNavigationSensors();
+  RemoteControl::update();
   
   Location current;
   current.latitude = GPS_UBX::latitude;
@@ -114,7 +117,12 @@ void loop() {
 
   Helmsman::setHeading(degrees(desiredHeading));
   Helmsman::setPower(60);
-  Helmsman::execute(degrees(filter.yaw),60.0);
+
+  if ( RemoteControl::isManual() ) {
+  	Helmsman::executeManual(RemoteControl::getSteering(),RemoteControl::getPower());
+  } else {
+  	Helmsman::execute(degrees(filter.yaw),60.0);
+  }
   
   float distance = Navigator::getDistanceToLocation(&current,&wp);
   
@@ -140,5 +148,13 @@ void loop() {
   	Serial.println("");
   	Serial.print("Left Thruster:  ");Serial.print(Thruster::get(Thruster::left));Serial.println(" us");
   	Serial.print("Right Thruster: ");Serial.print(Thruster::get(Thruster::right));Serial.println(" us");
+  	Serial.println("");
+  	if ( RemoteControl::isManual() ) {
+  		Serial.println("Manual Control Enabled");
+  	} else {
+  		Serial.println("AUTONOMOUS CONTROL ENABLED");
+  	}
+  	Serial.print("RC Steering:  ");Serial.print(RemoteControl::getSteering());Serial.println("");
+  	Serial.print("RC Power:     ");Serial.print(RemoteControl::getPower());Serial.println("");
   }
 }

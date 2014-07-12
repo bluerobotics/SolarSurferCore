@@ -38,7 +38,7 @@ ISR(TIMER4_CAPT_vect)
 
 namespace APM {
 	void init() {
-		/*
+		
 		//Init PWM Timer 1
 		pinMode(11,OUTPUT); //     (PB5/OC1A)
 		pinMode(12,OUTPUT); //OUT2 (PB6/OC1B)
@@ -52,6 +52,7 @@ namespace APM {
 		OCR1C = 3000; //PB7  OUT3
 		ICR1 = 40000; //50hz freq...Datasheet says  (system_freq/prescaler)/target frequency. So (16000000hz/8)/50hz=40000,
 	
+		/*
 		// Init PWM Timer 3
 		pinMode(2,OUTPUT); //OUT7 (PE4/OC3B)
 		pinMode(3,OUTPUT); //OUT6 (PE5/OC3C)
@@ -133,8 +134,7 @@ namespace APM {
 		return 0;
 	}
 	
-	uint16_t inputCh(uint8_t channel)
-	{
+	uint16_t inputCh(uint8_t channel)	{
 			uint16_t result;
 
 			// we need to stop interrupts to be sure we get a correct 16 bit value
@@ -151,8 +151,7 @@ namespace APM {
 			return result;
 	}
 	
-	uint8_t getRadioInputState()
-	{
+	uint8_t getRadioInputState() {
 		return radio_status;
 	}
 }

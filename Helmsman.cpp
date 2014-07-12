@@ -62,4 +62,11 @@ namespace Helmsman {
 		Thruster::set(Thruster::left,stoppedThrottle+powerOutput+steeringOutput);
 		Thruster::set(Thruster::right,stoppedThrottle+powerOutput-steeringOutput);
 	}
+
+	void executeManual(float steering, float power) {
+		const static int16_t stoppedThrottle = 1500;
+		
+		Thruster::set(Thruster::left,stoppedThrottle+power+steering);
+		Thruster::set(Thruster::right,stoppedThrottle+power-steering);	
+	}
 }
