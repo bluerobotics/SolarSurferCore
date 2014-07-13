@@ -31,8 +31,8 @@ cmake_minimum_required (VERSION 2.6)
 project (TestSatcom)
 set(arduino_libs NewSoftSerial EEPROM SPI)
 set(sources ../../IridiumSBD.cpp
+	    ../../MessageManager.cpp
 	    ../../Satcom.cpp
-	    ../../SatcomMessage.cpp
 	    )
 
 ###############################################################################
