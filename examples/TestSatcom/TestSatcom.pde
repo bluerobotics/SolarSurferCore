@@ -47,23 +47,19 @@ void setup() {
 
   Serial.print("Signal quality is ");
   Serial.println(signalQuality);
-
-  /*Serial.println("Hey, it worked!");
-  Serial.print("Messages left: ");
-  Serial.println(isbd.getWaitingMessageCount());*/
 }
 
 void loop() {
 
 	MessageManager::updateFields();
-	MessageManager::serialize(&Msg::status);
+	MessageManager::serialize(&Msg::tlmstatus);
 	uint16_t length = MessageManager::getTXBufferLength();
 	const uint8_t *data = MessageManager::getTXBuffer();
 	Serial.print("Packet Length: ");Serial.println(length);
 	Serial.println("Packet Data:");	
 	for ( uint8_t i = 0 ; i < length ; i++ ) {
-		Serial.print(data[i],HEX);Serial.print(" ");
-		if ( i != 0 && i % 8 == 0 ) {
+		Serial.print(data[i],HEX);Serial.print("\t");
+		if ( (i+1) % 8 == 0 ) {
 			Serial.println("");
 		}
 	}
@@ -76,6 +72,10 @@ void loop() {
     Serial.println(err);
     return;
   }
+  
+  Serial.println("Hey, it worked!");
+  Serial.print("Messages left: ");
+  Serial.println(isbd.getWaitingMessageCount());
 	
   while ( true ) {
   	digitalWrite(ledPin, HIGH);

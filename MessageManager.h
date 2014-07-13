@@ -6,7 +6,7 @@
 #include "Messages.h"
 
 namespace Msg {
-	extern MessageType::Status status;
+	extern MessageType::tlmstatus tlmstatus;
 }
 
 namespace MessageManager {
@@ -23,14 +23,13 @@ namespace MessageManager {
 	void serialize(T* messageStruct) {
 		uint16_t crc = 0xFFFF;
 		txLength = sizeof(T);
-		for ( uint8_t i = 0 ; i < txLength ; i++ ) {
+		for ( uint8_t i = 0 ; i < txLength - 2 ; i++ ) {
 			txBuffer[i] = reinterpret_cast<uint8_t*>(messageStruct)[i];
 			crc = _crc_ccitt_update(crc,txBuffer[i]);
 		}
 		crc = ~crc;
-		txBuffer[txLength] = reinterpret_cast<uint8_t*>(&crc)[0];
-		txBuffer[txLength+1] = reinterpret_cast<uint8_t*>(&crc)[1];
-		txLength += 2;
+		txBuffer[txLength-2] = reinterpret_cast<uint8_t*>(&crc)[0];
+		txBuffer[txLength-1] = reinterpret_cast<uint8_t*>(&crc)[1];
 	}
 	
 	uint8_t* getRXBuffer();
