@@ -3,6 +3,11 @@
 
 #include <WProgram.h>
 #include <util/crc16.h>
+#include "Messages.h"
+
+namespace Msg {
+	extern MessageType::Status status;
+}
 
 namespace MessageManager {
 	extern uint8_t txBuffer[];
@@ -15,7 +20,7 @@ namespace MessageManager {
 	void updateFields();
 
 	template <class T>
-	void serializeMessage(T* messageStruct) {
+	void serialize(T* messageStruct) {
 		uint16_t crc = 0xFFFF;
 		txLength = sizeof(T);
 		for ( uint8_t i = 0 ; i < txLength ; i++ ) {
@@ -35,14 +40,6 @@ namespace MessageManager {
 	size_t& getRXBufferLength();
 
   size_t getTXBufferLength();
-  
-	template <class T>
-	void addToPacket(T item, uint8_t *buffer, uint16_t &address) {
-		for ( uint8_t i = 0 ; i < sizeof(T) ; i++ ) {
-      buffer[address+i] = reinterpret_cast<uint8_t*>(&item)[i];
-    }
-		address += uint16_t(sizeof(T));
-	}
 }
 
 #endif

@@ -3,7 +3,8 @@
 
 #include <WProgram.h>
 #include <NewSoftSerial.h>
-#include "../../SatcomMessage.h"
+#include "../../MessageManager.h"
+#include "../../Messages.h"
 #include "../../IridiumSBD.h"
 
 NewSoftSerial nss(10, 11); //RX, TX
@@ -17,7 +18,7 @@ bool ISBDCallback()
 }
 
 void setup() {
-	SatcomMessage::init();
+	MessageManager::init();
 
 	int signalQuality = -1;
 
@@ -54,9 +55,10 @@ void setup() {
 
 void loop() {
 
-	SatcomMessage::formTelemPacket(SatcomMessage::testStatus);
-	uint16_t length = SatcomMessage::getTXBufferLength();
-	const uint8_t *data = SatcomMessage::getTXBuffer();
+	MessageManager::updateFields();
+	MessageManager::serialize(&Msg::status);
+	uint16_t length = MessageManager::getTXBufferLength();
+	const uint8_t *data = MessageManager::getTXBuffer();
 	Serial.print("Packet Length: ");Serial.println(length);
 	Serial.println("Packet Data:");	
 	for ( uint8_t i = 0 ; i < length ; i++ ) {
