@@ -1,14 +1,13 @@
 #include "PowerMonitor.h"
-#include "EasyTransfer.h"
 
 PowerMonitor::PowerMonitor(Stream *_stream) {
-	stream = _stream;
-}
-	
-void PowerMonitor::init() {
-	
+	transfer.setStream(_stream);
 }
 	
 void PowerMonitor::read() {
-	
+	static const uint32_t tryDelayMS = 5;
+	uint8_t tries = 5;
+	while ( tries-- && !transfer.receive(&data) ) {
+		delay(tryDelayMS);
+	}	
 }

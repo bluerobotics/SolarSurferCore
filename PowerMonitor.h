@@ -1,4 +1,8 @@
+#ifndef POWERMONITOR_H
+#define POWERMONITOR_H
+
 #include <WProgram.h>
+#include "Transfer.h"
 
 struct PowerMonitorStruct {
 	float voltage[4];
@@ -7,14 +11,14 @@ struct PowerMonitorStruct {
 
 class PowerMonitor {
 	private:
-	Stream *stream;
+	Transfer transfer;
 
 	public:
 	PowerMonitorStruct data;
 	
 	PowerMonitor(Stream *_stream);
 	
-	void init();
-	
 	void read();
 };
+
+#endif
