@@ -1,4 +1,8 @@
+#ifndef BLDCMONITOR_H
+#define BLDCMONITOR_H
+
 #include <WProgram.h>
+#include "Transfer.h"
 
 struct BLDCMonitorStruct {
 	int16_t rpmA;
@@ -10,14 +14,14 @@ struct BLDCMonitorStruct {
 
 class BLDCMonitor {
 	private:
-	Stream *stream;
+	Transfer transfer;
 
 	public:
 	BLDCMonitorStruct data;
 	
 	BLDCMonitor(Stream *_stream);
 	
-	void init();
-	
 	void read();
 };
+
+#endif

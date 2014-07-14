@@ -1,14 +1,13 @@
 #include "BLDCMonitor.h"
-#include "EasyTransfer.h"
 
 BLDCMonitor::BLDCMonitor(Stream *_stream) {
-	stream = _stream;
-}
-	
-void BLDCMonitor::init() {
-	
+	transfer.setStream(_stream);
 }
 	
 void BLDCMonitor::read() {
-	
+	static const uint32_t tryDelayMS = 5;
+	uint8_t tries = 5;
+	while ( tries-- && !transfer.receive(&data) ) {
+		delay(tryDelayMS);
+	}
 }

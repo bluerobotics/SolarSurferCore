@@ -46,6 +46,7 @@ set(sources APM.cpp
 	    PowerMonitor.cpp
 	    RemoteControl.cpp
 	    Satcom.cpp
+	    Transfer.cpp
 	    Thruster.cpp
 	    WaypointList.cpp
 	    )
