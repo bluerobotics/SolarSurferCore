@@ -11,7 +11,7 @@ namespace {
 }
 
 namespace WaypointList {
-	void setWaypoint(uint16_t index, const Location &location) {
+	void write(uint16_t index, const Location &location) {
 		uint16_t address = getEEPROMAddressFromWaypointIndex(index);
 		Waypoint temp;
 		temp.index = index;
@@ -20,7 +20,7 @@ namespace WaypointList {
 		NVM::write<Waypoint>(temp,&address);
 	}
 	
-	void getWaypoint(Waypoint *waypoint,uint16_t index) {
+	void read(Waypoint *waypoint,uint16_t index) {
 		uint16_t address = getEEPROMAddressFromWaypointIndex(index);
 		Waypoint temp = NVM::read<Waypoint>(&address);
 		waypoint->index = temp.index;

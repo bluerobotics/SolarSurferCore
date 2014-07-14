@@ -10,9 +10,9 @@ struct Waypoint {
 };
 
 namespace WaypointList {	
-	void setWaypoint(uint16_t index, const Location &location);
+	void write(uint16_t index, const Location &location);
 	
-	void getWaypoint(Waypoint *waypoint,uint16_t index);
+	void read(Waypoint *waypoint,uint16_t index);
 }
 
 #endif
