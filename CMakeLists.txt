@@ -31,20 +31,22 @@ cmake_minimum_required (VERSION 2.6)
 project (solarsurfer)
 set(arduino_libs EasyTransfer SoftEasyTransfer NewSoftSerial EEPROM SPI Wire Wire/utility)
 set(sources APM.cpp
-		Atlas_pH.cpp
+			Atlas_pH.cpp
 	    BLDCMonitor.cpp
 	    DCM.cpp
 	    GPS_UBX.cpp
 	    Helmsman.cpp
 	    HMC5883.cpp
 	    IridiumSBD.cpp
+	    MessageManager.cpp
 	    MPU6000.cpp
 	    Navigator.cpp
+	    Persistant.cpp
 	    PowerMonitor.cpp
 	    RemoteControl.cpp
 	    Satcom.cpp
-	    SatcomMessage.cpp
 	    Thruster.cpp
+	    WaypointList.cpp
 	    )
 
 ###############################################################################
