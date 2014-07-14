@@ -33,6 +33,7 @@ set(arduino_libs EasyTransfer SoftEasyTransfer NewSoftSerial EEPROM SPI Wire Wir
 set(sources APM.cpp
 			Atlas_pH.cpp
 	    BLDCMonitor.cpp
+	  	Captain.cpp
 	    DCM.cpp
 	    GPS_UBX.cpp
 	    Helmsman.cpp

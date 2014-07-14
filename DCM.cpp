@@ -2,7 +2,32 @@
 #include "matrix.h"
 #include "Vector.h"
 
-void DCM::init() {
+namespace {
+  float Accel_Vector[3]; //Store the acceleration in a vector
+  float Gyro_Vector[3];//Store the gyros rutn rate in a vector
+  float Omega_Vector[3]; //Corrected Gyro_Vector data
+  float Omega_P[3];//Omega Proportional correction
+  float Omega_I[3];//Omega Integrator
+  float Omega[3];
+  
+  float errorRollPitch[3]; 
+  float errorYaw[3];
+  float errorCourse; 
+  float COGX; //Course overground X axis
+  float COGY; //Course overground Y axis
+  
+  float DCM_Matrix[3][3]; 
+  float Update_Matrix[3][3]; //Gyros here
+  float Temporary_Matrix[3][3];
+}
+
+namespace DCM {
+
+float roll;
+float pitch;
+float yaw;
+
+void init() {
   errorCourse = 180;
   COGX = 0;
   COGY = 1;
@@ -16,7 +41,7 @@ void DCM::init() {
   Update_Matrix[2][0] = 6; Update_Matrix[2][1] = 7; Update_Matrix[2][2] = 8;
 }
 
-void DCM::updateMeasurements(float omegaX,float omegaY,float omegaZ,float accX,float accY,float accZ,float dt) {
+void updateMeasurements(float omegaX,float omegaY,float omegaZ,float accX,float accY,float accZ,float dt) {
   Gyro_Vector[0]=omegaX; //gyro x roll
   Gyro_Vector[1]=omegaY; //gyro y pitch
   Gyro_Vector[2]=omegaZ; //gyro Z yaw
@@ -51,7 +76,7 @@ void DCM::updateMeasurements(float omegaX,float omegaY,float omegaZ,float accX,f
   }
 }
 
-void DCM::normalize() {
+void normalize() {
   float error=0;
   float temporary[3][3];
   float renorm=0;
@@ -111,7 +136,7 @@ void DCM::normalize() {
   }
 }
 
-void DCM::driftCorrection(float heading) {
+void driftCorrection(float heading) {
   //Compensation the Roll, Pitch and Yaw drift. 
   float mag_heading_x;
   float mag_heading_y;
@@ -172,15 +197,17 @@ void DCM::driftCorrection(float heading) {
   }
 }
 
-void DCM::accelerationCorrection() {
+void accelerationCorrection() {
   #ifdef TEMPORARY
   Accel_Vector[1] += (GPS.ground_speed/100)*Omega[2];  // Centrifugal force on Acc_y = GPS ground speed (m/s) * GyroZ
   Accel_Vector[2] -= (GPS.ground_speed/100)*Omega[1];  // Centrifugal force on Acc_z = GPS ground speed (m/s) * GyroY 
   #endif
 }
 
-void DCM::convertDCMtoEuler() {
+void convertDCMtoEuler() {
   pitch = -asin(DCM_Matrix[2][0]);
   roll = atan2(DCM_Matrix[2][1],DCM_Matrix[2][2]);
   yaw = atan2(DCM_Matrix[1][0],DCM_Matrix[0][0]);
+}
+
 }
