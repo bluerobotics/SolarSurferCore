@@ -35,7 +35,7 @@ void setup() {
   if (false) {
 	  HMC5883::calibrateOffsets();
 	}
-	HMC5883::set_offset(101, 20, 101);
+	HMC5883::set_offset(124, 148, 140);
 }
 
 void updateNavigationSensors() {
@@ -119,11 +119,16 @@ void loop() {
 		Serial.print("Lat: ");Serial.print(GPS_UBX::latitude,6);Serial.println(" deg");
 		Serial.print("Lon: ");Serial.print(GPS_UBX::longitude,6);Serial.println(" deg");		
 		Serial.println("");
+		Serial.print("WP Lat: ");Serial.print(Captain::waypoint.index);
+		Serial.print("WP Lat: ");Serial.print(Captain::waypoint.location.latitude,6);Serial.println(" deg");
+		Serial.print("WP Lon: ");Serial.print(Captain::waypoint.location.longitude,6);Serial.println(" deg");		
+		Serial.println("");
 		Serial.print("Roll: ");Serial.print(degrees(DCM::roll));Serial.println(" deg ");
 		Serial.print("Pitch: ");Serial.print(degrees(DCM::pitch));Serial.println(" deg");				
 		Serial.println("");
   	Serial.print("Desired Course:  ");Serial.print(degrees(Captain::desiredCourse));Serial.println(" deg");
   	Serial.print("Current Heading: ");Serial.print(degrees(DCM::yaw));Serial.println(" deg");
+  	Serial.print("Current Course: ");Serial.print(degrees(GPS_UBX::course));Serial.println(" deg");
   	Serial.print("Distance to WP:  ");Serial.print(Captain::distanceToWaypoint,1);Serial.println(" m");
   	Serial.println("");
   	Serial.print("Left Thruster:  ");Serial.print(Thruster::get(Thruster::left));Serial.println(" us");
@@ -134,9 +139,12 @@ void loop() {
   	} else {
   		Serial.println("AUTONOMOUS CONTROL ENABLED");
   	}
+  	if ( RemoteControl::isOther() ) {
+  		Serial.println("'Other' Switch Disabled");
+  	} else {
+  		Serial.println("'Other' Switch Enabled");
+  	}
   	Serial.print("RC Steering:  ");Serial.print(RemoteControl::getSteering());Serial.println("");
   	Serial.print("RC Power:     ");Serial.print(RemoteControl::getPower());Serial.println("");
-  	//Serial.println(APM::inputCh(0));
-  	//Serial.println(APM::inputCh(1));
   }
 }

@@ -13,6 +13,8 @@ namespace RemoteControl {
 	float getPower();
 
 	bool isManual();
+
+	bool isOther();
 }
 
 #endif

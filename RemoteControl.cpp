@@ -21,14 +21,20 @@ namespace RemoteControl {
 	}
 
 	float getSteering() {
-		return channel[0]-center;
+		static const int16_t steeringMagnitude = 200;
+		return map(channel[0],1100,1900,-steeringMagnitude,steeringMagnitude);
 	}
 
 	float getPower() {
-		return channel[1]-center;
+		static const int16_t powerMagnitude = 400;
+		return map(channel[1],1100,1900,-powerMagnitude,powerMagnitude);
 	}
 
 	bool isManual() {
 		return channel[2] > center;
+	}
+
+	bool isOther() {
+		return channel[3] > center;
 	}
 }
