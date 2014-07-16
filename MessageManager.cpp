@@ -2,8 +2,9 @@
 #include <util/crc16.h>
 
 #include "GPS_UBX.h"
+#include "DCM.h"
 
-#define TEST_ONLY
+//#define TEST_ONLY
 
 namespace Msg {
 	MessageType::tlmstatus tlmstatus;
@@ -29,7 +30,7 @@ namespace MessageManager {
 		Msg::tlmstatus.time							=					GPS_UBX::time;
 		Msg::tlmstatus.altitude					=					GPS_UBX::altitude;
 		Msg::tlmstatus.course						=					GPS_UBX::course;
-		Msg::tlmstatus.heading					=					900;
+		Msg::tlmstatus.heading					=					DCM::yaw*10;
 		Msg::tlmstatus.p_solar					=					120;
 		Msg::tlmstatus.p_batt						=					15;
 		Msg::tlmstatus.p_left						=					49;
