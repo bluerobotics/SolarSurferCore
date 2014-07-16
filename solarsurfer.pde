@@ -12,6 +12,7 @@
 #include "Captain.h"
 #include "MessageManager.h"
 #include "Messages.h"
+#include "Transfer.h"
 #include "WaypointWriter.h"
 
 float dt;
@@ -20,6 +21,7 @@ long outputTimer;
 long diagnosticTimer;
 
 IridiumSBD isbd(Serial2, 12);
+Transfer telemTransfer;
 
 void setup() {
   Serial.begin(115200);
@@ -43,6 +45,8 @@ void setup() {
   isbd.attachConsole(Serial);
   isbd.attachDiags(Serial);
   isbd.setPowerProfile(1); // 1 == low power
+
+  telemTransfer.setStream(&Serial);
   
   if (false) {
 	  HMC5883::calibrateOffsets();
@@ -151,14 +155,14 @@ void loop() {
   	telemTimer = millis();
 
 		MessageManager::updateFields();
-		MessageManager::serialize(&Msg::tlmstatus);
+		/*MessageManager::serialize(&Msg::tlmdiagnostic);
 		uint16_t length = MessageManager::getTXBufferLength();
-		const uint8_t *data = MessageManager::getTXBuffer();  	  	
+		const uint8_t *data = MessageManager::getTXBuffer();*/
 
-		// Send with transfer here.
+		telemTransfer.send(&Msg::tlmdiagnostic);
   }	
   
-  if (true && millis()-printTimer > 250) {
+  if (false && millis()-printTimer > printPeriod) {
   	printTimer = millis();
 		Serial.write(27);       // ESC command
 		Serial.print("[2J");    // clear screen command

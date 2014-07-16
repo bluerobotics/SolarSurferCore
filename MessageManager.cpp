@@ -34,7 +34,7 @@ namespace MessageManager {
 		Msg::tlmstatus.time							=					GPS_UBX::time;
 		Msg::tlmstatus.altitude					=					GPS_UBX::altitude;
 		Msg::tlmstatus.course						=					GPS_UBX::course;
-		Msg::tlmstatus.heading					=					DCM::yaw*10;
+		Msg::tlmstatus.heading					=					degrees(DCM::yaw)*10;
 		Msg::tlmstatus.p_solar					=					120;
 		Msg::tlmstatus.p_batt						=					15;
 		Msg::tlmstatus.p_left						=					49;
@@ -61,11 +61,11 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.wpIndex						=					Captain::waypoint.index;
 		Msg::tlmdiagnostic.wpLatitude					=					Captain::waypoint.location.latitude;
 		Msg::tlmdiagnostic.wpLongitude				=					Captain::waypoint.location.longitude;
-		Msg::tlmdiagnostic.roll								=					DCM::roll;
-		Msg::tlmdiagnostic.pitch							=					DCM::pitch;
-		Msg::tlmdiagnostic.heading						=					DCM::yaw;
+		Msg::tlmdiagnostic.roll								=					degrees(DCM::roll);
+		Msg::tlmdiagnostic.pitch							=					degrees(DCM::pitch);
+		Msg::tlmdiagnostic.heading						=					degrees(DCM::yaw);
 		Msg::tlmdiagnostic.distanceToWaypoint	=					Captain::distanceToWaypoint;
-		Msg::tlmdiagnostic.desiredCourse			=					Captain::desiredCourse;
+		Msg::tlmdiagnostic.desiredCourse			=					degrees(Captain::desiredCourse);
 		Msg::tlmdiagnostic.desiredPower				=					Captain::desiredPower;
 		Msg::tlmdiagnostic.leftThruster				=					Thruster::get(Thruster::left);
 		Msg::tlmdiagnostic.rightThruster			=					Thruster::get(Thruster::right);
