@@ -10,6 +10,8 @@
 #include "RemoteControl.h"
 
 namespace Captain {
+	static const float waypointAchievedRadius = 3.0f;
+	
   float desiredCourse;
   float desiredPower;
   float distanceToWaypoint;
@@ -34,7 +36,7 @@ namespace Captain {
 
 		// Determine state of the mission
 		distanceToWaypoint = Navigator::getDistanceToLocation(&current.location,&waypoint.location);
-		if (distanceToWaypoint < 3.0f) {
+		if (distanceToWaypoint < waypointAchievedRadius) {
 			getNextWaypoint();
 		}
 	

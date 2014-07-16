@@ -3,12 +3,15 @@
 #include "HMC5883.h"
 #include "DCM.h"
 #include "GPS_UBX.h"
+#include "IridiumSBD.h"
 #include "APM.h"
 #include "Navigator.h"
 #include "Helmsman.h"
 #include "Thruster.h"
 #include "RemoteControl.h"
 #include "Captain.h"
+#include "MessageManager.h"
+#include "Messages.h"
 #include "WaypointWriter.h"
 
 float dt;
@@ -16,8 +19,11 @@ long timer;
 long outputTimer;
 long diagnosticTimer;
 
+IridiumSBD isbd(Serial2, 12);
+
 void setup() {
   Serial.begin(115200);
+  Serial2.begin(19200); // Satcom
   Serial.println("start");
 
   // Set barometer CS pin high so it doesn't hog the bus. How frustrating.  
@@ -32,6 +38,11 @@ void setup() {
   Thruster::init();
   RemoteControl::init();
   Captain::init();
+  MessageManager::init();
+
+  isbd.attachConsole(Serial);
+  isbd.attachDiags(Serial);
+  isbd.setPowerProfile(1); // 1 == low power
   
   if (false) {
 	  HMC5883::calibrateOffsets();
@@ -104,14 +115,48 @@ void updateNavigationSensors() {
 }
 
 void loop() {
-  updateNavigationSensors();
-  RemoteControl::update();
+	static const long printPeriod			=			250;
+	static const long navPeriod 			=		 	100;
+	static const long satcomPeriod 		=     60000*5; // 5 minutes
+	static const long telemPeriod     =     125;
+
+	static long printTimer;
+	static long navTimer;
+	static long satcomTimer;
+	static long telemTimer;
+
+	if (millis()-navTimer>navPeriod) {
+		navTimer = millis();
+
+  	updateNavigationSensors();
+  	RemoteControl::update();
   
-  Captain::determineState();
-  Captain::determineCourseAndPower();
-  Captain::execute();
-  
-  static long printTimer;
+    Captain::determineState();
+    Captain::determineCourseAndPower();
+    Captain::execute();
+  }
+
+  if (millis()-satcomTimer>satcomPeriod) {
+  	satcomTimer = millis();
+
+  	MessageManager::updateFields();
+		MessageManager::serialize(&Msg::tlmstatus);
+		uint16_t length = MessageManager::getTXBufferLength();
+		const uint8_t *data = MessageManager::getTXBuffer();  	
+
+		// Call satcom function here.
+  }
+
+  if (millis()-telemTimer>telemPeriod) {
+  	telemTimer = millis();
+
+		MessageManager::updateFields();
+		MessageManager::serialize(&Msg::tlmstatus);
+		uint16_t length = MessageManager::getTXBufferLength();
+		const uint8_t *data = MessageManager::getTXBuffer();  	  	
+
+		// Send with transfer here.
+  }	
   
   if (true && millis()-printTimer > 250) {
   	printTimer = millis();
@@ -154,5 +199,14 @@ void loop() {
   	}
   	Serial.print("RC Steering:  ");Serial.print(RemoteControl::getSteering());Serial.println("");
   	Serial.print("RC Power:     ");Serial.print(RemoteControl::getPower());Serial.println("");
+  	Serial.println("");
+  	Serial.print("Packet Length: ");Serial.println(MessageManager::getTXBufferLength());
+		Serial.println("Packet Data:");	
+		for ( uint8_t i = 0 ; i < MessageManager::getTXBufferLength() ; i++ ) {
+			Serial.print((MessageManager::getTXBuffer())[i],HEX);Serial.print("\t");
+			if ( (i+1) % 8 == 0 ) {
+				Serial.println("");
+			}
+		}
   }
 }
