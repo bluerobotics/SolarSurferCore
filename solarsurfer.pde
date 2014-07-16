@@ -123,6 +123,9 @@ void loop() {
 		Serial.println("=====================");
 		Serial.print("Lat: ");Serial.print(GPS_UBX::latitude,6);Serial.println(" deg");
 		Serial.print("Lon: ");Serial.print(GPS_UBX::longitude,6);Serial.println(" deg");		
+		Serial.print("Alt: ");Serial.print(GPS_UBX::altitude,2);Serial.println(" m");
+		Serial.print("Speed: ");Serial.print(GPS_UBX::groundSpeed,2);Serial.println(" m/s");
+		Serial.print("Current Course: ");Serial.print(degrees(GPS_UBX::course));Serial.println(" deg");
 		Serial.println("");
 		Serial.print("WP Index: ");Serial.println(Captain::waypoint.index,DEC);
 		Serial.print("WP Lat: ");Serial.print(Captain::waypoint.location.latitude,6);Serial.println(" deg");
@@ -133,7 +136,6 @@ void loop() {
 		Serial.println("");
   	Serial.print("Desired Course:  ");Serial.print(degrees(Captain::desiredCourse));Serial.println(" deg");
   	Serial.print("Current Heading: ");Serial.print(degrees(DCM::yaw));Serial.println(" deg");
-  	Serial.print("Current Course: ");Serial.print(degrees(GPS_UBX::course));Serial.println(" deg");
   	Serial.print("Distance to WP:  ");Serial.print(Captain::distanceToWaypoint,1);Serial.println(" m");
   	Serial.println("");
   	Serial.print("Left Thruster:  ");Serial.print(Thruster::get(Thruster::left));Serial.println(" us");

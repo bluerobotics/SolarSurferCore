@@ -115,6 +115,7 @@ void read() {
                 case 0x02:  // NAV-POSLLH
                   longitude = LONG(4)/10000000.0f;
                   latitude = LONG(8)/10000000.0f;
+                  altitude = LONG(16)/1000.0f; // meters
                   /*Serial.print("POSLLH: lon = ");
 				          Serial.print(longitude,10);
                   Serial.print(", lat = ");
@@ -156,8 +157,13 @@ void read() {
                   Serial.print(data[47], DEC);
                   break;
                 case 0x12:  // NAV-VELNED
-                  groundSpeed = ULONG(20); // cm/s
-                  course = (float) LONG(24)/100000; // deg
+                  groundSpeed = ULONG(20)*0.01f; // cm/s to m/s
+                  course = radians((float) LONG(24)/100000.0); // deg to rad
+                  if ( course > PI ) {
+                    course -= 2*PI;
+                  } else if ( course < -PI ) {
+                    course += 2*PI;
+                  }
                   /*Serial.print("VELNED: gSpeed = ");
                   Serial.print(groundSpeed, 1);
                   Serial.print(" cm/sec, sAcc = ");
