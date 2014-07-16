@@ -57,7 +57,7 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.gpsLongitude				=					GPS_UBX::longitude;
 		Msg::tlmdiagnostic.gpsAltitude				=					GPS_UBX::altitude;
 		Msg::tlmdiagnostic.gpsGroundSpeed			=					GPS_UBX::groundSpeed;
-		Msg::tlmdiagnostic.gpsCourse					=					GPS_UBX::course;
+		Msg::tlmdiagnostic.gpsCourse					=					degrees(GPS_UBX::course);
 		Msg::tlmdiagnostic.wpIndex						=					Captain::waypoint.index;
 		Msg::tlmdiagnostic.wpLatitude					=					Captain::waypoint.location.latitude;
 		Msg::tlmdiagnostic.wpLongitude				=					Captain::waypoint.location.longitude;

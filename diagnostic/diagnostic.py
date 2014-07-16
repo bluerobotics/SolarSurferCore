@@ -8,6 +8,8 @@ import time
 import os
 from optparse import OptionParser
 import csv
+import signal
+import sys
 
 class SerialConnection:
 	def openConnection(self,port,baudrate):
@@ -48,6 +50,15 @@ class SerialConnection:
 		      
 		return data
 
+def sigint_handler(*args):
+	print "Closing serial port."
+	sc.ser.close()
+	print "Quiting gracefully."
+	time.sleep(0.25)
+	sys.exit()
+
+sc = SerialConnection()
+
 parser = OptionParser()
 parser.add_option("-o","--output",dest="filename",help="Output file name.",metavar="FILE")
 (options,args) = parser.parse_args()
@@ -62,6 +73,8 @@ headers = []
 formatString = "=" # The equal sign in the format string eliminate C-struct padding
 
 if __name__ == '__main__':
+	signal.signal(signal.SIGINT, sigint_handler)
+
 	with open('formats.json') as format_file:
 		formats = json.load(format_file)
 		diag = formats["formats"]["5"]["payload"]
@@ -98,8 +111,7 @@ if __name__ == '__main__':
 
 	print headers
 	print formatString
-	
-	sc = SerialConnection()
+
 	sc.openConnection('/dev/tty.usbmodemfd141',115200)
 
 	while (True):
