@@ -9,6 +9,7 @@
 #include "Thruster.h"
 #include "RemoteControl.h"
 #include "Captain.h"
+#include "WaypointWriter.h"
 
 float dt;
 long timer;
@@ -36,6 +37,10 @@ void setup() {
 	  HMC5883::calibrateOffsets();
 	}
 	HMC5883::set_offset(124, 148, 140);
+
+	if (false) {
+		WaypointWriter::write();
+	}
 }
 
 void updateNavigationSensors() {

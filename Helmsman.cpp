@@ -18,8 +18,8 @@ namespace {
 	}
 	
 	float powerController(float error, float dt) {
-		static const float Kp = 1.0;
-		static const float Ki = 0.1;
+		static const float Kp = 4.0;
+		static const float Ki = 0.0;
 		static const float iMax = 1000;
 		
 		powerErrorIntegral = constrain(powerErrorIntegral+error*dt,-iMax,iMax);		
@@ -65,8 +65,15 @@ namespace Helmsman {
 
 	void executeManual(float steering, float power) {
 		const static int16_t stoppedThrottle = 1500;
+
+		resetIntegrals(); // Reset the I terms so that they do not spool up during manual control
 		
 		Thruster::set(Thruster::left,stoppedThrottle+power+steering);
 		Thruster::set(Thruster::right,stoppedThrottle+power-steering);	
+	}
+
+	void resetIntegrals() {
+		steeringErrorIntegral = 0;
+		powerErrorIntegral = 0;
 	}
 }

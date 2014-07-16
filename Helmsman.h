@@ -11,6 +11,8 @@ namespace Helmsman {
   void execute(float heading, float power);
 
   void executeManual(float steering, float power);
+
+  void resetIntegrals();
 }
 
 #endif

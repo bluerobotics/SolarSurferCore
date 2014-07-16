@@ -17,6 +17,8 @@ namespace Captain {
 	void determineCourseAndPower();
 	
 	void execute();
+
+	void getNextWaypoint();
 }
 
 #endif
