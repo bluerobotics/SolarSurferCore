@@ -20,7 +20,21 @@ Sensors:
 
 ## Compilation
 
-Check back.
+'''bash
+mkdir build
+cd build
+cmake .. -i
+cmake ..
+make
+make program
+'''
+
+## Diagnostic Printing
+
+'''bash
+cd diagnostic
+python diagnostic -o filename.csv
+'''
 
 ## Change History
 
