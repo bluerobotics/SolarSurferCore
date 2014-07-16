@@ -46,7 +46,7 @@ namespace APM {
 
 		// WGM: 1 1 1 0. Clear Timer on Compare, TOP is ICR1.
     // CS11: prescale by 8 => 0.5us tick
-    TCCR1A =((1<<WGM11));
+    TCCR1A = ((1<<WGM11)|(1<<COM1A1)|(1<<COM1B1));
     TCCR1B = (1<<WGM13)|(1<<WGM12)|(1<<CS11);
     ICR1 = 40000; // 0.5us tick => 50hz freq
     OCR1A = 0xFFFF; // Ch 2, Init OCR registers to nil output signal
