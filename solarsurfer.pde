@@ -121,6 +121,7 @@ void loop() {
 		Serial.print("[H");     // cursor to home command
 		Serial.println("SolarSurfer Live Data");
 		Serial.println("=====================");
+		Serial.print("Time: ");Serial.print(GPS_UBX::time,DEC);Serial.println(" ms");
 		Serial.print("Lat: ");Serial.print(GPS_UBX::latitude,6);Serial.println(" deg");
 		Serial.print("Lon: ");Serial.print(GPS_UBX::longitude,6);Serial.println(" deg");		
 		Serial.print("Alt: ");Serial.print(GPS_UBX::altitude,2);Serial.println(" m");
