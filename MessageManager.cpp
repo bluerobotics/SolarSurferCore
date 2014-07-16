@@ -1,5 +1,4 @@
 #include "MessageManager.h"
-#include "struct/struct.h"
 #include <util/crc16.h>
 
 #include "GPS_UBX.h"
