@@ -119,7 +119,7 @@ void loop() {
 		Serial.print("Lat: ");Serial.print(GPS_UBX::latitude,6);Serial.println(" deg");
 		Serial.print("Lon: ");Serial.print(GPS_UBX::longitude,6);Serial.println(" deg");		
 		Serial.println("");
-		Serial.print("WP Lat: ");Serial.print(Captain::waypoint.index);
+		Serial.print("WP Index: ");Serial.println(Captain::waypoint.index,DEC);
 		Serial.print("WP Lat: ");Serial.print(Captain::waypoint.location.latitude,6);Serial.println(" deg");
 		Serial.print("WP Lon: ");Serial.print(Captain::waypoint.location.longitude,6);Serial.println(" deg");		
 		Serial.println("");

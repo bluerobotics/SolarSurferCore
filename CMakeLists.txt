@@ -86,7 +86,7 @@ add_definitions(-fno-exceptions)     # disable exceptions
 add_definitions(-ffunction-sections)
 add_definitions(-fdata-sections)
 add_definitions(-std=c++0x)
-add_definitions(-DCANBUS_INTERRUPT_PIN=0 -DCANBUS_SS_PORT=PORTD -DCANBUS_SS_PIN=5)
+add_definitions(-D__AVR_LIBC_DEPRECATED_ENABLE__)
 
 ###############################################################################
 #                           TARGETS, COMMANDS, ETC.                           #
