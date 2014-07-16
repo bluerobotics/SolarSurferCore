@@ -6,6 +6,7 @@
 
 namespace Captain {
   extern float desiredCourse;
+  extern float desiredPower;
   extern float distanceToWaypoint;
   extern Waypoint current;
   extern Waypoint waypoint;

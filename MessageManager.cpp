@@ -3,11 +3,15 @@
 
 #include "GPS_UBX.h"
 #include "DCM.h"
+#include "Captain.h"
+#include "RemoteControl.h"
+#include "Thruster.h"
 
 //#define TEST_ONLY
 
 namespace Msg {
 	MessageType::tlmstatus tlmstatus;
+	MessageType::tlmdiagnostic tlmdiagnostic;
 }
 
 namespace MessageManager {
@@ -23,7 +27,7 @@ namespace MessageManager {
 	void updateFields() {
 #ifndef TEST_ONLY
 		Msg::tlmstatus.version					=					1;
-		Msg::tlmstatus.format						=					0;
+		Msg::tlmstatus.format						=					3;
 		Msg::tlmstatus.latitude					=					GPS_UBX::latitude;
 		Msg::tlmstatus.longitude 				=					GPS_UBX::longitude;
 		Msg::tlmstatus.fix							=					GPS_UBX::fix;
@@ -44,8 +48,32 @@ namespace MessageManager {
 		Msg::tlmstatus.tempWater				=					22;
 		Msg::tlmstatus.pressure					=					10130;
 		Msg::tlmstatus.pH								=					820;
-		Msg::tlmstatus.telemetryRate		=					2;
 		Msg::tlmstatus.telemetryCount		=					4;
+
+		Msg::tlmdiagnostic.version						=					1;
+		Msg::tlmdiagnostic.format							=					5;
+		Msg::tlmdiagnostic.gpsTime						=					GPS_UBX::time;
+		Msg::tlmdiagnostic.gpsLatitude				=					GPS_UBX::latitude;
+		Msg::tlmdiagnostic.gpsLongitude				=					GPS_UBX::longitude;
+		Msg::tlmdiagnostic.gpsAltitude				=					GPS_UBX::altitude;
+		Msg::tlmdiagnostic.gpsGroundSpeed			=					GPS_UBX::groundSpeed;
+		Msg::tlmdiagnostic.gpsCourse					=					GPS_UBX::course;
+		Msg::tlmdiagnostic.wpIndex						=					Captain::waypoint.index;
+		Msg::tlmdiagnostic.wpLatitude					=					Captain::waypoint.location.latitude;
+		Msg::tlmdiagnostic.wpLongitude				=					Captain::waypoint.location.longitude;
+		Msg::tlmdiagnostic.roll								=					DCM::roll;
+		Msg::tlmdiagnostic.pitch							=					DCM::pitch;
+		Msg::tlmdiagnostic.heading						=					DCM::yaw;
+		Msg::tlmdiagnostic.distanceToWaypoint	=					Captain::distanceToWaypoint;
+		Msg::tlmdiagnostic.desiredCourse			=					Captain::desiredCourse;
+		Msg::tlmdiagnostic.desiredPower				=					Captain::desiredPower;
+		Msg::tlmdiagnostic.leftThruster				=					Thruster::get(Thruster::left);
+		Msg::tlmdiagnostic.rightThruster			=					Thruster::get(Thruster::right);
+		Msg::tlmdiagnostic.isManual						=					RemoteControl::isManual();
+		Msg::tlmdiagnostic.isOther						=					RemoteControl::isOther();	
+		Msg::tlmdiagnostic.rcSteering					=					RemoteControl::getSteering();
+		Msg::tlmdiagnostic.rcPower						=					RemoteControl::getPower();
+
 #else
 		Msg::tlmstatus.version					=					1;
 		Msg::tlmstatus.format						=					0;

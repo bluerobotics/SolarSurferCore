@@ -7,6 +7,7 @@
 
 namespace Msg {
 	extern MessageType::tlmstatus tlmstatus;
+	extern MessageType::tlmdiagnostic tlmdiagnostic;
 }
 
 namespace MessageManager {
