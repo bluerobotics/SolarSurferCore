@@ -61,6 +61,7 @@ sc = SerialConnection()
 
 parser = OptionParser()
 parser.add_option("-o","--output",dest="filename",help="Output file name.",metavar="FILE")
+parser.add_option("-p","--port",dest="portname")
 (options,args) = parser.parse_args()
 
 isFile = False
@@ -112,7 +113,7 @@ if __name__ == '__main__':
 	print headers
 	print formatString
 
-	sc.openConnection('/dev/tty.usbmodemfd141',115200)
+	sc.openConnection(options.portname,57600)
 
 	while (True):
 		length = struct.calcsize(formatString)

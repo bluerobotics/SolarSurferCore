@@ -9,8 +9,8 @@ namespace {
 	
 	float steeringController(float error, float dt) {
 		static const float Kp = 2.0;
-		static const float Ki = 0.75;
-		static const float iMax = 150;
+		static const float Ki = 0.6;
+		static const float iMax = 75;
 		
 		steeringErrorIntegral = constrain(steeringErrorIntegral+error*dt,-iMax,iMax);
 		

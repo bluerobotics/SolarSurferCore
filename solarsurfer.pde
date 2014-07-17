@@ -24,7 +24,7 @@ IridiumSBD isbd(Serial2, 12);
 Transfer telemTransfer;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(57600);
   Serial2.begin(19200); // Satcom
   Serial.println("start");
 
@@ -51,7 +51,7 @@ void setup() {
   if (false) {
 	  HMC5883::calibrateOffsets();
 	}
-	HMC5883::set_offset(124, 148, 140);
+	HMC5883::set_offset(108, 6, 96);
 
 	if (false) {
 		WaypointWriter::write();
@@ -119,10 +119,10 @@ void updateNavigationSensors() {
 }
 
 void loop() {
-	static const long printPeriod			=			250;
+	static const long printPeriod			=			500;
 	static const long navPeriod 			=		 	100;
 	static const long satcomPeriod 		=     60000*5; // 5 minutes
-	static const long telemPeriod     =     125;
+	static const long telemPeriod     =     250;
 
 	static long printTimer;
 	static long navTimer;
