@@ -13,6 +13,8 @@
 #include "MessageManager.h"
 #include "Messages.h"
 #include "Transfer.h"
+#include "PowerMonitor.h"
+#include "BLDCMonitor.h"
 #include "WaypointWriter.h"
 
 float dt;
@@ -22,6 +24,11 @@ long diagnosticTimer;
 
 IridiumSBD isbd(Serial2, 12);
 Transfer telemTransfer;
+
+//NewSoftSerial nssBLDC(X,X);
+//NewSoftSerial nssPM(X,X);
+// BLDCMonitor(&nssBLDC);
+// BLDCMonitor(&nssPM);
 
 void setup() {
   Serial.begin(57600);
@@ -59,6 +66,7 @@ void setup() {
 }
 
 void updateNavigationSensors() {
+	// Update GPS
 	static uint32_t gpsTimer;
 	if ( millis() - gpsTimer > 25 ) {
 		for ( uint8_t i = 0 ; i < 255 ; i++ )
@@ -75,6 +83,7 @@ void updateNavigationSensors() {
 		}
 	}
 	
+	// Update IMU + compass
 	if ( MPU6000::newdata ) {
     
     dt = (micros()-timer)/1000000.0f;
@@ -115,6 +124,26 @@ void updateNavigationSensors() {
 			Serial.print(MPU6000::gyroX);Serial.print(" ");
 			Serial.print(-MPU6000::gyroZ);Serial.println(" ");
 	  }
+  }
+
+  // Update BLDC monitor
+  static const uint32_t BLDCReadPeriodMS = 1000;
+  static uint32_t BLDCReadTimer;
+  if ( millis() - BLDCReadTimer > BLDCReadPeriodMS ) {
+  	BLDCReadTimer = millis();
+  	// Listen on software serial here
+  	// nssBLDC.listen()
+  	// BLDCMonitor.read();
+  }
+
+  // Update Power monitor
+  static const uint32_t PowerReadPeriodMS = 1000;
+  static uint32_t PowerReadTimer;
+  if ( millis() - PowerReadTimer > PowerReadPeriodMS ) {
+  	PowerReadTimer = millis();
+  	// Listen on software serial here
+  	// nssPM.listen()
+  	// PowerMonitor.read();
   }
 }
 
