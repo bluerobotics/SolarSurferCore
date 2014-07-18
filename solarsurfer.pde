@@ -145,6 +145,30 @@ void updateNavigationSensors() {
   	// nssPM.listen()
   	// PowerMonitor.read();
   }
+
+  // Update Airmar 100WX sensor
+  static const uint32_t AirmarReadPeriodMS = 2000;
+  static uint32_t AirmarReadTimer;
+  if ( millis() - AirmarReadTimer > AirmarReadPeriodMS ) {
+  	AirmarReadTimer = millis();
+  	// Insert code here.
+  }
+
+  // Update temperature sensor
+  static const uint32_t WTempReadPeriodMS = 2000;
+  static uint32_t WTempReadTimer;
+  if ( millis() - WTempReadTimer > WTempReadPeriodMS ) {
+  	WTempReadTimer = millis();
+  	// Insert code here.
+  }
+
+  // Update pH sensor
+  static const uint32_t pHReadPeriodMS = 2000;
+  static uint32_t pHReadTimer;
+  if ( millis() - pHReadTimer > pHReadPeriodMS ) {
+  	pHReadTimer = millis();
+  	// Insert code here.
+  }
 }
 
 void loop() {
