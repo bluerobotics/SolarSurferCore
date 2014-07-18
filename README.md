@@ -16,7 +16,21 @@ The following hardware is used:
 
 Sensors:
 * Atlas Scientific pH sensor
-* Temperature sensor w/ one-wire interface
+* Water temperature sensor w/ one-wire interface
+* Airmar WS-100WX wind/temperature/pressure sensor
+
+## Wiring
+
+Serial ports:
+APM UART0: USB/3DR Radio (auto-mux)
+APM UART1: UBlox GPS (through GPS plug on APM)
+APM UART2: RockBLOCK (connected to RX/TX/GND pin in the case)
+APM UART3: Unused
+SoftwareSerial0 (pins X,X): Airmar WS-100WX
+SoftwareSerial1 (pins X,X): Atlas Scientific pH Sensor
+SoftwareSerial2 (pins X,X): Adafruit TTL Serial Camera
+SoftwareSerial3 (pins X,X): BLDC Monitor
+SoftwareSerial4 (pins X,X): Power Monitor
 
 ## Compilation
 
@@ -33,12 +47,12 @@ make program
 
 ```bash
 cd diagnostic
-python diagnostic -o filename.csv
+python diagnostic -p /dev/ttyUSBXXXX -o filename.csv
 ```
 
 ## Change History
 
-### v0.1.0 - tbd
+### v0.1.0 - Used on Ocean Test No. 2
 
 * Initial release
 
