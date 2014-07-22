@@ -70,6 +70,7 @@ add_definitions(-fno-exceptions)     # disable exceptions
 add_definitions(-ffunction-sections)
 add_definitions(-fdata-sections)
 add_definitions(-std=c++0x)
+add_definitions(-DMM_TEST_ONLY)
 
 ###############################################################################
 #                           TARGETS, COMMANDS, ETC.                           #
