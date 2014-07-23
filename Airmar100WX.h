@@ -1,4 +1,4 @@
-k#ifndef AIRMAR100WX_H
+#ifndef AIRMAR100WX_H
 #define AIRMAR100WX_H
 
 #include <WProgram.h>

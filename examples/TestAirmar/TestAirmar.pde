@@ -6,11 +6,11 @@
 #include <NewSoftSerial.h>
 #include "../../Airmar100WX.h"
 
-NewSoftSerial nss(2,3);
+NewSoftSerial nss(6,5);
 
 void setup() {
 	Serial.begin(115200);
-	nss.begin(38400);
+	nss.begin(4800);
 	
 	Airmar100WX::init(&nss);
 	
@@ -18,25 +18,24 @@ void setup() {
 }
 
 void loop() {
-	if (true) {
-		if (Airmar100WX::readRaw()) {
-		  Airmar100WX::convertToAbsolute(1.0,PI,PI);
-
-  		Serial.write(27);       // ESC command
-  		Serial.print("[2J");    // clear screen command
-  		Serial.write(27);
-  		Serial.print("[H");     // cursor to home command	
-  		Serial.println("=== Airmar 100WX Test ===");
-  		Serial.print("Rel. Wind Speed: ");Serial.print(Airmar100WX::apparentWindSpeed);Serial.println(" m/s");
-  		Serial.print("Abs. Wind Speed: ");Serial.print(Airmar100WX::windSpeed);Serial.println(" m/s");
-  		Serial.print("Rel. Wind Dir:   ");Serial.print(Airmar100WX::apparentWindDirection);Serial.println(" deg");
-  		Serial.print("Abs. Wind Dir:   ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg");
-  		Serial.print("Pressure:        ");Serial.print(Airmar100WX::pressure);Serial.println(" kPa");
-  		Serial.print("Air Temp:        ");Serial.print(Airmar100WX::airTemperature);Serial.println(" deg C");
-  		Serial.println("=========================");
-
-  		delay(500);
+  if (true) {
+    if (Airmar100WX::readRaw()) {
+      Airmar100WX::convertToAbsolute(1.0,45.0,45.0);
     }
+    Serial.write(27);       // ESC command
+    Serial.print("[2J");    // clear screen command
+    Serial.write(27);
+    Serial.print("[H");     // cursor to home command	
+    Serial.println("=== Airmar 100WX Test ===");
+    Serial.print("Rel. Wind Speed: ");Serial.print(Airmar100WX::apparentWindSpeed);Serial.println(" m/s");
+    Serial.print("Abs. Wind Speed: ");Serial.print(Airmar100WX::windSpeed);Serial.println(" m/s");
+    Serial.print("Rel. Wind Dir:   ");Serial.print(Airmar100WX::apparentWindDirection);Serial.println(" deg");
+    Serial.print("Abs. Wind Dir:   ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg");
+    Serial.print("Pressure:        ");Serial.print(Airmar100WX::pressure);Serial.println(" kPa");
+    Serial.print("Air Temp:        ");Serial.print(Airmar100WX::airTemperature);Serial.println(" deg C");
+    Serial.println("=========================");
+
+    delay(500);
   }
   if (false) {
   	float speed, course, heading;

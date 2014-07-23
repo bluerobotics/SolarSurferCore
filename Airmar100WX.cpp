@@ -34,6 +34,12 @@ namespace Airmar100WX {
 			airTemperature = atof(_airTemperature.value());
 			apparentWindSpeed = atof(_windSpeed.value())*0.514444444; // to m/s
 			apparentWindDirection = atof(_windDirection.value());
+			if (apparentWindDirection > 180) {
+				apparentWindDirection -= 360;
+			} else if (apparentWindDirection < -180) {
+				apparentWindDirection += 360;
+			}
+			apparentWindDirection = -apparentWindDirection;
 			return true;
 		} else {
 			return false;
