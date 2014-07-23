@@ -11,3 +11,7 @@ void BLDCMonitor::read() {
 		delay(tryDelayMS);
 	}
 }
+
+float BLDCMonitor::getTotalPower() {
+	return (data.currentLeft+data.currentRight)*data.voltage;
+}

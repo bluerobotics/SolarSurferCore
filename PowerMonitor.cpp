@@ -11,3 +11,7 @@ void PowerMonitor::read() {
 		delay(tryDelayMS);
 	}	
 }
+
+float PowerMonitor::getPower(uint8_t index) {
+	return data.voltage[index]*data.current[index];
+}

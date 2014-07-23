@@ -9,6 +9,23 @@
 #include "DCM.h"
 #include "RemoteControl.h"
 
+namespace {
+	BLDCMonitor* bldc;
+  PowerMonitor* power;
+
+  float desiredPowerErrorIntegral;
+
+  float desiredPowerController(float error,float dt) {
+		static const float Kp = 50.0;
+		static const float Ki = 10.0;
+		static const float iMax = 10.0;
+		
+		desiredPowerErrorIntegral = constrain(desiredPowerErrorIntegral+error*dt,-iMax,iMax);
+		
+		return Kp*error + Ki*desiredPowerErrorIntegral;
+  }
+}
+
 namespace Captain {
 	static const float waypointAchievedRadius = 3.0f;
 	
@@ -18,7 +35,10 @@ namespace Captain {
   Waypoint current;
   Waypoint waypoint;
 
-	void init() {
+	void init(BLDCMonitor *_bldcMonitor,PowerMonitor *_powerMonitor) {
+		bldc = _bldcMonitor;
+		power = _powerMonitor;
+
 		// Get the current waypoint.
 		Persistant::read();
 		// TEMPORARY RESET WAYPOINTS UPON RESTART::
@@ -43,15 +63,25 @@ namespace Captain {
 	}
 	
 	void determineCourseAndPower() {
+		static uint32_t lastTime;
+		float dt = (millis()-lastTime)/1000.0f;
+		lastTime = millis();
+
 	  current.location.latitude = GPS_UBX::latitude;
 	  current.location.longitude = GPS_UBX::longitude;
 	  
 	  desiredCourse = Navigator::getHeadingToLocation(&current.location,&waypoint.location);
 
 	  if (waypoint.location.latitude != 0.0f && waypoint.location.latitude != 0.0f) {
-	  	desiredPower = 60;
+	  	static const float desiredVoltage = 12.5;
+	  	desiredPower = desiredPowerController(power->data.voltage[PowerMonitor::BatteryToLoad]-desiredVoltage,dt);
 	  } else {
+	  	desiredPowerErrorIntegral = 0;
 	  	desiredPower = 0;
+	  }
+
+	  if ( RemoteControl::isManual() ) {
+	  	desiredPowerErrorIntegral = 0;
 	  }
 	}
 	
@@ -61,7 +91,7 @@ namespace Captain {
 		if ( RemoteControl::isManual() ) {
 			Helmsman::executeManual(RemoteControl::getSteering(),RemoteControl::getPower());
 		} else {
-			Helmsman::execute(degrees(DCM::yaw),0);
+			Helmsman::execute(degrees(DCM::yaw),bldc->getTotalPower());
 		}
 	}
 

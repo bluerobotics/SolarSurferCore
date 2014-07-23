@@ -3,6 +3,8 @@
 
 #include <WProgram.h>
 #include "WaypointList.h"
+#include "BLDCMonitor.h"
+#include "PowerMonitor.h"
 
 namespace Captain {
   extern float desiredCourse;
@@ -11,7 +13,7 @@ namespace Captain {
   extern Waypoint current;
   extern Waypoint waypoint;
 
-	void init();
+	void init(BLDCMonitor *_bldcMonitor,PowerMonitor *_powerMonitor);
 	
 	void determineState();
 	

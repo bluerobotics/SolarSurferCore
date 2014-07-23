@@ -1,4 +1,5 @@
 #include <WProgram.h>
+#include <NewSoftSerial.h>
 #include "MPU6000.h"
 #include "HMC5883.h"
 #include "DCM.h"
@@ -25,10 +26,10 @@ long diagnosticTimer;
 IridiumSBD isbd(Serial2, 12);
 Transfer telemTransfer;
 
-//NewSoftSerial nssBLDC(X,X);
-//NewSoftSerial nssPM(X,X);
-// BLDCMonitor(&nssBLDC);
-// BLDCMonitor(&nssPM);
+NewSoftSerial nssBLDC(150,151);
+NewSoftSerial nssPM(152,153);
+BLDCMonitor bldcMonitor(&nssBLDC);
+PowerMonitor powerMonitor(&nssPM);
 
 void setup() {
   Serial.begin(57600);
@@ -46,7 +47,7 @@ void setup() {
   GPS_UBX::init();
   Thruster::init();
   RemoteControl::init();
-  Captain::init();
+  Captain::init(&bldcMonitor,&powerMonitor);
   MessageManager::init();
 
   isbd.attachConsole(Serial);

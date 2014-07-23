@@ -22,6 +22,8 @@ class BLDCMonitor {
 	BLDCMonitor(Stream *_stream);
 	
 	void read();
+
+	float getTotalPower();
 };
 
 #endif
