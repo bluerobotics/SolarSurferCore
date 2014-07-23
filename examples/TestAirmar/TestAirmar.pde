@@ -18,191 +18,210 @@ void setup() {
 }
 
 void loop() {
-	if (false) {
-		Airmar100WX::readRaw();
+	if (true) {
+		if (Airmar100WX::readRaw()) {
+		  Airmar100WX::convertToAbsolute(1.0,PI,PI);
 
-		float relSpeed = Airmar100WX::windSpeed;
-		float relDir = Airmar100WX::windDirection;
+  		Serial.write(27);       // ESC command
+  		Serial.print("[2J");    // clear screen command
+  		Serial.write(27);
+  		Serial.print("[H");     // cursor to home command	
+  		Serial.println("=== Airmar 100WX Test ===");
+  		Serial.print("Rel. Wind Speed: ");Serial.print(Airmar100WX::apparentWindSpeed);Serial.println(" m/s");
+  		Serial.print("Abs. Wind Speed: ");Serial.print(Airmar100WX::windSpeed);Serial.println(" m/s");
+  		Serial.print("Rel. Wind Dir:   ");Serial.print(Airmar100WX::apparentWindDirection);Serial.println(" deg");
+  		Serial.print("Abs. Wind Dir:   ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg");
+  		Serial.print("Pressure:        ");Serial.print(Airmar100WX::pressure);Serial.println(" kPa");
+  		Serial.print("Air Temp:        ");Serial.print(Airmar100WX::airTemperature);Serial.println(" deg C");
+  		Serial.println("=========================");
 
-		Airmar100WX::convertToAbsolute(1.0,PI,PI);
-
-		Serial.write(27);       // ESC command
-		Serial.print("[2J");    // clear screen command
-		Serial.write(27);
-		Serial.print("[H");     // cursor to home command	
-		Serial.println("=== Airmar 100WX Test ===");
-		Serial.print("Rel. Wind Speed: ");Serial.print(relSpeed);Serial.println(" m/s");
-		Serial.print("Abs. Wind Speed: ");Serial.print(Airmar100WX::windSpeed);Serial.println(" m/s");
-		Serial.print("Rel. Wind Dir:   ");Serial.print(relDir);Serial.println(" deg");
-		Serial.print("Abs. Wind Dir:   ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg");
-		Serial.print("Pressure:        ");Serial.print(Airmar100WX::pressure);Serial.println(" kPa");
-		Serial.print("Air Temp:        ");Serial.print(Airmar100WX::airTemperature);Serial.println(" deg C");
-		Serial.println("=========================");
-
-		delay(500);
+  		delay(500);
+    }
   }
-  if (true) {
+  if (false) {
   	float speed, course, heading;
 
-  	// Test 1: Zero measured wind speed, check for proper relative wind
-  	Airmar100WX::windSpeed = 0.0;
-  	Airmar100WX::windDirection = 0.0;
+    // Test 0: Zero movement, check wind angle
+    Airmar100WX::apparentWindSpeed = 1.0;
+    Airmar100WX::apparentWindDirection = 0.0;
 
-  	speed = 1.0;
-  	course = 0.0;
-  	heading = 0.0;
+    speed = 0.0;
+    course = 0.0;
+    heading = 0.0;
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	Serial.println("== Test 1 ==");
-  	Serial.print("Should be: ");Serial.println("{1.0 m/s, 180 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
+    Serial.println("== Test 0 ==");
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 0.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-		speed = 1.0;
-  	course = 90.0;
-  	heading = 0.0;
+    speed = 0.0;
+    course = 0.0;
+    heading = 45.0;
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	Serial.print("Should be: ");Serial.println("{1.0 m/s, 270 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 45.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-  	speed = 1.0;
-  	course = 180.0;
-  	heading = 0.0;
+    speed = 0.0;
+    course = 0.0;
+    heading = 90.0;
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	Serial.print("Should be: ");Serial.println("{1.0 m/s, 0 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 90.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-  	speed = 1.0;
-  	course = 270.0;
-  	heading = 0.0;
+    speed = 0.0;
+    course = 0.0;
+    heading = -135.0;
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	Serial.print("Should be: ");Serial.println("{1.0 m/s, 90 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, -135.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-		speed = 1.0;
-  	course = 0.0;
-  	heading = 90.0;
+    // Test 1: Zero movement, check wind angle
+    Airmar100WX::apparentWindSpeed = 1.0;
+    Airmar100WX::apparentWindDirection = 0.0;
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    speed = 0.0;
+    course = 0.0;
+    heading = 0.0;
 
-  	Serial.print("Should be: ");Serial.println("{1.0 m/s, 180 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	  	
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	speed = 1.0;
-  	course = 0.0;
-  	heading = 180.0;
+    Serial.println("== Test 1 ==");
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 0.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    Airmar100WX::apparentWindSpeed = 1.0;
+    Airmar100WX::apparentWindDirection = 45.0;
 
-  	Serial.print("Should be: ");Serial.println("{1.0 m/s, 180 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	speed = 1.0;
-  	course = 0.0;
-  	heading = 270.0;
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 45.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    Airmar100WX::apparentWindSpeed = 1.0;
+    Airmar100WX::apparentWindDirection = 90.0;
 
-  	Serial.print("Should be: ");Serial.println("{1.0 m/s, 180 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	// Test 2: Wind measured 1.0 m/s @ 90 deg (east)
-  	Airmar100WX::windSpeed = 1.0;
-  	Airmar100WX::windDirection = 90.0;
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 90.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-		speed = 0.0;
-  	course = 0.0;
-  	heading = 0.0;
+    // Test 2: Zero movement, heading plus wind direction
+    Airmar100WX::apparentWindSpeed = 1.0;
+    Airmar100WX::apparentWindDirection = 0.0;
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    speed = 0.0;
+    course = 0.0;
+    heading = 0.0;
 
-  	Serial.println("== Test 1 ==");
-  	Serial.print("Should be: ");Serial.println("{1.0 m/s, 90 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	speed = 1.0;
-  	course = 0.0;
-  	heading = 0.0;
+    Serial.println("== Test 2 ==");
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 0.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    Airmar100WX::apparentWindSpeed = 1.0;
+    Airmar100WX::apparentWindDirection = 45.0;
 
-  	Serial.print("Should be: ");Serial.println("{1.41 m/s, 45 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
+    speed = 0.0;
+    course = 0.0;
+    heading = 45.0;
 
-		speed = 1.0;
-  	course = 90.0;
-  	heading = 0.0;
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 90.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-  	Serial.print("Should be: ");Serial.println("{2.0 m/s, 90 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	
+    Airmar100WX::apparentWindSpeed = 1.0;
+    Airmar100WX::apparentWindDirection = -45.0;
 
-  	speed = 1.0;
-  	course = 180.0;
-  	heading = 0.0;
+    speed = 0.0;
+    course = 0.0;
+    heading = 90.0;
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	Serial.print("Should be: ");Serial.println("{1.41 m/s, 135 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 45.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");    
 
-  	speed = 1.0;
-  	course = 270.0;
-  	heading = 0.0;
+    // Test 3: Movement with no apparent speed
+    Airmar100WX::apparentWindSpeed = 0;
+    Airmar100WX::apparentWindDirection = 0;
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    speed = 1.0;
+    course = 0.0;
+    heading = 0.0;
 
-  	Serial.print("Should be: ");Serial.println("{0.0 m/s, --- deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-		speed = 1.0;
-  	course = 0.0;
-  	heading = 90.0;
+    Serial.println("== Test 3 ==");
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 0.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    speed = 1.0;
+    course = 45.0;
+    heading = 45.0;
 
-  	Serial.print("Should be: ");Serial.println("{0.0 m/s, --- deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	  	
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	speed = 1.0;
-  	course = 0.0;
-  	heading = 180.0;
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 45.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    speed = 1.0;
+    course = 90.0;
+    heading = 90.0;
 
-  	Serial.print("Should be: ");Serial.println("{1.41 m/s, 45 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	
+    Airmar100WX::convertToAbsolute(speed,course,heading);
 
-  	speed = 1.0;
-  	course = 0.0;
-  	heading = 270.0;
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 90.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");
 
-  	Airmar100WX::convertToAbsolute(speed,course,heading);
+    // Test 3: Movement and wind
+    Airmar100WX::apparentWindSpeed = sqrt(2.0);
+    Airmar100WX::apparentWindDirection = -135;
 
-  	Serial.print("Should be: ");Serial.println("{2.0 m/s, 0 deg}");
-  	Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
-  	Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");  	
+    speed = 1.0;
+    course = 0.0;
+    heading = 0.0;
+
+    Airmar100WX::convertToAbsolute(speed,course,heading);
+
+    Serial.println("== Test 3 ==");
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, -90.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");    
+
+    Airmar100WX::apparentWindSpeed = sqrt(2.0);
+    Airmar100WX::apparentWindDirection = 45;
+
+    speed = 1.0;
+    course = -90.0;
+    heading = 90.0;
+
+    Airmar100WX::convertToAbsolute(speed,course,heading);
+
+    Serial.print("Should be: ");Serial.println("{1.0 m/s, 180.0 deg}");
+    Serial.print("Is:        {");Serial.print(Airmar100WX::windSpeed);
+    Serial.print(" m/s, ");Serial.print(Airmar100WX::windDirection);Serial.println(" deg}");    
 
   	for (;;);
   }

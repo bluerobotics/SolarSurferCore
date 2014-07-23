@@ -55,6 +55,7 @@ void loop() {
 	MessageManager::serialize(&Msg::tlmstatus);
 	uint16_t length = MessageManager::getTXBufferLength();
 	const uint8_t *data = MessageManager::getTXBuffer();
+
 	Serial.print("Packet Length: ");Serial.println(length);
 	Serial.println("Packet Data:");	
 	for ( uint8_t i = 0 ; i < length ; i++ ) {

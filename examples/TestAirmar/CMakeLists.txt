@@ -29,7 +29,7 @@ cmake_minimum_required (VERSION 2.6)
 # as well as the project's name.                                              #
 ###############################################################################
 project (TestAirmar)
-set(arduino_libs NewSoftSerial EEPROM SPI)
+set(arduino_libs NewSoftSerial EEPROM SPI TinyGPSPlus)
 set(sources ../../Airmar100WX.cpp
 	    )
 

@@ -4,6 +4,8 @@
 #include <WProgram.h>
 
 namespace Airmar100WX {
+	extern float apparentWindSpeed;
+	extern float apparentWindDirection;
 	extern float windSpeed;
 	extern float windDirection;
 	extern float airTemperature;
@@ -11,7 +13,7 @@ namespace Airmar100WX {
 
 	void init(Stream *_stream);
 
-	void readRaw();
+	bool readRaw();
 
 	void convertToAbsolute(float groundSpeed, float course, float heading);
 }

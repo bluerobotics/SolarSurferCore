@@ -1,10 +1,18 @@
+#include <TinyGPS++.h>
 #include "Airmar100WX.h"
 
 namespace {
 	Stream *stream;
+	TinyGPSPlus nmea;
+	TinyGPSCustom _pressure(nmea,"WIMDA",1); // inHg
+	TinyGPSCustom _airTemperature(nmea,"WIMDA",5); // C
+	TinyGPSCustom _windDirection(nmea,"WIMDA",13); // deg
+	TinyGPSCustom _windSpeed(nmea,"WIMDA",19); // m/s
 }
 
 namespace Airmar100WX {
+	float apparentWindSpeed;
+	float apparentWindDirection;
 	float windSpeed;
 	float windDirection;
 	float airTemperature;
@@ -14,16 +22,30 @@ namespace Airmar100WX {
 		stream = _stream;
 	}
 
-	void readRaw() {
-		// Read Airmar sensor here
+	bool readRaw() {
+		uint8_t maxChars = 128;
+
+		while(stream->available() > 0 && maxChars-- > 0 ) {
+			nmea.encode(stream->read());
+		}
+
+		if (_pressure.isUpdated()) {
+			pressure = atof(_pressure.value())*3386; // to Pa
+			airTemperature = atof(_airTemperature.value());
+			apparentWindSpeed = atof(_windSpeed.value());
+			apparentWindDirection = atof(_windDirection.value());
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	void convertToAbsolute(float groundSpeed, float course, float heading) {
 		// Correct from relative to absolute speed here
-		float relX, relY, vesselX, vesselY, absX, absY;
+		/*float relX, relY, vesselX, vesselY, absX, absY;
 
-		relX = windSpeed*cos(radians(windDirection));
-		relY = windSpeed*sin(radians(windDirection));
+		relX = apparentWindSpeed*cos(radians(apparentWindDirection));
+		relY = apparentWindSpeed*sin(radians(apparentWindDirection));
 
 		float angle = radians(heading-course);
 		if (angle > PI)
@@ -38,6 +60,21 @@ namespace Airmar100WX {
 		absY = relY+vesselY;
 
 		windSpeed = sqrt(absX*absX+absY*absY);
-		windDirection = atan2(absY,absX);
+		windDirection = degrees(atan2(absX,absY));*/
+
+		float a = apparentWindSpeed*sin(radians(apparentWindDirection+heading-course));
+		float b = apparentWindSpeed*cos(radians(apparentWindDirection+heading-course))+groundSpeed;
+
+		windSpeed = sqrt(a*a+b*b);
+		windDirection = degrees(atan2(a,b))+course;
+
+		if (windDirection > 180)
+			windDirection -= 360;
+		else if (windDirection <= -180)
+			windDirection += 360;		
+
+		/*windSpeed = sqrt(apparentWindSpeed^2+groundSpeed^2-2*apparentWindSpeed*groundSpeed*cos(radians(apparentWindDirection)));
+
+		windDirection = acos((apparentWindSpeed*cos(radians(apparentWindDirection))-groundSpeed)/windSpeed);*/
 	}
 }
