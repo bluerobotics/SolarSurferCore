@@ -6,6 +6,7 @@
 #include "Captain.h"
 #include "RemoteControl.h"
 #include "Thruster.h"
+#include "APM.h"
 
 namespace {
 	BLDCMonitor *bldc;
@@ -104,13 +105,15 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.isOther						=					RemoteControl::isOther();	
 		Msg::tlmdiagnostic.rcSteering					=					RemoteControl::getSteering();
 		Msg::tlmdiagnostic.rcPower						=					RemoteControl::getPower();
+		Msg::tlmdiagnostic.voltageAPM         =         APM::getVoltage();
 		Msg::tlmdiagnostic.voltageSolar       =         power->data.voltage[PowerMonitor::SolarToCC];
 		Msg::tlmdiagnostic.voltageBattery     =         power->data.voltage[PowerMonitor::CCtoBattery];
-		Msg::tlmdiagnostic.voltageThrusters   =         bldc->data.voltage; 
-		Msg::tlmdiagnostic.totalThrusterPower =         bldc->getTotalPower();
-		Msg::tlmdiagnostic.solarPower         =         power->getPower(PowerMonitor::SolarToCC);
-		Msg::tlmdiagnostic.chargePower        =         power->getPower(PowerMonitor::CCtoBattery)-power->getPower(PowerMonitor::BatteryToLoad);
-		Msg::tlmdiagnostic.loadPower          =         power->getPower(PowerMonitor::BatteryToLoad);
+		Msg::tlmdiagnostic.voltageThrusters   =         bldc->data.voltage;
+		Msg::tlmdiagnostic.powerAPM           =         APM::getPower();
+		Msg::tlmdiagnostic.powerThrusters     =         bldc->getTotalPower();
+		Msg::tlmdiagnostic.powerSolar         =         power->getPower(PowerMonitor::SolarToCC);
+		Msg::tlmdiagnostic.powerCharge        =         power->getPower(PowerMonitor::CCtoBattery)-power->getPower(PowerMonitor::BatteryToLoad);
+		Msg::tlmdiagnostic.powerLoad          =         power->getPower(PowerMonitor::BatteryToLoad);
 #endif
 	}
 	

@@ -13,6 +13,14 @@ namespace APM {
 	uint16_t inputCh(uint8_t channel);
 
 	uint8_t getRadioInputState();
+
+	float getVCC();
+
+	float getVoltage();
+
+	float getCurrent();
+
+	float getPower();
 }
 
 #endif
