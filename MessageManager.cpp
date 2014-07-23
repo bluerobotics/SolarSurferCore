@@ -7,6 +7,11 @@
 #include "RemoteControl.h"
 #include "Thruster.h"
 
+namespace {
+	BLDCMonitor *bldc;
+	PowerMonitor *power;
+}
+
 namespace Msg {
 	MessageType::tlmstatus tlmstatus;
 	MessageType::tlmdiagnostic tlmdiagnostic;
@@ -18,8 +23,9 @@ namespace MessageManager {
 	size_t txLength;
 	size_t rxLength;
 	
-	void init() {
-
+	void init(BLDCMonitor *_bldc,PowerMonitor *_power) {
+	  bldc = _bldc;
+	  power = _power;
 	}
 	
 	void updateFields() {
@@ -98,6 +104,13 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.isOther						=					RemoteControl::isOther();	
 		Msg::tlmdiagnostic.rcSteering					=					RemoteControl::getSteering();
 		Msg::tlmdiagnostic.rcPower						=					RemoteControl::getPower();
+		Msg::tlmdiagnostic.voltageSolar       =         power->data.voltage[PowerMonitor::SolarToCC];
+		Msg::tlmdiagnostic.voltageBattery     =         power->data.voltage[PowerMonitor::CCtoBattery];
+		Msg::tlmdiagnostic.voltageThrusters   =         bldc->data.voltage; 
+		Msg::tlmdiagnostic.totalThrusterPower =         bldc->getTotalPower();
+		Msg::tlmdiagnostic.solarPower         =         power->getPower(PowerMonitor::SolarToCC);
+		Msg::tlmdiagnostic.chargePower        =         power->getPower(PowerMonitor::CCtoBattery)-power->getPower(PowerMonitor::BatteryToLoad);
+		Msg::tlmdiagnostic.loadPower          =         power->getPower(PowerMonitor::BatteryToLoad);
 #endif
 	}
 	

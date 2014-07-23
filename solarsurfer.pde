@@ -48,7 +48,7 @@ void setup() {
   Thruster::init();
   RemoteControl::init();
   Captain::init(&bldcMonitor,&powerMonitor);
-  MessageManager::init();
+  MessageManager::init(&bldcMonitor,&powerMonitor);
 
   isbd.attachConsole(Serial);
   isbd.attachDiags(Serial);

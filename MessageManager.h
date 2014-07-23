@@ -4,6 +4,8 @@
 #include <WProgram.h>
 #include <util/crc16.h>
 #include "Messages.h"
+#include "BLDCMonitor.h"
+#include "PowerMonitor.h"
 
 namespace Msg {
 	extern MessageType::tlmstatus tlmstatus;
@@ -16,7 +18,7 @@ namespace MessageManager {
 	extern size_t txLength;
 	extern size_t rxLength;
 	
-	void init();
+	void init(BLDCMonitor *_bldc,PowerMonitor *_power);
 	
 	void updateFields();
 
