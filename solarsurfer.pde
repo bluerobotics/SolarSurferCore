@@ -16,6 +16,7 @@
 #include "Transfer.h"
 #include "PowerMonitor.h"
 #include "BLDCMonitor.h"
+#include "Airmar100WX.h"
 #include "WaypointWriter.h"
 
 float dt;
@@ -28,6 +29,10 @@ Transfer telemTransfer;
 
 NewSoftSerial nssBLDC(150,151);
 NewSoftSerial nssPM(152,153);
+NewSoftSerial nssAirmar(154,155);
+NewSoftSerial nssPH(156,157);
+NewSoftSerial nssCamera(158,159);
+
 BLDCMonitor bldcMonitor(&nssBLDC);
 PowerMonitor powerMonitor(&nssPM);
 
@@ -45,6 +50,7 @@ void setup() {
   HMC5883::init();
   DCM::init();
   GPS_UBX::init();
+  Airmar100WX::init(&nssAirmar);
   Thruster::init();
   RemoteControl::init();
   Captain::init(&bldcMonitor,&powerMonitor);
@@ -128,35 +134,39 @@ void updateNavigationSensors() {
   }
 
   // Update BLDC monitor
-  static const uint32_t BLDCReadPeriodMS = 1000;
+  static const uint32_t BLDCReadPeriodMS = 250;
   static uint32_t BLDCReadTimer;
   if ( millis() - BLDCReadTimer > BLDCReadPeriodMS ) {
   	BLDCReadTimer = millis();
   	// Listen on software serial here
-  	// nssBLDC.listen()
-  	// BLDCMonitor.read();
+  	nssBLDC.listen();
+  	bldcMonitor.read();
   }
 
   // Update Power monitor
-  static const uint32_t PowerReadPeriodMS = 1000;
+  static const uint32_t PowerReadPeriodMS = 250;
   static uint32_t PowerReadTimer;
   if ( millis() - PowerReadTimer > PowerReadPeriodMS ) {
   	PowerReadTimer = millis();
   	// Listen on software serial here
-  	// nssPM.listen()
-  	// PowerMonitor.read();
+  	nssPM.listen();
+  	powerMonitor.read();
   }
 
   // Update Airmar 100WX sensor
-  static const uint32_t AirmarReadPeriodMS = 2000;
+  static const uint32_t AirmarReadPeriodMS = 3000;
   static uint32_t AirmarReadTimer;
   if ( millis() - AirmarReadTimer > AirmarReadPeriodMS ) {
-  	AirmarReadTimer = millis();
-  	// Insert code here.
+    AirmarReadTimer = millis();
+  	
+    nssAirmar.listen();
+    if (Airmar100WX::readRaw()) {
+      Airmar100WX::convertToAbsolute(GPS_UBX::groundSpeed,GPS_UBX::course,DCM::yaw);
+    }
   }
 
   // Update temperature sensor
-  static const uint32_t WTempReadPeriodMS = 2000;
+  static const uint32_t WTempReadPeriodMS = 3000;
   static uint32_t WTempReadTimer;
   if ( millis() - WTempReadTimer > WTempReadPeriodMS ) {
   	WTempReadTimer = millis();
@@ -164,7 +174,7 @@ void updateNavigationSensors() {
   }
 
   // Update pH sensor
-  static const uint32_t pHReadPeriodMS = 2000;
+  static const uint32_t pHReadPeriodMS = 5000;
   static uint32_t pHReadTimer;
   if ( millis() - pHReadTimer > pHReadPeriodMS ) {
   	pHReadTimer = millis();
