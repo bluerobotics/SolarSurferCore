@@ -6,8 +6,8 @@ namespace {
 	TinyGPSPlus nmea;
 	TinyGPSCustom _pressure(nmea,"WIMDA",1); // inHg
 	TinyGPSCustom _airTemperature(nmea,"WIMDA",5); // C
-	TinyGPSCustom _windDirection(nmea,"WIMDA",13); // deg
-	TinyGPSCustom _windSpeed(nmea,"WIMDA",19); // m/s
+	TinyGPSCustom _windDirection(nmea,"WIMWV",1); // deg
+	TinyGPSCustom _windSpeed(nmea,"WIMWV",3); // knots
 }
 
 namespace Airmar100WX {
@@ -29,10 +29,10 @@ namespace Airmar100WX {
 			nmea.encode(stream->read());
 		}
 
-		if (_pressure.isUpdated()) {
+		if (_pressure.isUpdated() || _windSpeed.isUpdated() ) {
 			pressure = atof(_pressure.value())*3386; // to Pa
 			airTemperature = atof(_airTemperature.value());
-			apparentWindSpeed = atof(_windSpeed.value());
+			apparentWindSpeed = atof(_windSpeed.value())*0.514444444; // to m/s
 			apparentWindDirection = atof(_windDirection.value());
 			return true;
 		} else {
