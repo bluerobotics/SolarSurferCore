@@ -22,15 +22,15 @@ Sensors:
 ## Wiring
 
 Serial ports:
-APM UART0: USB/3DR Radio (auto-mux)
-APM UART1: UBlox GPS (through GPS plug on APM)
-APM UART2: RockBLOCK (connected to RX/TX/GND pin in the case)
-APM UART3: Unused
-SoftwareSerial0 (pins X,X): Airmar WS-100WX
-SoftwareSerial1 (pins X,X): Atlas Scientific pH Sensor
-SoftwareSerial2 (pins X,X): Adafruit TTL Serial Camera
-SoftwareSerial3 (pins X,X): BLDC Monitor
-SoftwareSerial4 (pins X,X): Power Monitor
+* APM UART0 USB/3DR Radio (auto-mux)
+* APM UART1 UBlox GPS (through GPS plug on APM)
+* APM UART2 RockBLOCK (connected to RX/TX/GND pin in the case)
+* APM UART3 Unused
+* SoftwareSerial0 (pins X,X) Airmar WS-100WX
+* SoftwareSerial1 (pins X,X) Atlas Scientific pH Sensor
+* SoftwareSerial2 (pins X,X) Adafruit TTL Serial Camera
+* SoftwareSerial3 (pins X,X) BLDC Monitor
+* SoftwareSerial4 (pins X,X) Power Monitor
 
 ## Compilation
 
