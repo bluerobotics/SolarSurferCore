@@ -50,8 +50,9 @@ class Transfer {
 		reinterpret_cast<uint8_t*>(&checksum)[0] = stream->read();
 		reinterpret_cast<uint8_t*>(&checksum)[1] = stream->read();			
 				
-		if ( checksum != crc )
+		if ( checksum != crc ) {
 		  return false;
+		}
 		
 		for ( uint8_t i = 0 ; i < length ; i++ ) {
 		  reinterpret_cast<uint8_t*>(item)[i] = rxBuffer[i];
