@@ -7,6 +7,7 @@
 #include "HMC5883.h"
 #include "MPU6000.h"
 #include "DCM.h"
+#include "APM.h"
 #include "RemoteControl.h"
 
 namespace {
@@ -70,11 +71,12 @@ namespace Captain {
 	  current.location.latitude = GPS_UBX::latitude;
 	  current.location.longitude = GPS_UBX::longitude;
 	  
-	  desiredCourse = Navigator::getHeadingToLocation(&current.location,&waypoint.location);
+	  // TEMPORARILY DISABLE COURSE CONTROL
+	  desiredCourse = DCM::yaw; //Navigator::getHeadingToLocation(&current.location,&waypoint.location);
 
 	  if (waypoint.location.latitude != 0.0f && waypoint.location.latitude != 0.0f) {
-	  	static const float desiredVoltage = 12.5;
-	  	desiredPower = desiredPowerController(power->data.voltage[PowerMonitor::BatteryToLoad]-desiredVoltage,dt);
+	  	static const float desiredVoltage = 12.75;
+	  	desiredPower = -desiredPowerController(desiredVoltage-APM::getVoltage(),dt);
 	  } else {
 	  	desiredPowerErrorIntegral = 0;
 	  	desiredPower = 0;

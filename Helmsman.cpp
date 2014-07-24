@@ -57,10 +57,41 @@ namespace Helmsman {
 		float powerOutput = powerController(desiredPower-power,dt);
 		
 		steeringOutput = constrain(steeringOutput,-maxSteering,maxSteering);
-		powerOutput = constrain(powerOutput,-maxPower,maxPower);
+		powerOutput = constrain(powerOutput,0,maxPower);
+
+		float thrusterLeft  = powerOutput+steeringOutput;
+		float thrusterRight = powerOutput-steeringOutput;
+
+		// The following variables and statements provide hysteresis between turning motors
+		// on and off to avoid jumping between the two.
+		static const int16_t turnOnThreshold = 80;
+		static const int16_t turnOffThreshold = 40;
+		static bool leftOn;
+		static bool rightOn;
+
+		if (fabs(thrusterLeft) < turnOnThreshold && !leftOn) {
+			thrusterLeft = 0;
+		}
+		if (fabs(thrusterRight) < turnOnThreshold && !rightOn) {
+			thrusterRight = 0;
+		}
+		if (fabs(thrusterLeft) < turnOffThreshold && leftOn) {
+			leftOn = false;
+			thrusterLeft = 0;
+		}
+		if (fabs(thrusterRight) < turnOffThreshold && rightOn) {
+			rightOn = false;
+			thrusterRight = 0;
+		}
+		if (fabs(thrusterLeft) > turnOnThreshold) {
+			leftOn = true;
+		}
+		if (fabs(thrusterRight) > turnOnThreshold) {
+			rightOn = true;
+		}
 		
-		Thruster::set(Thruster::left,stoppedThrottle+powerOutput+steeringOutput);
-		Thruster::set(Thruster::right,stoppedThrottle+powerOutput-steeringOutput);
+		Thruster::set(Thruster::left,stoppedThrottle+thrusterLeft);
+		Thruster::set(Thruster::right,stoppedThrottle+thrusterRight);
 	}
 
 	void executeManual(float steering, float power) {
