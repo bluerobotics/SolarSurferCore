@@ -10,4 +10,4 @@ script:
  - file /usr/local/share/arduino/hardware/tools/g++_arm_none_eabi/bin
  - ls -alF /usr/local/share/arduino/hardware/tools/g++_arm_none_eabi/bin
  - /usr/local/share/arduino/hardware/tools/g++_arm_none_eabi/bin/arm-none-eabi-gcc --version
- - ino build -m mega2560
+ - ino build -m mega
