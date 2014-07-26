@@ -6,4 +6,4 @@ install:
  - scripts/install-linux.sh
 
 script:
- - ino build
+ - ino build -m mega2560

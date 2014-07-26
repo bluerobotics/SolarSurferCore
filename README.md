@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bluerobotics/SolarSurferCore.svg?branch=ino)](https://travis-ci.org/bluerobotics/SolarSurferCore)
+
 # SolarSurferCore
 
 Embedded software core for the a robotic solar powered surfboard propelled by the [BlueRobotics Thruster-100](http://www.bluerobotics.com/thruster).
