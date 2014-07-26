@@ -1,9 +1,4 @@
-#if defined(ARDUINO) && ARDUINO >= 100
-  #include "Arduino.h"
-#else
-  #include "WProgram.h"
-#endif
-
+#include "Arduino.h"
 #include <NewSoftSerial.h>
 #include "MPU6000.h"
 #include "HMC5883.h"
