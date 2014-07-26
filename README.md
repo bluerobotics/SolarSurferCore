@@ -1,8 +1,8 @@
 # SolarSurferCore
 
-Embedded software core for the a robotic solar powered surfboard propelled by the [BlueRobotics Thruster-100](http://www.bluerobotics.com/thruster). 
+Embedded software core for the a robotic solar powered surfboard propelled by the [BlueRobotics Thruster-100](http://www.bluerobotics.com/thruster).
 
-## Hardware
+## Overview
 
 The SolarSurferCore is designed to run on the [3DR APM2.6](https://store.3drobotics.com/products/apm-2-6-kit-1) with the 3DR UBlox GPS/Compass Unit. The drivers for the onboard hardware were derived from a number of internet sources and modified for use on this project.
 
@@ -19,7 +19,7 @@ Sensors:
 * Water temperature sensor w/ one-wire interface
 * Airmar WS-100WX wind/temperature/pressure sensor
 
-## Wiring
+### Wiring
 
 Serial ports:
 * APM UART0 USB/3DR Radio (auto-mux)
@@ -32,15 +32,22 @@ Serial ports:
 * SoftwareSerial3 (pins X,X) BLDC Monitor
 * SoftwareSerial4 (pins X,X) Power Monitor
 
-## Compilation
+## Setup
+
+This project use [ino](https://github.com/amperka/ino) to compile and upload code. To 
 
 ```bash
-mkdir build
-cd build
-cmake .. -i
-cmake ..
-make
-make program
+git clone https://github.com/bluerobotics/SolarSurferCore.git
+scripts/install-linux.sh
+# or
+scripts/install-mac.sh
+```
+
+Once ino is ready to go, building the project is as simple as:
+
+```bash
+ino build -m mega2560
+ino upload
 ```
 
 ## Diagnostic Printing
@@ -52,9 +59,9 @@ python diagnostic -p /dev/ttyUSBXXXX -o filename.csv
 
 ## Change History
 
-### v0.1.0 - Used on Ocean Test No. 2
+This project uses [semantic versioning](http://semver.org/).
+
+### v0.1.0 - 2014/07/17
 
 * Initial release
-
-
-
+* Used on Ocean Test No. 2
