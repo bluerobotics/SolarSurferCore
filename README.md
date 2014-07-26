@@ -4,9 +4,10 @@ Embedded software core for the a robotic solar powered surfboard propelled by th
 
 ## Overview
 
-The SolarSurferCore is designed to run on the [3DR APM2.6](https://store.3drobotics.com/products/apm-2-6-kit-1) with the 3DR UBlox GPS/Compass Unit. The drivers for the onboard hardware were derived from a number of internet sources and modified for use on this project.
+The SolarSurferCore is designed to run on the [3DR APM2.6](https://store.3drobotics.com/products/apm-2-6-kit-1) with the 3DR UBlox GPS/Compass Unit. The drivers for the onboard hardware were derived from a number of Internet sources and modified for use on this project.
 
 The following hardware is used:
+
 * Invensense MPU-6000 for compass tilt compensation
 * UBlox GPS using binary communication
 * HMC5883 compass
@@ -15,13 +16,13 @@ The following hardware is used:
 * [Rock Seven RockBLOCK](http://rockblock.rock7mobile.com/) for satellite communications
 
 Sensors:
+
 * Atlas Scientific pH sensor
 * Water temperature sensor w/ one-wire interface
 * Airmar WS-100WX wind/temperature/pressure sensor
 
-### Wiring
+Serial port assignments:
 
-Serial ports:
 * APM UART0 USB/3DR Radio (auto-mux)
 * APM UART1 UBlox GPS (through GPS plug on APM)
 * APM UART2 RockBLOCK (connected to RX/TX/GND pin in the case)
@@ -43,11 +44,18 @@ scripts/install-linux.sh
 scripts/install-mac.sh
 ```
 
-Once ino is ready to go, building the project is as simple as:
+You'll also need to cross-compile the latest message format from the [SolarSurferMessage](https://github.com/bluerobotics/SolarSurferMessage) project. Do that with the update script:
 
 ```bash
-ino build -m mega2560
-ino upload
+scrips/update.sh
+```
+
+Once everything is ready to go, building the project is as simple as:
+
+```bash
+ino build
+ino upload -p /dev/ttyACM1
+ino serial -p /dev/ttyACM1
 ```
 
 ## Diagnostic Printing
