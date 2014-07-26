@@ -1,7 +1,7 @@
 #ifndef MESSAGEMANAGER_H
 #define MESSAGEMANAGER_H
 
-#include <WProgram.h>
+#include "Arduino.h"
 #include <util/crc16.h>
 #include "Messages.h"
 #include "BLDCMonitor.h"

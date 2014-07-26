@@ -1,7 +1,7 @@
 #ifndef TRANSFER_H630903
 #define TRANSFER_H630903
 
-#include <WProgram.h>
+#include "Arduino.h"
 #include <util/crc16.h>
 
 class Transfer {

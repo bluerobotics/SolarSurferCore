@@ -1,7 +1,7 @@
 #ifndef WAYPOINTLIST_H
 #define WAYPOINTLIST_H
 
-#include <WProgram.h>
+#include "Arduino.h"
 #include "Location.h"
 
 struct Waypoint {

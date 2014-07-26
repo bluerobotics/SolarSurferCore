@@ -1,7 +1,7 @@
 #ifndef WAYPOINTWRITER_H
 #define WAYPOINTWRITER_H
 
-#include <WProgram.h>
+#include "Arduino.h"
 #include "WaypointList.h"
 
 #if (true)

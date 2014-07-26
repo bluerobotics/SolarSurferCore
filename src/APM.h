@@ -1,7 +1,7 @@
 #ifndef APM_H
 #define APM_H
 
-#include <WProgram.h>
+#include "Arduino.h"
 
 namespace APM {
 	void init();

@@ -5,7 +5,7 @@
  * https://sites.google.com/site/wayneholder/self-driving-car---part/evaluating-the-3dr-ublox-lea-6-gps
  *
  */
-#include <WProgram.h>
+#include "Arduino.h"
  
 #define MAX_LENGTH 512
 

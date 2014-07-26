@@ -49,7 +49,7 @@ scripts/install-mac.sh
 You'll also need to cross-compile the latest message format from the [SolarSurferMessage](https://github.com/bluerobotics/SolarSurferMessage) project. Do that with the update script:
 
 ```bash
-scripts/update.sh
+./scripts/update.sh
 ```
 
 Once everything is ready to go, building the project is as simple as:

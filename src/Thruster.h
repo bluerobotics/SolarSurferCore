@@ -1,7 +1,7 @@
 #ifndef THRUSTER_H
 #define THRUSTER_H
 
-#include <WProgram.h>
+#include "Arduino.h"
 
 namespace Thruster {
 	static const uint8_t left = 0;

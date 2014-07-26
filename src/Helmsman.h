@@ -1,7 +1,7 @@
 #ifndef HELMSMAN_H
 #define HELMSMAN_H
 
-#include <WProgram.h>
+#include "Arduino.h"
 
 namespace Helmsman {
 	void setHeading(float heading);

@@ -5,7 +5,7 @@
  * This code was based on the code provided on Atlas Scientific's website. 
  */
 
-#include <WProgram.h>
+#include "Arduino.h"
 #include <NewSoftSerial.h>
  
 #define PH_SERIAL_RX 2
