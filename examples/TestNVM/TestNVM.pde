@@ -2,8 +2,8 @@
 * to run on an Atmega328p for testing purposes. */
 
 #include <WProgram.h>
-#include "../../Persistant.h"
-#include "../../WaypointList.h"
+#include "../../src/Persistant.h"
+#include "../../src/WaypointList.h"
 
 Waypoint w[5];
 

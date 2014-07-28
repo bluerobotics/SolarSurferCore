@@ -4,7 +4,7 @@
 
 #include <WProgram.h>
 #include <NewSoftSerial.h>
-#include "../../Transfer.h"
+#include "../../src/Transfer.h"
 
 NewSoftSerial nss1(2,3); // Connected to nss2
 
