@@ -3,9 +3,9 @@
 
 #include <WProgram.h>
 #include <NewSoftSerial.h>
-#include "../../MessageManager.h"
-#include "../../Messages.h"
-#include "../../IridiumSBD.h"
+#include "../../src/MessageManager.h"
+#include "../../src/Messages.h"
+#include "../../src/IridiumSBD.h"
 
 NewSoftSerial nss(10, 11); //RX, TX
 IridiumSBD isbd(nss, 12);
