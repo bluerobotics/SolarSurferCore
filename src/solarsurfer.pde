@@ -1,4 +1,4 @@
-#include "Arduino.h"
+#include <WProgram.h>
 #include <NewSoftSerial.h>
 #include "MPU6000.h"
 #include "HMC5883.h"

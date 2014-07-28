@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "HMC5883.h"
 
 namespace HMC5883 {

@@ -1,6 +1,7 @@
 #ifndef HMC5883_H
 #define HMC5883_H
 
+#include <WProgram.h>
 #include <math.h>
 #include <Wire.h>
 
