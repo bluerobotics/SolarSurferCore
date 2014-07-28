@@ -35,6 +35,13 @@ Serial port assignments:
 * SoftwareSerial3 (pins X,X) BLDC Monitor
 * SoftwareSerial4 (pins X,X) Power Monitor
 
+## Dependencies
+
+This project requires several Arduino libraries that are not included in the standard Arduino distribution. These are:
+
+* TinyGPS++ for NMEA-0183 communication with the wind sensor
+* NewSoftSerial (if Arduino Version < 1.0)
+
 ## Setup
 
 This project use [ino](https://github.com/amperka/ino) to compile and upload code. To 
@@ -60,11 +67,27 @@ ino upload -p /dev/ttyACM1
 ino serial -p /dev/ttyACM1
 ```
 
+## Building with CMake
+
+The project can also be built using CMake.
+
+```bash
+git clone http://github.com/bluerobotics/SolarSurferCore.git
+cd SolarSurferCore
+mkdir build
+cmake -i ../src/
+cmake ../src/
+make
+make program
+```
+
+Any .cpp files that are added to the project must be listed in the CMakeLists.txt file in the src/ directory.
+
 ## Diagnostic Printing
 
 ```bash
-cd diagnostic
-python diagnostic -p /dev/ttyUSBXXXX -o filename.csv
+cd scripts
+python diagnostic.py -p /dev/ttyUSBXXXX -o filename.csv
 ```
 
 ## Change History

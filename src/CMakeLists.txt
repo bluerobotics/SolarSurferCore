@@ -29,7 +29,7 @@ cmake_minimum_required (VERSION 2.6)
 # as well as the project's name.                                              #
 ###############################################################################
 project (solarsurfer)
-set(arduino_libs EasyTransfer SoftEasyTransfer NewSoftSerial EEPROM SPI Wire Wire/utility TinyGPSPlus)
+set(arduino_libs NewSoftSerial EEPROM SPI Wire Wire/utility TinyGPSPlus)
 set(sources Airmar100WX.cpp
 			APM.cpp
 			Atlas_pH.cpp
