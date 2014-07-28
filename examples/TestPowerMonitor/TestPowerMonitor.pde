@@ -4,8 +4,8 @@
 
 #include <WProgram.h>
 #include <NewSoftSerial.h>
-#include "../../Transfer.h"
-#include "../../PowerMonitor.h"
+#include "../../src/Transfer.h"
+#include "../../src/PowerMonitor.h"
 
 NewSoftSerial nss1(8,9); // Connected to nss2
 

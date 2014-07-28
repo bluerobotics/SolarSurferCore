@@ -30,8 +30,8 @@ cmake_minimum_required (VERSION 2.6)
 ###############################################################################
 project (TestPowerMonitor)
 set(arduino_libs NewSoftSerial EEPROM SPI)
-set(sources ../../PowerMonitor.cpp
-						../../Transfer.cpp
+set(sources ../../src/PowerMonitor.cpp
+		../../src/Transfer.cpp
 	    )
 
 ###############################################################################
