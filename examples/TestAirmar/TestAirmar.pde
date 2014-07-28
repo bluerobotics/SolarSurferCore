@@ -4,7 +4,7 @@
 
 #include <WProgram.h>
 #include <NewSoftSerial.h>
-#include "../../Airmar100WX.h"
+#include "../../src/Airmar100WX.h"
 
 NewSoftSerial nss(6,5);
 
