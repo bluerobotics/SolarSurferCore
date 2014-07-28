@@ -1,7 +1,7 @@
 #ifndef PERSISTANT_H
 #define PERSISTANT_H
 
-#include "Arduino.h"
+#include <WProgram.h>
 #include "NVM.h"
 
 struct PersistantData {

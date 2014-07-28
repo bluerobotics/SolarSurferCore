@@ -1,7 +1,7 @@
 #ifndef LOCATION_H630903
 #define LOCATION_H630903
 
-#include "Arduino.h"
+#include <WProgram.h>
 
 struct Location {
 	float latitude;

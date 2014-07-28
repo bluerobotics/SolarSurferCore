@@ -1,7 +1,7 @@
 #ifndef REMOTECONTROL_H
 #define REMOTECONTROL_H
 
-#include "Arduino.h"
+#include <WProgram.h>
 
 namespace RemoteControl {
 	void init();

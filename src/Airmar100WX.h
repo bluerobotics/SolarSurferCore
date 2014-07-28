@@ -1,7 +1,7 @@
 #ifndef AIRMAR100WX_H
 #define AIRMAR100WX_H
 
-#include "Arduino.h"
+#include <WProgram.h>
 
 namespace Airmar100WX {
 	extern float apparentWindSpeed;

@@ -1,7 +1,7 @@
 #ifndef SATCOM_H
 #define SATCOM_H
 
-#include "Arduino.h"
+#include <WProgram.h>
 #include "IridiumSBD.h"
 /*
 namespace Satcom {

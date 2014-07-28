@@ -1,7 +1,7 @@
 #ifndef DCM_H
 #define DCM_H
 
-#include "Arduino.h"
+#include <WProgram.h>
 
 #define Kp_ROLLPITCH 0.015
 #define Ki_ROLLPITCH 0.000010

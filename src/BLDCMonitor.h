@@ -1,7 +1,7 @@
 #ifndef BLDCMONITOR_H
 #define BLDCMONITOR_H
 
-#include "Arduino.h"
+#include <WProgram.h>
 #include "Transfer.h"
 
 struct BLDCMonitorStruct {

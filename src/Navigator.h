@@ -1,7 +1,7 @@
 #ifndef NAVIGATOR_H
 #define NAVIGATOR_H
 
-#include "Arduino.h"
+#include <WProgram.h>
 #include "Location.h"
 
 namespace Navigator {

@@ -1,7 +1,7 @@
 #ifndef POWERMONITOR_H
 #define POWERMONITOR_H
 
-#include "Arduino.h"
+#include <WProgram.h>
 #include "Transfer.h"
 
 struct PowerMonitorStruct {

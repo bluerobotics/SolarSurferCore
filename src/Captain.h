@@ -1,7 +1,7 @@
 #ifndef CAPTAIN_H
 #define CAPTAIN_H
 
-#include "Arduino.h"
+#include <WProgram.h>
 #include "WaypointList.h"
 #include "BLDCMonitor.h"
 #include "PowerMonitor.h"

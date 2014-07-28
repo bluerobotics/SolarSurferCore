@@ -3,7 +3,7 @@
 
 /* This file was automatically generated. DO NOT EDIT! */
 
-#include "Arduino.h"
+#include <WProgram.h>
 
 namespace MessageType {
 
