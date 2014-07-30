@@ -18,6 +18,8 @@ namespace APM {
 
 	float getVoltage();
 
+	float getCorrectedVoltage();
+
 	float getCurrent();
 
 	float getPower();

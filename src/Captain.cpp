@@ -75,8 +75,9 @@ namespace Captain {
 	  desiredCourse = DCM::yaw; //Navigator::getHeadingToLocation(&current.location,&waypoint.location);
 
 	  if (waypoint.location.latitude != 0.0f && waypoint.location.latitude != 0.0f) {
-	  	static const float desiredVoltage = 12.75;
-	  	desiredPower = -desiredPowerController(desiredVoltage-APM::getVoltage(),dt);
+	  	static const float desiredVoltage = 13.2;
+	  	
+	  	desiredPower = -desiredPowerController(desiredVoltage-APM::getCorrectedVoltage(),dt);
 	  } else {
 	  	desiredPowerErrorIntegral = 0;
 	  	desiredPower = 0;

@@ -105,7 +105,7 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.isOther						=					RemoteControl::isOther();	
 		Msg::tlmdiagnostic.rcSteering					=					RemoteControl::getSteering();
 		Msg::tlmdiagnostic.rcPower						=					RemoteControl::getPower();
-		Msg::tlmdiagnostic.voltageAPM         =         APM::getVoltage();
+		Msg::tlmdiagnostic.voltageAPM         =         APM::getCorrectedVoltage();
 		Msg::tlmdiagnostic.voltageSolar       =         power->data.voltage[PowerMonitor::SolarToCC];
 		Msg::tlmdiagnostic.voltageBattery     =         power->data.voltage[PowerMonitor::CCtoBattery];
 		Msg::tlmdiagnostic.voltageThrusters   =         bldc->data.voltage;

@@ -61,6 +61,7 @@ sc = SerialConnection()
 
 parser = OptionParser()
 parser.add_option("-o","--output",dest="filename",help="Output file name.",metavar="FILE")
+parser.add_option("-f","--format",dest="formatFile",help="Format JSON file.")
 parser.add_option("-p","--port",dest="portname")
 (options,args) = parser.parse_args()
 
@@ -76,7 +77,7 @@ formatString = "=" # The equal sign in the format string eliminate C-struct padd
 if __name__ == '__main__':
 	signal.signal(signal.SIGINT, sigint_handler)
 
-	with open('formats.json') as format_file:
+	with open(options.formatFile) as format_file:
 		formats = json.load(format_file)
 		diag = formats["formats"]["5"]["payload"]
 

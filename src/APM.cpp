@@ -159,6 +159,13 @@ namespace APM {
 		return voltage;
 	}
 
+	float getCorrectedVoltage() {
+		static const float R_supply = 0.088; // ohms
+
+	  // Correct the voltage measurement for voltage drop due to current draw
+	  return getVoltage() + getCurrent()*R_supply;
+	}
+
 	float getCurrent() {
 		static const uint8_t currentPin = A12;
 		static const float ampsPerVolt = 18.0018;
