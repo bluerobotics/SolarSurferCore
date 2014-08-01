@@ -4,19 +4,18 @@
 #include <WProgram.h>
 #include "WaypointList.h"
 
-#if (true)
 namespace {
+	static const uint8_t radius[] = {3,
+																	3,
+																	3,
+																	3,
+																	3};
 	static const Location loc[] = {{33.962710,-118.454540},
 																 {33.962396,-118.454933},
 															 	 {33.962456,-118.454429},
 														 		 {33.962827,-118.453992},
 													 			 {33.962710,-118.454540}};
 }
-#else
-namespace {
-	static const Location loc[0] = {};
-}
-#endif
 
 namespace WaypointWriter {
 	
@@ -28,10 +27,10 @@ namespace WaypointWriter {
 		for (uint16_t i = 0 ; i < WaypointList::maxWaypoints ; i++) {
 			Serial.print("Writing waypoint ");Serial.println(i,DEC);
 			if (i < numWaypoints) {
-				WaypointList::write(i,loc[i]);
+				WaypointList::write(i,radius[i],loc[i]);
 			} else {
 				Location blank = {0.0f,0.0f};
-				WaypointList::write(i,blank);
+				WaypointList::write(i,0,blank);
 			}
 			
 		}
@@ -41,6 +40,7 @@ namespace WaypointWriter {
 			Waypoint wp;
 			WaypointList::read(&wp,i);
 			Serial.print(wp.index,DEC);Serial.print(" ");
+			Serial.print(wp.radius,DEC);Serial.print(" ");
 			Serial.print(wp.location.latitude,6);Serial.print(" ");
 			Serial.print(wp.location.longitude,6);Serial.println("");
 			delay(20);
