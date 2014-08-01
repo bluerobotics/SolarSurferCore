@@ -6,10 +6,17 @@
 #include "../../src/MessageManager.h"
 #include "../../src/Messages.h"
 #include "../../src/IridiumSBD.h"
+#include "../../src/BLDCMonitor.h"
+#include "../../src/PowerMonitor.h"
 
+NewSoftSerial nssBLDC(100,101);
+NewSoftSerial nssPM(102,103);
 NewSoftSerial nss(10, 11); //RX, TX
 IridiumSBD isbd(nss, 12);
 static const int ledPin = 13;
+
+BLDCMonitor bldc(&nssBLDC);
+PowerMonitor pm(&nssPM);
 
 bool ISBDCallback()
 {
@@ -18,7 +25,7 @@ bool ISBDCallback()
 }
 
 void setup() {
-	MessageManager::init();
+	MessageManager::init(&bldc,&pm);
 
 	int signalQuality = -1;
 
@@ -26,13 +33,23 @@ void setup() {
 
   Serial.begin(115200);
   nss.begin(19200);
+
+  Serial.println("Press 's' to start message sending process.");
+
+  while (true) {
+    uint8_t input = Serial.read();
+    if (input == 's') {
+      break;
+    }
+  }
   
   Serial.println("Setting up isbd");
 
   isbd.attachConsole(Serial);
   isbd.attachDiags(Serial);
   isbd.setPowerProfile(1); // 1 == low power
-  //isbd.begin();
+  //isbd.setMinimumSignalQuality(1); // 2+ is recommended for sending
+  isbd.begin();
   
   Serial.println("Setup done");
 
@@ -64,9 +81,10 @@ void loop() {
 			Serial.println("");
 		}
 	}
+  Serial.println("");
 	
 	int16_t err;
-	//err = isbd.sendReceiveSBDBinary(SatcomMessage::getTXBuffer(),SatcomMessage::getTXBufferLength(),SatcomMessage::getRXBuffer(),SatcomMessage::getRXBufferLength());
+	//err = isbd.sendReceiveSBDBinary(MessageManager::getTXBuffer(),MessageManager::getTXBufferLength(),MessageManager::getRXBuffer(),MessageManager::getRXBufferLength());
   if (err != 0)
   {
     Serial.print("sendSBDText failed: error ");

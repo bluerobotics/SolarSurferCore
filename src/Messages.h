@@ -30,22 +30,31 @@ struct tlmstatus {
 	float longitude; // 
 	uint8_t fix; // 
 	uint32_t time; // 
-	int16_t altitude; // 
-	int16_t course; // centidegrees, degrees, 0,100
-	int16_t heading; // centidegrees, degrees, 0,100
+	int8_t altitude; // 
+	int8_t course; // 180/128 degrees, degrees, 1.40625,0
+	int8_t heading; // 180/128 degrees, degrees, 1.40625,0
+	uint16_t v_load; // 
+	uint16_t v_solar; // 
 	int8_t p_solar; // 
-	int8_t p_batt; // 
+	int8_t p_load; // 
 	uint8_t p_left; // 
 	uint8_t p_right; // 
 	uint16_t rotations; // 
 	uint8_t rpm_left; // 
 	uint8_t rpm_right; // 
-	uint16_t swellHeight; // 
-	uint16_t commandCount; // 
+	uint8_t rollPitchRange; // 
+	uint8_t swellPeriod; // 
+	uint8_t swellHeight; // 
 	uint8_t tempAir; // 
 	uint8_t tempWater; // 
-	uint16_t pressure; // 
-	uint16_t pH; // 
+	int8_t pressure; // 
+	int8_t pH; // 
+	int8_t salinity; // 
+	uint16_t windSpeed; // 
+	int8_t windDirection; // 
+	uint16_t status; // 
+	uint8_t currentWaypointIndex; // 
+	uint16_t commandCount; // 
 	uint16_t telemetryCount; // 
 	uint16_t checksum; // 
 };
@@ -54,18 +63,23 @@ struct cmdcontrol {
 	uint8_t format; // 
 	uint8_t telemetryPeriod; // 0: 1; 1: 5; 2: 10; 3: 20; 4: 30; 5: 45; 6: 60; 7: 90; 8: 120; 9: 180; 10: 360; 11: 720; 12: 1440; 13: 2880; 
 	uint8_t forceMode; // 
-	int16_t forceHeading; // 
-	uint16_t forceCurrentWaypointIndex; // 
-	uint16_t waypointID1; // 
+	int8_t forceHeading; // 
+	uint16_t forceGoalVoltage; // 
+	uint8_t forceCurrentWaypointIndex; // 
+	uint8_t waypointID1; // 
+	uint8_t waypointRadius1; // 
 	float waypointLat1; // 
 	float waypointLon1; // 
-	uint16_t waypointID2; // 
+	uint8_t waypointID2; // 
+	uint8_t waypointRadius2; // 
 	float waypointLat2; // 
 	float waypointLon2; // 
-	uint16_t waypointID3; // 
+	uint8_t waypointID3; // 
+	uint8_t waypointRadius3; // 
 	float waypointLat3; // 
 	float waypointLon3; // 
-	uint16_t waypointID4; // 
+	uint8_t waypointID4; // 
+	uint8_t waypointRadius4; // 
 	float waypointLat4; // 
 	float waypointLon4; // 
 	uint16_t checksum; // 
@@ -87,7 +101,8 @@ struct tlmdiagnostic {
 	float gpsAltitude; // 
 	float gpsGroundSpeed; // 
 	float gpsCourse; // 
-	uint16_t wpIndex; // 
+	uint8_t wpIndex; // 
+	uint8_t waypointRadius; // 
 	float wpLatitude; // 
 	float wpLongitude; // 
 	float roll; // 

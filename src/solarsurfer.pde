@@ -219,9 +219,6 @@ void loop() {
   	telemTimer = millis();
 
 		MessageManager::updateFields();
-		/*MessageManager::serialize(&Msg::tlmdiagnostic);
-		uint16_t length = MessageManager::getTXBufferLength();
-		const uint8_t *data = MessageManager::getTXBuffer();*/
 
 		telemTransfer.send(&Msg::tlmdiagnostic);
   }	

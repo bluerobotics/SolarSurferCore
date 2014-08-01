@@ -19,8 +19,8 @@ namespace Msg {
 }
 
 namespace MessageManager {
-	uint8_t txBuffer[128];
-	uint8_t rxBuffer[128];
+	uint8_t txBuffer[64];
+	uint8_t rxBuffer[64];
 	size_t txLength;
 	size_t rxLength;
 	
@@ -58,29 +58,38 @@ namespace MessageManager {
 
 #else		
 
-		Msg::tlmstatus.version					=					1;
-		Msg::tlmstatus.format						=					3;
-		Msg::tlmstatus.latitude					=					GPS_UBX::latitude;
-		Msg::tlmstatus.longitude 				=					GPS_UBX::longitude;
-		Msg::tlmstatus.fix							=					GPS_UBX::fix;
-		Msg::tlmstatus.time							=					GPS_UBX::time;
-		Msg::tlmstatus.altitude					=					GPS_UBX::altitude;
-		Msg::tlmstatus.course						=					GPS_UBX::course;
-		Msg::tlmstatus.heading					=					degrees(DCM::yaw)*10;
-		Msg::tlmstatus.p_solar					=					120;
-		Msg::tlmstatus.p_batt						=					15;
-		Msg::tlmstatus.p_left						=					49;
-		Msg::tlmstatus.p_right					=					51;
-		Msg::tlmstatus.rotations				=					123;
-		Msg::tlmstatus.rpm_left					=					100;
-		Msg::tlmstatus.rpm_right				=					101;
-		Msg::tlmstatus.swellHeight			=					53;
-		Msg::tlmstatus.commandCount			=					1;
-		Msg::tlmstatus.tempAir					=					25;
-		Msg::tlmstatus.tempWater				=					22;
-		Msg::tlmstatus.pressure					=					10130;
-		Msg::tlmstatus.pH								=					820;
-		Msg::tlmstatus.telemetryCount		=					4;
+		Msg::tlmstatus.version									=					1;
+		Msg::tlmstatus.format										=					3;
+		Msg::tlmstatus.latitude									=					GPS_UBX::latitude;
+		Msg::tlmstatus.longitude 								=					GPS_UBX::longitude;
+		Msg::tlmstatus.fix											=					GPS_UBX::fix;
+		Msg::tlmstatus.time											=					GPS_UBX::time;
+		Msg::tlmstatus.altitude									=					GPS_UBX::altitude/2;
+		Msg::tlmstatus.course										=					GPS_UBX::course*128/180;
+		Msg::tlmstatus.heading									=					degrees(DCM::yaw)*128/180;
+		Msg::tlmstatus.v_load										=         APM::getCorrectedVoltage()*1000;
+		Msg::tlmstatus.v_solar        				  =         0.0*1000;
+		Msg::tlmstatus.p_solar									=					120;
+		Msg::tlmstatus.p_load 									=					APM::getPower();
+		Msg::tlmstatus.p_left										=					49;
+		Msg::tlmstatus.p_right									=					51;
+		Msg::tlmstatus.rotations								=					123;
+		Msg::tlmstatus.rpm_left									=					100;
+		Msg::tlmstatus.rpm_right								=					101;
+		Msg::tlmstatus.rollPitchRange						=					4;
+		Msg::tlmstatus.swellPeriod							=					10;
+		Msg::tlmstatus.swellHeight							=					53;
+		Msg::tlmstatus.tempAir									=					25;
+		Msg::tlmstatus.tempWater			        	=					22;
+		Msg::tlmstatus.pressure				        	=					30;
+		Msg::tlmstatus.pH								        =					-2;
+		Msg::tlmstatus.salinity									=					100;
+		Msg::tlmstatus.windSpeed								=					2;
+		Msg::tlmstatus.windDirection						=					100;
+		Msg::tlmstatus.status										=					0x0000;
+		Msg::tlmstatus.currentWaypointIndex			=					Captain::waypoint.index;
+		Msg::tlmstatus.commandCount							=					1;
+		Msg::tlmstatus.telemetryCount		        =					4;
 
 		Msg::tlmdiagnostic.version						=					1;
 		Msg::tlmdiagnostic.format							=					5;
