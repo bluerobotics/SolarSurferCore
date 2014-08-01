@@ -32,29 +32,38 @@ namespace MessageManager {
 	void updateFields() {
 #ifdef MM_TEST_ONLY
 
-		Msg::tlmstatus.version					=					1;
-		Msg::tlmstatus.format						=					0;
-		Msg::tlmstatus.latitude					=					33.4;
-		Msg::tlmstatus.longitude 				=					-118.8;
-		Msg::tlmstatus.fix							=					1;
-		Msg::tlmstatus.time							=					12345678;
-		Msg::tlmstatus.altitude					=					0;
-		Msg::tlmstatus.course						=					900;
-		Msg::tlmstatus.heading					=					1800;
-		Msg::tlmstatus.p_solar					=					120;
-		Msg::tlmstatus.p_batt						=					15;
-		Msg::tlmstatus.p_left						=					49;
-		Msg::tlmstatus.p_right					=					51;
-		Msg::tlmstatus.rotations				=					123;
-		Msg::tlmstatus.rpm_left					=					100;
-		Msg::tlmstatus.rpm_right				=					101;
-		Msg::tlmstatus.swellHeight			=					53;
-		Msg::tlmstatus.commandCount			=					1;
-		Msg::tlmstatus.tempAir					=					25;
-		Msg::tlmstatus.tempWater				=					22;
-		Msg::tlmstatus.pressure					=					10130;
-		Msg::tlmstatus.pH								=					820;
-		Msg::tlmstatus.telemetryCount		=					4;
+		Msg::tlmstatus.version									=					1;
+		Msg::tlmstatus.format										=					3;
+		Msg::tlmstatus.latitude									=					-118.3;
+		Msg::tlmstatus.longitude 								=					33.4;
+		Msg::tlmstatus.fix											=					1;
+		Msg::tlmstatus.time											=					1000;
+		Msg::tlmstatus.altitude									=					2;
+		Msg::tlmstatus.course										=					100;
+		Msg::tlmstatus.heading									=					90;
+		Msg::tlmstatus.v_load										=         1321;
+		Msg::tlmstatus.v_solar        				  =         1356;
+		Msg::tlmstatus.p_solar									=					0;
+		Msg::tlmstatus.p_load 									=					0;
+		Msg::tlmstatus.p_left										=					0;
+		Msg::tlmstatus.p_right									=					0;
+		Msg::tlmstatus.rotations								=					0;
+		Msg::tlmstatus.rpm_left									=					0;
+		Msg::tlmstatus.rpm_right								=					0;
+		Msg::tlmstatus.rollPitchRange						=					0;
+		Msg::tlmstatus.swellPeriod							=					0;
+		Msg::tlmstatus.swellHeight							=					0;
+		Msg::tlmstatus.tempAir									=					0;
+		Msg::tlmstatus.tempWater			        	=					0;
+		Msg::tlmstatus.pressure				        	=					0;
+		Msg::tlmstatus.pH								        =					0;
+		Msg::tlmstatus.salinity									=					0;
+		Msg::tlmstatus.windSpeed								=					0;
+		Msg::tlmstatus.windDirection						=					0;
+		Msg::tlmstatus.status										=					0x0000;
+		Msg::tlmstatus.currentWaypointIndex			=					1;
+		Msg::tlmstatus.commandCount							=					0;
+		Msg::tlmstatus.telemetryCount		        =					1;
 
 #else		
 
