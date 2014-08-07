@@ -209,24 +209,42 @@ void controlLoop() {
   }
 }
 
+void diagnosticCommunication() {
+  static uint32_t diagnosticPeriod      =     250;
+  static uint32_t diagnosticTimer;
+
+  // This send normal telemetry data through Serial0, i.e. usb or 3dr radio
+  if (millis()-diagnosticTimer>diagnosticPeriod) {
+    diagnosticTimer = millis();
+
+    MessageManager::updateFields();
+
+    telemTransfer.send(&Msg::cmdcontrol);
+    
+    if ( telemTransfer.receive(&Msg::cmdcontrol) ) {
+      MessageManager::processCommand();
+    }
+  } 
+}
+
 bool ISBDCallback()
 {
   controlLoop();
+  diagnosticCommunication();
   return true;
 }
 
 void loop() {
 	const static uint32_t printPeriod			=			500;
-	static uint32_t diagnosticPeriod      =     250;
   uint32_t satcomPeriod                 =     Persistant::data.telemetryPeriod;
 
 	static uint32_t printTimer;
 	static uint32_t satcomTimer;
-	static uint32_t diagnosticTimer;
 
   // Run the control loop like normal. It will also be called from the IridiumSBD
   // callback function while it is running.
   controlLoop();
+  diagnosticCommunication();
 
   // This sends the Satcom message. It won't send a message until 5 minutes
   // after powering up so that if it is browning-out for some reason it won't
@@ -261,7 +279,7 @@ void loop() {
       }
     }
 
-    if ( MessageManager::deserialize(&Msg::cmdcontrol) ) {
+    if ( rxBufferSize > 0 && MessageManager::deserialize(&Msg::cmdcontrol) ) {
       // If a message is received, update command count
       Persistant::data.commandCount++;
       Persistant::write();
@@ -270,65 +288,59 @@ void loop() {
       MessageManager::processCommand();
     }
   }
-
-  // This send normal telemetry data through Serial0, i.e. usb or 3dr radio
-  if (millis()-diagnosticTimer>diagnosticPeriod) {
-  	diagnosticTimer = millis();
-
-		MessageManager::updateFields();
-
-		telemTransfer.send(&Msg::tlmdiagnostic);
-  }	
   
-  /*if (false && millis()-printTimer > printPeriod) {
+  if (false && millis()-printTimer > printPeriod) {
   	printTimer = millis();
 		Serial.write(27);       // ESC command
 		Serial.print("[2J");    // clear screen command
 		Serial.write(27);
 		Serial.print("[H");     // cursor to home command
-		Serial.println("SolarSurfer Live Data");
-		Serial.println("=====================");
-		Serial.print("Time: ");Serial.print(GPS_UBX::time,DEC);Serial.println(" ms");
-		Serial.print("Lat: ");Serial.print(GPS_UBX::latitude,6);Serial.println(" deg");
-		Serial.print("Lon: ");Serial.print(GPS_UBX::longitude,6);Serial.println(" deg");		
-		Serial.print("Alt: ");Serial.print(GPS_UBX::altitude,2);Serial.println(" m");
-		Serial.print("Speed: ");Serial.print(GPS_UBX::groundSpeed,2);Serial.println(" m/s");
-		Serial.print("Current Course: ");Serial.print(degrees(GPS_UBX::course));Serial.println(" deg");
-		Serial.println("");
-		Serial.print("WP Index: ");Serial.println(Captain::waypoint.index,DEC);
-		Serial.print("WP Lat: ");Serial.print(Captain::waypoint.location.latitude,6);Serial.println(" deg");
-		Serial.print("WP Lon: ");Serial.print(Captain::waypoint.location.longitude,6);Serial.println(" deg");		
-		Serial.println("");
-		Serial.print("Roll: ");Serial.print(degrees(DCM::roll));Serial.println(" deg ");
-		Serial.print("Pitch: ");Serial.print(degrees(DCM::pitch));Serial.println(" deg");				
-		Serial.println("");
-  	Serial.print("Desired Course:  ");Serial.print(degrees(Captain::desiredCourse));Serial.println(" deg");
-  	Serial.print("Current Heading: ");Serial.print(degrees(DCM::yaw));Serial.println(" deg");
-  	Serial.print("Distance to WP:  ");Serial.print(Captain::distanceToWaypoint,1);Serial.println(" m");
-  	Serial.println("");
-  	Serial.print("Left Thruster:  ");Serial.print(Thruster::get(Thruster::left));Serial.println(" us");
-  	Serial.print("Right Thruster: ");Serial.print(Thruster::get(Thruster::right));Serial.println(" us");
-  	Serial.println("");
-  	if ( RemoteControl::isManual() ) {
-  		Serial.println("Manual Control Enabled");
-  	} else {
-  		Serial.println("AUTONOMOUS CONTROL ENABLED");
-  	}
-  	if ( RemoteControl::isOther() ) {
-  		Serial.println("'Other' Switch Disabled");
-  	} else {
-  		Serial.println("'Other' Switch Enabled");
-  	}
-  	Serial.print("RC Steering:  ");Serial.print(RemoteControl::getSteering());Serial.println("");
-  	Serial.print("RC Power:     ");Serial.print(RemoteControl::getPower());Serial.println("");
-  	Serial.println("");
-  	Serial.print("Packet Length: ");Serial.println(MessageManager::getTXBufferLength());
-		Serial.println("Packet Data:");	
-		for ( uint8_t i = 0 ; i < MessageManager::getTXBufferLength() ; i++ ) {
-			Serial.print((MessageManager::getTXBuffer())[i],HEX);Serial.print("\t");
-			if ( (i+1) % 8 == 0 ) {
-				Serial.println("");
-			}
-		}
-  }*/
+		
+    if ( false ) {
+      Serial.println("SolarSurfer Live Data");
+  		Serial.println("=====================");
+  		Serial.print("Time: ");Serial.print(GPS_UBX::time,DEC);Serial.println(" ms");
+  		Serial.print("Lat: ");Serial.print(GPS_UBX::latitude,6);Serial.println(" deg");
+  		Serial.print("Lon: ");Serial.print(GPS_UBX::longitude,6);Serial.println(" deg");		
+  		Serial.print("Alt: ");Serial.print(GPS_UBX::altitude,2);Serial.println(" m");
+  		Serial.print("Speed: ");Serial.print(GPS_UBX::groundSpeed,2);Serial.println(" m/s");
+  		Serial.print("Current Course: ");Serial.print(degrees(GPS_UBX::course));Serial.println(" deg");
+  		Serial.println("");
+  		Serial.print("WP Index: ");Serial.println(Captain::waypoint.index,DEC);
+  		Serial.print("WP Lat: ");Serial.print(Captain::waypoint.location.latitude,6);Serial.println(" deg");
+  		Serial.print("WP Lon: ");Serial.print(Captain::waypoint.location.longitude,6);Serial.println(" deg");		
+  		Serial.println("");
+  		Serial.print("Roll: ");Serial.print(degrees(DCM::roll));Serial.println(" deg ");
+  		Serial.print("Pitch: ");Serial.print(degrees(DCM::pitch));Serial.println(" deg");				
+  		Serial.println("");
+    	Serial.print("Desired Course:  ");Serial.print(degrees(Captain::desiredCourse));Serial.println(" deg");
+    	Serial.print("Current Heading: ");Serial.print(degrees(DCM::yaw));Serial.println(" deg");
+    	Serial.print("Distance to WP:  ");Serial.print(Captain::distanceToWaypoint,1);Serial.println(" m");
+    	Serial.println("");
+    	Serial.print("Left Thruster:  ");Serial.print(Thruster::get(Thruster::left));Serial.println(" us");
+    	Serial.print("Right Thruster: ");Serial.print(Thruster::get(Thruster::right));Serial.println(" us");
+    	Serial.println("");
+    	if ( RemoteControl::isManual() ) {
+    		Serial.println("Manual Control Enabled");
+    	} else {
+    		Serial.println("AUTONOMOUS CONTROL ENABLED");
+    	}
+    	if ( RemoteControl::isOther() ) {
+    		Serial.println("'Other' Switch Disabled");
+    	} else {
+    		Serial.println("'Other' Switch Enabled");
+    	}
+    	Serial.print("RC Steering:  ");Serial.print(RemoteControl::getSteering());Serial.println("");
+    	Serial.print("RC Power:     ");Serial.print(RemoteControl::getPower());Serial.println("");
+    	Serial.println("");
+    	Serial.print("Packet Length: ");Serial.println(MessageManager::getTXBufferLength());
+  		Serial.println("Packet Data:");	
+  		for ( uint8_t i = 0 ; i < MessageManager::getTXBufferLength() ; i++ ) {
+  			Serial.print((MessageManager::getTXBuffer())[i],HEX);Serial.print("\t");
+  			if ( (i+1) % 8 == 0 ) {
+  				Serial.println("");
+  			}
+  		}
+    }
+  }
 }

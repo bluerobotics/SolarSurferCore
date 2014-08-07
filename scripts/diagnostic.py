@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
 	with open(options.formatFile) as format_file:
 		formats = json.load(format_file)
-		diag = formats["formats"]["5"]["payload"]
+		diag = formats["formats"]["3"]["payload"]
 
 	for item in diag:
 		if item == 'version':

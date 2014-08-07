@@ -7,8 +7,8 @@
 #include "BLDCMonitor.h"
 #include "PowerMonitor.h"
 
-#define MM_TX_BUFFER_SIZE 64
-#define MM_RX_BUFFER_SIZE 64
+#define MM_TX_BUFFER_SIZE 340
+#define MM_RX_BUFFER_SIZE 270
 
 namespace Msg {
 	extern MessageType::tlmstatus tlmstatus;
