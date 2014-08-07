@@ -59,15 +59,6 @@ void setup() {
   Captain::init(&bldcMonitor,&powerMonitor);
   MessageManager::init(&bldcMonitor,&powerMonitor);
 
-  if (ISBD_CONNECTED) {
-    isbd.attachConsole(Serial);
-    //isbd.attachDiags(Serial);
-    isbd.setPowerProfile(1); // 1 == low power
-    isbd.setMinimumSignalQuality(2);
-    isbd.useMSSTMWorkaround(false);
-    isbd.begin();
-  }
-
   telemTransfer.setStream(&Serial);
   
   if (false) {
@@ -245,6 +236,22 @@ void loop() {
   // callback function while it is running.
   controlLoop();
   diagnosticCommunication();
+
+  // Initialize Satcom. This is done here vs. the setup function to ensure that the vehicle
+  // can operate properly when the callback function is used. We don't want the callback called
+  // before the end of the setup function.
+  static bool initialized = false;
+  if ( !initialized ) {
+    initialized = true;
+    if (ISBD_CONNECTED) {
+      isbd.attachConsole(Serial);
+      //isbd.attachDiags(Serial);
+      isbd.setPowerProfile(1); // 1 == low power
+      isbd.setMinimumSignalQuality(2);
+      isbd.useMSSTMWorkaround(false);
+      isbd.begin();
+    }
+  }
 
   // This sends the Satcom message. It won't send a message until 5 minutes
   // after powering up so that if it is browning-out for some reason it won't
