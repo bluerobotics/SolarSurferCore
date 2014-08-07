@@ -7,6 +7,7 @@
 #include "RemoteControl.h"
 #include "Thruster.h"
 #include "APM.h"
+#include "Persistant.h"
 
 namespace {
 	BLDCMonitor *bldc;
@@ -16,6 +17,7 @@ namespace {
 namespace Msg {
 	MessageType::tlmstatus tlmstatus;
 	MessageType::tlmdiagnostic tlmdiagnostic;
+	MessageType::cmdcontrol cmdcontrol;
 }
 
 namespace MessageManager {
@@ -33,37 +35,40 @@ namespace MessageManager {
 #ifdef MM_TEST_ONLY
 
 		Msg::tlmstatus.version									=					1;
-		Msg::tlmstatus.format										=					3;
-		Msg::tlmstatus.latitude									=					-118.3;
-		Msg::tlmstatus.longitude 								=					33.4;
-		Msg::tlmstatus.fix											=					1;
-		Msg::tlmstatus.time											=					1000;
+		Msg::tlmstatus.format										=					2;
+		Msg::tlmstatus.latitude									=					-118.3123456;
+		Msg::tlmstatus.longitude 								=					33.4123456;
+		Msg::tlmstatus.fix											=					3;
+		Msg::tlmstatus.time											=					60;
 		Msg::tlmstatus.altitude									=					2;
-		Msg::tlmstatus.course										=					100;
-		Msg::tlmstatus.heading									=					90;
-		Msg::tlmstatus.v_load										=         1321;
-		Msg::tlmstatus.v_solar        				  =         1356;
-		Msg::tlmstatus.p_solar									=					0;
-		Msg::tlmstatus.p_load 									=					0;
-		Msg::tlmstatus.p_left										=					0;
-		Msg::tlmstatus.p_right									=					0;
-		Msg::tlmstatus.rotations								=					0;
-		Msg::tlmstatus.rpm_left									=					0;
-		Msg::tlmstatus.rpm_right								=					0;
-		Msg::tlmstatus.rollPitchRange						=					0;
-		Msg::tlmstatus.swellPeriod							=					0;
-		Msg::tlmstatus.swellHeight							=					0;
-		Msg::tlmstatus.tempAir									=					0;
-		Msg::tlmstatus.tempWater			        	=					0;
-		Msg::tlmstatus.pressure				        	=					0;
-		Msg::tlmstatus.pH								        =					0;
-		Msg::tlmstatus.salinity									=					0;
-		Msg::tlmstatus.windSpeed								=					0;
-		Msg::tlmstatus.windDirection						=					0;
-		Msg::tlmstatus.status										=					0x0000;
+		Msg::tlmstatus.course										=					90*128/180;
+		Msg::tlmstatus.heading									=					95*128/180;
+		Msg::tlmstatus.v_load										=         13.201*1000;
+		Msg::tlmstatus.v_solar        				  =         13.563*1000;
+		Msg::tlmstatus.p_solar									=					110;
+		Msg::tlmstatus.p_load 									=					90;
+		Msg::tlmstatus.p_left										=					43;
+		Msg::tlmstatus.p_right									=					44;
+		Msg::tlmstatus.rotations								=					20;
+		Msg::tlmstatus.rpm_left									=					4000/25;
+		Msg::tlmstatus.rpm_right								=					4200/25;
+		Msg::tlmstatus.rollPitchRange						=					(3*5);
+		Msg::tlmstatus.swellPeriod							=					14;
+		Msg::tlmstatus.swellHeight							=					(2.25*4);
+		Msg::tlmstatus.tempAir									=					(20+20)*4;
+		Msg::tlmstatus.tempWater			        	=					(25*6);
+		Msg::tlmstatus.pressure				        	=					(103300-101300)/100;
+		Msg::tlmstatus.pH								        =					(8.2-7.0)*50;
+		Msg::tlmstatus.salinity									=					(35-27.5)*10;
+		Msg::tlmstatus.windSpeed								=					200;
+		Msg::tlmstatus.windDirection						=					60*128/180;
+		Msg::tlmstatus.status1									=					0x01;
+		Msg::tlmstatus.status2									=					0x00;
 		Msg::tlmstatus.currentWaypointIndex			=					1;
+		Msg::tlmstatus.currentWaypointChecksum	=					2;
 		Msg::tlmstatus.commandCount							=					0;
 		Msg::tlmstatus.telemetryCount		        =					1;
+		Msg::tlmstatus.extra1										=					1;
 
 #else		
 
@@ -72,7 +77,7 @@ namespace MessageManager {
 		Msg::tlmstatus.latitude									=					GPS_UBX::latitude;
 		Msg::tlmstatus.longitude 								=					GPS_UBX::longitude;
 		Msg::tlmstatus.fix											=					GPS_UBX::fix;
-		Msg::tlmstatus.time											=					GPS_UBX::time;
+		Msg::tlmstatus.time											=					GPS_UBX::time/1000/60;
 		Msg::tlmstatus.altitude									=					GPS_UBX::altitude/2;
 		Msg::tlmstatus.course										=					GPS_UBX::course*128/180;
 		Msg::tlmstatus.heading									=					degrees(DCM::yaw)*128/180;
@@ -95,10 +100,13 @@ namespace MessageManager {
 		Msg::tlmstatus.salinity									=					0;
 		Msg::tlmstatus.windSpeed								=					0;
 		Msg::tlmstatus.windDirection						=					0;
-		Msg::tlmstatus.status										=					0x0000;
+		Msg::tlmstatus.status1									=					0x00;
+		Msg::tlmstatus.status2									=					0x00;
 		Msg::tlmstatus.currentWaypointIndex			=					Captain::waypoint.index;
+		Msg::tlmstatus.currentWaypointChecksum	=					2;
 		Msg::tlmstatus.commandCount							=					0;
 		Msg::tlmstatus.telemetryCount		        =					1;
+		Msg::tlmstatus.extra1										=					1;
 
 		Msg::tlmdiagnostic.version						=					1;
 		Msg::tlmdiagnostic.format							=					5;
@@ -134,6 +142,85 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.powerLoad          =         power->getPower(PowerMonitor::BatteryToLoad);
 #endif
 	}
+
+	void processCommand() {
+		// Telemetry period
+		switch ( Msg::cmdcontrol.telemetryPeriod ) {
+			case 0:
+				break;
+			case 1:
+			  Persistant::data.telemetryPeriod = 5*60000;
+			  break;
+			case 2:
+			  Persistant::data.telemetryPeriod = 10*60000;
+			  break;
+			case 3:
+			  Persistant::data.telemetryPeriod = 20*60000;
+			  break;
+			case 4:
+			  Persistant::data.telemetryPeriod = 30*60000;
+			  break;
+			case 5:
+			  Persistant::data.telemetryPeriod = 45*60000;
+			  break;
+			case 6:
+			  Persistant::data.telemetryPeriod = 60*60000;
+			  break;
+			case 7:
+			  Persistant::data.telemetryPeriod = 90*60000;
+			  break;
+			case 8:
+			  Persistant::data.telemetryPeriod = 120*60000;
+			  break;
+			case 9:
+			  Persistant::data.telemetryPeriod = 180*60000;
+			  break;
+			case 10:
+			  Persistant::data.telemetryPeriod = 360*60000;
+			  break;
+			default:
+				Persistant::data.telemetryPeriod = 30*60000;
+		}
+
+		// Force mode
+		Persistant::data.forceMode = Msg::cmdcontrol.forceMode;
+
+		// Force heading and voltage
+		Persistant::data.forceHeading = Msg::cmdcontrol.forceHeading*180.0f/128.0f;
+
+		if ( Msg::cmdcontrol.goalVoltage > 1000 ) {
+			Persistant::data.goalVoltage = Msg::cmdcontrol.goalVoltage*0.001;
+		}
+
+		// Force current waypoint index
+		if ( Msg::cmdcontrol.forceCurrentWaypointIndex > 0 ) {
+			Persistant::data.currentWaypointIndex = Msg::cmdcontrol.forceCurrentWaypointIndex;
+			Captain::refreshWaypoint();
+		}
+
+		// Update waypoints if necessary
+		Location tempLoc;
+		if ( Msg::cmdcontrol.waypointID1 > 0 && Msg::cmdcontrol.waypointRadius1 > 0 ) {
+			tempLoc.latitude      = Msg::cmdcontrol.waypointLat1;
+			tempLoc.longitude     = Msg::cmdcontrol.waypointLon1;
+			WaypointList::write(Msg::cmdcontrol.waypointID1,Msg::cmdcontrol.waypointRadius1,tempLoc);
+		}
+		if ( Msg::cmdcontrol.waypointID2 > 0 && Msg::cmdcontrol.waypointRadius2 > 0 ) {
+			tempLoc.latitude      = Msg::cmdcontrol.waypointLat2;
+			tempLoc.longitude     = Msg::cmdcontrol.waypointLon2;
+			WaypointList::write(Msg::cmdcontrol.waypointID2,Msg::cmdcontrol.waypointRadius2,tempLoc);
+		}
+		if ( Msg::cmdcontrol.waypointID3 > 0 && Msg::cmdcontrol.waypointRadius3 > 0 ) {
+			tempLoc.latitude      = Msg::cmdcontrol.waypointLat3;
+			tempLoc.longitude     = Msg::cmdcontrol.waypointLon3;
+			WaypointList::write(Msg::cmdcontrol.waypointID3,Msg::cmdcontrol.waypointRadius3,tempLoc);
+		}
+		if ( Msg::cmdcontrol.waypointID4 > 0 && Msg::cmdcontrol.waypointRadius4 > 0 ) {
+			tempLoc.latitude      = Msg::cmdcontrol.waypointLat4;
+			tempLoc.longitude     = Msg::cmdcontrol.waypointLon4;
+			WaypointList::write(Msg::cmdcontrol.waypointID4,Msg::cmdcontrol.waypointRadius4,tempLoc);
+		}
+	}
 	
 	uint8_t* getRXBuffer() {
 		return rxBuffer;
@@ -145,9 +232,5 @@ namespace MessageManager {
 	
 	size_t getTXBufferLength() {
 		return txLength;
-	}
-	
-	size_t& getRXBufferLength() {
-		return rxLength;
 	}
 }

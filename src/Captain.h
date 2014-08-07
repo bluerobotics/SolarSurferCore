@@ -22,6 +22,8 @@ namespace Captain {
 	void execute();
 
 	void getNextWaypoint();
+
+	void refreshWaypoint();
 }
 
 #endif

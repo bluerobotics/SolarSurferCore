@@ -20,8 +20,13 @@ PowerMonitor pm(&nssPM);
 
 bool ISBDCallback()
 {
-   digitalWrite(ledPin, (millis() / 1000) % 2 == 1 ? HIGH : LOW);
-   return true;
+  static long timer;
+  if ( millis() - timer > 1000 ) {
+    timer = millis();
+    Serial.println("Callback");
+  }
+  digitalWrite(ledPin, (millis() / 1000) % 2 == 1 ? HIGH : LOW);
+  return true;
 }
 
 void setup() {
@@ -31,10 +36,10 @@ void setup() {
 
   pinMode(ledPin, OUTPUT);
 
-  Serial.begin(115200);
+  Serial.begin(56700);
   nss.begin(19200);
 
-  Serial.println("Press 's' to start message sending process.");
+  Serial.println("Press 's'");
 
   while (true) {
     uint8_t input = Serial.read();
@@ -46,15 +51,16 @@ void setup() {
   Serial.println("Setting up isbd");
 
   isbd.attachConsole(Serial);
-  isbd.attachDiags(Serial);
+  //isbd.attachDiags(Serial);
+  isbd.useMSSTMWorkaround(false);
   isbd.setPowerProfile(1); // 1 == low power
-  //isbd.setMinimumSignalQuality(1); // 2+ is recommended for sending
+  isbd.setMinimumSignalQuality(2); // 2+ is recommended for sending
   isbd.begin();
   
   Serial.println("Setup done");
 
   int err;
-  err = isbd.getSignalQuality(signalQuality);
+  //err = isbd.getSignalQuality(signalQuality);
   if (err != 0)
   {
     Serial.print("SignalQuality failed: error ");
@@ -76,11 +82,23 @@ void loop() {
 	Serial.print("Packet Length: ");Serial.println(length);
 	Serial.println("Packet Data:");	
 	for ( uint8_t i = 0 ; i < length ; i++ ) {
+    if ( data[i] < 0x10 ) {
+      Serial.print("0");
+    }
 		Serial.print(data[i],HEX);Serial.print("\t");
 		if ( (i+1) % 8 == 0 ) {
 			Serial.println("");
 		}
 	}
+  Serial.println("");
+
+  Serial.println("Packet Data As It Will Be Received:"); 
+  for ( uint8_t i = 0 ; i < length ; i++ ) {
+    if ( data[i] < 0x10 ) {
+      Serial.print("0");
+    }
+    Serial.print(data[i],HEX);
+  }
   Serial.println("");
 	
 	int16_t err;

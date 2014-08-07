@@ -18,13 +18,16 @@
 #include "BLDCMonitor.h"
 #include "Airmar100WX.h"
 #include "WaypointWriter.h"
+#include "Persistant.h"
 
 float dt;
 long timer;
 long outputTimer;
 long diagnosticTimer;
 
-IridiumSBD isbd(Serial2, 12);
+#define ISBD_CONNECTED 0
+
+IridiumSBD isbd(Serial2, -1);
 Transfer telemTransfer;
 
 NewSoftSerial nssBLDC(150,151);
@@ -56,9 +59,14 @@ void setup() {
   Captain::init(&bldcMonitor,&powerMonitor);
   MessageManager::init(&bldcMonitor,&powerMonitor);
 
-  isbd.attachConsole(Serial);
-  isbd.attachDiags(Serial);
-  isbd.setPowerProfile(1); // 1 == low power
+  if (ISBD_CONNECTED) {
+    isbd.attachConsole(Serial);
+    //isbd.attachDiags(Serial);
+    isbd.setPowerProfile(1); // 1 == low power
+    isbd.setMinimumSignalQuality(2);
+    isbd.useMSSTMWorkaround(false);
+    isbd.begin();
+  }
 
   telemTransfer.setStream(&Serial);
   
@@ -140,6 +148,7 @@ void updateNavigationSensors() {
   	BLDCReadTimer = millis();
   	// Listen on software serial here
   	nssBLDC.listen();
+    delay(50);
   	bldcMonitor.read();
   }
 
@@ -150,6 +159,7 @@ void updateNavigationSensors() {
   	PowerReadTimer = millis();
   	// Listen on software serial here
   	nssPM.listen();
+    delay(50);
   	powerMonitor.read();
   }
 
@@ -160,6 +170,7 @@ void updateNavigationSensors() {
     AirmarReadTimer = millis();
   	
     nssAirmar.listen();
+    delay(50);
     if (Airmar100WX::readRaw()) {
       Airmar100WX::convertToAbsolute(GPS_UBX::groundSpeed,GPS_UBX::course,DCM::yaw);
     }
@@ -182,48 +193,93 @@ void updateNavigationSensors() {
   }
 }
 
-void loop() {
-	static const long printPeriod			=			500;
-	static const long navPeriod 			=		 	100;
-	static const long satcomPeriod 		=     60000*5; // 5 minutes
-	static const long telemPeriod     =     250;
+void controlLoop() {
+  static const long navPeriod       =     100;
+  static long navTimer;
 
-	static long printTimer;
-	static long navTimer;
-	static long satcomTimer;
-	static long telemTimer;
+  if (millis()-navTimer>navPeriod) {
+    navTimer = millis();
 
-	if (millis()-navTimer>navPeriod) {
-		navTimer = millis();
-
-  	updateNavigationSensors();
-  	RemoteControl::update();
+    updateNavigationSensors();
+    RemoteControl::update();
   
     Captain::determineState();
     Captain::determineCourseAndPower();
     Captain::execute();
   }
+}
 
-  if (millis()-satcomTimer>satcomPeriod) {
+bool ISBDCallback()
+{
+  controlLoop();
+  return true;
+}
+
+void loop() {
+	const static uint32_t printPeriod			=			500;
+	static uint32_t diagnosticPeriod      =     250;
+  uint32_t satcomPeriod                 =     Persistant::data.telemetryPeriod;
+
+	static uint32_t printTimer;
+	static uint32_t satcomTimer;
+	static uint32_t diagnosticTimer;
+
+  // Run the control loop like normal. It will also be called from the IridiumSBD
+  // callback function while it is running.
+  controlLoop();
+
+  // This sends the Satcom message. It won't send a message until 5 minutes
+  // after powering up so that if it is browning-out for some reason it won't
+  // try to send tons of messages.
+  
+  const static uint32_t initialTimeout = 360000;
+  if (millis()-satcomTimer>satcomPeriod && millis() > initialTimeout ) {
   	satcomTimer = millis();
 
   	MessageManager::updateFields();
-		MessageManager::serialize(&Msg::tlmstatus);
-		uint16_t length = MessageManager::getTXBufferLength();
-		const uint8_t *data = MessageManager::getTXBuffer();  	
+		MessageManager::serialize(&Msg::tlmstatus);	
 
-		// Call satcom function here.
+		// Send/receive message
+    size_t rxBufferSize;
+    int16_t err = 0;
+    if (ISBD_CONNECTED) {
+      err = isbd.sendReceiveSBDBinary(MessageManager::getTXBuffer(),
+                                      MessageManager::getTXBufferLength(),
+                                      MessageManager::getRXBuffer(),
+                                      rxBufferSize);
+    }
+
+    if ( err == 0 ) {
+      // If successful, update telemetry count
+      Persistant::data.telemetryCount++;
+      Persistant::write();
+    }
+
+    if (ISBD_CONNECTED) {
+      if ( isbd.getWaitingMessageCount() > 0 ) {
+        satcomTimer += satcomPeriod; // Force another read in the next loop.
+      }
+    }
+
+    if ( MessageManager::deserialize(&Msg::cmdcontrol) ) {}
+      // If a message is received, update command count
+      Persistant::data.commandCount++;
+      Persistant::write();
+
+      // Process message
+      MessageManager::processCommand();
   }
 
-  if (millis()-telemTimer>telemPeriod) {
-  	telemTimer = millis();
+  // This send normal telemetry data through Serial0, i.e. usb or 3dr radio
+  if (millis()-diagnosticTimer>diagnosticPeriod) {
+  	diagnosticTimer = millis();
 
 		MessageManager::updateFields();
 
 		telemTransfer.send(&Msg::tlmdiagnostic);
   }	
   
-  if (false && millis()-printTimer > printPeriod) {
+  /*if (false && millis()-printTimer > printPeriod) {
   	printTimer = millis();
 		Serial.write(27);       // ESC command
 		Serial.print("[2J");    // clear screen command
@@ -273,5 +329,5 @@ void loop() {
 				Serial.println("");
 			}
 		}
-  }
+  }*/
 }

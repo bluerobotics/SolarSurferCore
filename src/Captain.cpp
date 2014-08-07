@@ -104,4 +104,7 @@ namespace Captain {
 		WaypointList::read(&waypoint,Persistant::data.currentWaypointIndex);
 	}
 
+	void refreshWaypoint() {
+		WaypointList::read(&waypoint,Persistant::data.currentWaypointIndex);	
+	}
 }
