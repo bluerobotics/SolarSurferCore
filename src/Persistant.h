@@ -9,6 +9,7 @@ struct PersistantData {
 	uint16_t lastWaypointIndex;
 	uint16_t commandCount;
 	uint16_t telemetryCount;
+	uint8_t telemetryEnum;
 	uint32_t telemetryPeriod;
 	uint8_t forceMode;
 	float forceHeading;
@@ -21,6 +22,8 @@ namespace Persistant {
 	void read();
 	
 	void write();
+
+	void writeDefaults();
 }
 
 #endif

@@ -43,6 +43,7 @@ set(sources Airmar100WX.cpp
 	    MessageManager.cpp
 	    MPU6000.cpp
 	    Navigator.cpp
+	    NonPersistant.cpp
 	    Persistant.cpp
 	    PowerMonitor.cpp
 	    RemoteControl.cpp

@@ -8,6 +8,7 @@
 #include "Thruster.h"
 #include "APM.h"
 #include "Persistant.h"
+#include "NonPersistant.h"
 
 namespace {
 	BLDCMonitor *bldc;
@@ -21,8 +22,8 @@ namespace Msg {
 }
 
 namespace MessageManager {
-	uint8_t txBuffer[64];
-	uint8_t rxBuffer[64];
+	uint8_t txBuffer[MM_TX_BUFFER_SIZE];
+	uint8_t rxBuffer[MM_RX_BUFFER_SIZE];
 	size_t txLength;
 	size_t rxLength;
 	
@@ -140,11 +141,19 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.powerSolar         =         power->getPower(PowerMonitor::SolarToCC);
 		Msg::tlmdiagnostic.powerCharge        =         power->getPower(PowerMonitor::CCtoBattery)-power->getPower(PowerMonitor::BatteryToLoad);
 		Msg::tlmdiagnostic.powerLoad          =         power->getPower(PowerMonitor::BatteryToLoad);
+		Msg::tlmdiagnostic.cmdtelemetryPeriod =         Persistant::data.telemetryEnum;
+		Msg::tlmdiagnostic.cmdforceMode       =         Persistant::data.forceMode;
+		Msg::tlmdiagnostic.cmdforceHeading    =         Persistant::data.forceHeading*128/180;
+                Msg::tlmdiagnostic.cmdgoalVoltage     =         Persistant::data.goalVoltage*1000;
+                Msg::tlmdiagnostic.cmdforceCurrentWaypointIndex = Persistant::data.currentWaypointIndex;
+		Msg::tlmdiagnostic.inCallback         =         NonPersistant::data.inCallback;
+		Msg::tlmdiagnostic.satcomErrCode      =         NonPersistant::data.lastISBDError;
 #endif
 	}
 
 	void processCommand() {
 		// Telemetry period
+		Persistant::data.telemetryEnum = Msg::cmdcontrol.telemetryPeriod;
 		switch ( Msg::cmdcontrol.telemetryPeriod ) {
 			case 0:
 				break;

@@ -46,8 +46,8 @@ namespace WaypointWriter {
 			delay(20);
 		}
 
-		Serial.println("Starting 30 second delay.");
-		delay(30000);
+		Serial.println("Done. Must reprogram.");
+		for(;;);
 	}
 }
 

@@ -19,6 +19,7 @@
 #include "Airmar100WX.h"
 #include "WaypointWriter.h"
 #include "Persistant.h"
+#include "NonPersistant.h"
 
 float dt;
 long timer;
@@ -42,9 +43,9 @@ PowerMonitor powerMonitor(&nssPM);
 void setup() {
   Serial.begin(57600);
   Serial2.begin(19200); // Satcom
-  //nssBLDC.begin(19200);
-  //nssPM.begin(19200);
-  //nssAirmar.begin(4800);
+  nssBLDC.begin(19200);
+  nssPM.begin(19200);
+  nssAirmar.begin(4800);
   Serial.println("=Start=");
 
   // Set barometer CS pin high so it doesn't hog the bus. How frustrating.  
@@ -72,6 +73,12 @@ void setup() {
 	if (false) {
 		WaypointWriter::write();
 	}
+  if (false) {
+    Serial.println("writing defaults...");
+    Persistant::writeDefaults();
+    Serial.println("done");
+    for(;;);
+  }
 }
 
 void updateNavigationSensors() {
@@ -153,7 +160,7 @@ void updateNavigationSensors() {
   	PowerReadTimer = millis();
   	// Listen on software serial here
   	nssPM.listen();
-    //delay(50);
+        delay(20);
   	powerMonitor.read();
   }
 
@@ -164,7 +171,7 @@ void updateNavigationSensors() {
     AirmarReadTimer = millis();
   	
     nssAirmar.listen();
-    //delay(50);
+    delay(20);
     if (Airmar100WX::readRaw()) {
       Airmar100WX::convertToAbsolute(GPS_UBX::groundSpeed,GPS_UBX::course,DCM::yaw);
     }
@@ -213,7 +220,7 @@ void diagnosticCommunication() {
 
     MessageManager::updateFields();
 
-    telemTransfer.send(&Msg::tlmstatus);
+    telemTransfer.send(&Msg::tlmdiagnostic);
     
     if ( telemTransfer.receive(&Msg::cmdcontrol) ) {
       MessageManager::processCommand();
@@ -223,6 +230,7 @@ void diagnosticCommunication() {
 
 bool ISBDCallback()
 {
+  NonPersistant::data.inCallback = 1;
   controlLoop();
   diagnosticCommunication();
   return true;
@@ -235,6 +243,8 @@ void loop() {
 	static uint32_t printTimer;
 	static uint32_t satcomTimer;
 
+  NonPersistant::data.inCallback = 0;
+
   // Run the control loop like normal. It will also be called from the IridiumSBD
   // callback function while it is running.
   controlLoop();
@@ -243,7 +253,7 @@ void loop() {
   // Initialize Satcom. This is done here vs. the setup function to ensure that the vehicle
   // can operate properly when the callback function is used. We don't want the callback called
   // before the end of the setup function.
-  /*static bool initialized = false;
+  static bool initialized = false;
   if ( !initialized ) {
     initialized = true;
     if (ISBD_CONNECTED) {
@@ -281,6 +291,8 @@ void loop() {
       // If successful, update telemetry count
       Persistant::data.telemetryCount++;
       Persistant::write();
+    } else {
+      NonPersistant::data.lastISBDError = err;
     }
 
     if (ISBD_CONNECTED) {
@@ -297,7 +309,7 @@ void loop() {
       // Process message
       MessageManager::processCommand();
     }
-  }*/
+  }
   
   if (false && millis()-printTimer > printPeriod) {
   	printTimer = millis();
