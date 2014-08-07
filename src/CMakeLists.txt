@@ -180,7 +180,7 @@ add_custom_target(
 #### avrdude programming
 add_custom_target(
 	program
-	COMMAND avrdude -p ${mcu} -b ${programmer_baud} -c ${programmer_type} -P ${programmer_port} -U "flash:w:${PROJECT_NAME}.hex"
+	COMMAND avrdude -v -p ${mcu} -b ${programmer_baud} -c ${programmer_type} -D -P ${programmer_port} -U "flash:w:${PROJECT_NAME}.hex:i"
 	DEPENDS "${PROJECT_NAME}.hex"
 	COMMENT "Programming device"
 	VERBATIM

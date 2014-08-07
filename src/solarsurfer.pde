@@ -42,7 +42,10 @@ PowerMonitor powerMonitor(&nssPM);
 void setup() {
   Serial.begin(57600);
   Serial2.begin(19200); // Satcom
-  Serial.println("start");
+  //nssBLDC.begin(19200);
+  //nssPM.begin(19200);
+  //nssAirmar.begin(4800);
+  Serial.println("=Start=");
 
   // Set barometer CS pin high so it doesn't hog the bus. How frustrating.  
   pinMode(40,OUTPUT);
@@ -139,7 +142,7 @@ void updateNavigationSensors() {
   	BLDCReadTimer = millis();
   	// Listen on software serial here
   	nssBLDC.listen();
-    delay(50);
+    //delay(50);
   	bldcMonitor.read();
   }
 
@@ -150,7 +153,7 @@ void updateNavigationSensors() {
   	PowerReadTimer = millis();
   	// Listen on software serial here
   	nssPM.listen();
-    delay(50);
+    //delay(50);
   	powerMonitor.read();
   }
 
@@ -161,7 +164,7 @@ void updateNavigationSensors() {
     AirmarReadTimer = millis();
   	
     nssAirmar.listen();
-    delay(50);
+    //delay(50);
     if (Airmar100WX::readRaw()) {
       Airmar100WX::convertToAbsolute(GPS_UBX::groundSpeed,GPS_UBX::course,DCM::yaw);
     }
@@ -210,7 +213,7 @@ void diagnosticCommunication() {
 
     MessageManager::updateFields();
 
-    telemTransfer.send(&Msg::cmdcontrol);
+    telemTransfer.send(&Msg::tlmstatus);
     
     if ( telemTransfer.receive(&Msg::cmdcontrol) ) {
       MessageManager::processCommand();
@@ -240,7 +243,7 @@ void loop() {
   // Initialize Satcom. This is done here vs. the setup function to ensure that the vehicle
   // can operate properly when the callback function is used. We don't want the callback called
   // before the end of the setup function.
-  static bool initialized = false;
+  /*static bool initialized = false;
   if ( !initialized ) {
     initialized = true;
     if (ISBD_CONNECTED) {
@@ -294,7 +297,7 @@ void loop() {
       // Process message
       MessageManager::processCommand();
     }
-  }
+  }*/
   
   if (false && millis()-printTimer > printPeriod) {
   	printTimer = millis();
