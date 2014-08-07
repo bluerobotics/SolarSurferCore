@@ -261,13 +261,14 @@ void loop() {
       }
     }
 
-    if ( MessageManager::deserialize(&Msg::cmdcontrol) ) {}
+    if ( MessageManager::deserialize(&Msg::cmdcontrol) ) {
       // If a message is received, update command count
       Persistant::data.commandCount++;
       Persistant::write();
 
       // Process message
       MessageManager::processCommand();
+    }
   }
 
   // This send normal telemetry data through Serial0, i.e. usb or 3dr radio
