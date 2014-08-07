@@ -41,12 +41,14 @@ class SerialConnection:
 
 		#Verify checksum
 		crc16 = crcmod.mkCrcFun(0x11021,0xFFFF,True)
+		#crc16 = crcmod.mkCrcFun(0x11021,0xFFFF,False) # xmodem
 		calcChecksum = crc16(data)
 		calcChecksum = (~calcChecksum) % 2**16  # convert to uint16_t
+		#calcChecksum = (calcChecksum) % 2**16 # xmodem
 
 		if ( checksum != calcChecksum ):
 			print "Failed checksum."
-			#return
+			return
 		      
 		return data
 
