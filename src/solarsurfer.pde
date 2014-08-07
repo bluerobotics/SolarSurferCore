@@ -215,9 +215,9 @@ void diagnosticCommunication() {
 
     telemTransfer.send(&Msg::tlmstatus);
     
-    if ( telemTransfer.receive(&Msg::cmdcontrol) ) {
-      MessageManager::processCommand();
-    }
+    //if ( telemTransfer.receive(&Msg::cmdcontrol) ) {
+      //MessageManager::processCommand();
+    //}
   } 
 }
 
