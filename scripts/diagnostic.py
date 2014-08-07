@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
 	with open(options.formatFile) as format_file:
 		formats = json.load(format_file)
-		diag = formats["formats"]["3"]["payload"]
+		diag = formats["formats"]["5"]["payload"]
 
 	for item in diag:
 		if item == 'version':
@@ -133,7 +133,7 @@ if __name__ == '__main__':
 
 			os.system('clear')
 			for i in range(len(headers)):
-				filler = 25 - len(headers[i])
+				filler = 30 - len(headers[i])
 				print ' '*filler,
 				print headers[i] + ": ",
 				print values[i]

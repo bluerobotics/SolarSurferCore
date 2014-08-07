@@ -134,6 +134,8 @@ struct tlmdiagnostic {
 	int8_t cmdforceHeading; // undefined, undefined, 0,1.40625
 	uint16_t cmdgoalVoltage; // undefined, undefined, 0,0.001
 	uint8_t cmdforceCurrentWaypointIndex; // 
+	uint8_t inCallback; // 
+	uint8_t satcomErrorCode; // 
 	uint16_t checksum; // 
 };
 
