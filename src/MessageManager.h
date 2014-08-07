@@ -36,8 +36,10 @@ namespace MessageManager {
 			txBuffer[i] = reinterpret_cast<uint8_t*>(messageStruct)[i];
 			// Josh is using a Node CRC library and it seems to be using the XModem CRC16
 			// protocol. This should match his checksum.
-			crc = _crc_xmodem_update(crc,txBuffer[i]);
+			//crc = _crc_xmodem_update(crc,txBuffer[i]);
+			crc = _crc_ccitt_update(crc,txBuffer[i]);
 		}
+		crc = ~crc;
 		txBuffer[txLength-2] = reinterpret_cast<uint8_t*>(&crc)[0];
 		txBuffer[txLength-1] = reinterpret_cast<uint8_t*>(&crc)[1];
 	}

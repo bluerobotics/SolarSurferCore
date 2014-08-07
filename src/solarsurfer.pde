@@ -215,9 +215,9 @@ void diagnosticCommunication() {
 
     telemTransfer.send(&Msg::tlmstatus);
     
-    //if ( telemTransfer.receive(&Msg::cmdcontrol) ) {
-      //MessageManager::processCommand();
-    //}
+    if ( telemTransfer.receive(&Msg::cmdcontrol) ) {
+      MessageManager::processCommand();
+    }
   } 
 }
 
@@ -306,7 +306,7 @@ void loop() {
 		Serial.write(27);
 		Serial.print("[H");     // cursor to home command
 		
-    if ( false ) {
+    if (true) {
       Serial.println("SolarSurfer Live Data");
   		Serial.println("=====================");
   		Serial.print("Time: ");Serial.print(GPS_UBX::time,DEC);Serial.println(" ms");
