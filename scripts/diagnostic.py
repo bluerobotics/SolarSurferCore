@@ -46,7 +46,7 @@ class SerialConnection:
 
 		if ( checksum != calcChecksum ):
 			print "Failed checksum."
-			return
+			#return
 		      
 		return data
 
@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
 	with open(options.formatFile) as format_file:
 		formats = json.load(format_file)
-		diag = formats["formats"]["5"]["payload"]
+		diag = formats["formats"]["3"]["payload"]
 
 	for item in diag:
 		if item == 'version':
@@ -93,6 +93,10 @@ if __name__ == '__main__':
 			formatString += 'H'
 		if type(item) is dict:
 			headers.append(item["name"])
+			if item["type"] == 'enum':
+				formatString += ('B')
+			if item["type"] == 'bitmap':
+				formatString += ('B')
 			if item["type"] == 'int8_t':
 				formatString += ('b')
 			if item["type"] == 'uint8_t':
@@ -127,7 +131,7 @@ if __name__ == '__main__':
 
 			os.system('clear')
 			for i in range(len(headers)):
-				filler = 20 - len(headers[i])
+				filler = 25 - len(headers[i])
 				print ' '*filler,
 				print headers[i] + ": ",
 				print values[i]

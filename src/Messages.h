@@ -65,7 +65,7 @@ struct cmdcontrol {
 	uint8_t version; // 
 	uint8_t format; // 
 	uint8_t telemetryPeriod; // 0: No Change; 1: 5; 2: 10; 3: 20; 4: 30; 5: 45; 6: 60; 7: 90; 8: 120; 9: 180; 10: 360; 11: 720; 12: 1440; 13: 2880; 
-	uint8_t forceMode; // 0: None; 1: ForceHeading; 2: ForceGoalVoltage; 3: ForceCurrentWaypointIndex; 
+	uint8_t forceMode; // 
 	int8_t forceHeading; // undefined, undefined, 0,1.40625
 	uint16_t goalVoltage; // undefined, undefined, 0,0.001
 	uint8_t forceCurrentWaypointIndex; // 
@@ -129,6 +129,11 @@ struct tlmdiagnostic {
 	float powerSolar; // 
 	float powerCharge; // 
 	float powerLoad; // 
+	uint8_t cmdtelemetryPeriod; // 0: No Change; 1: 5; 2: 10; 3: 20; 4: 30; 5: 45; 6: 60; 7: 90; 8: 120; 9: 180; 10: 360; 11: 720; 12: 1440; 13: 2880; 
+	uint8_t cmdforceMode; // 
+	int8_t cmdforceHeading; // undefined, undefined, 0,1.40625
+	uint16_t cmdgoalVoltage; // undefined, undefined, 0,0.001
+	uint8_t cmdforceCurrentWaypointIndex; // 
 	uint16_t checksum; // 
 };
 
