@@ -73,11 +73,11 @@ namespace MessageManager {
 
 		Msg::cmdcontrol.version                 =         1;
 		Msg::cmdcontrol.format                  =         3;
-		Msg::cmdcontrol.telemetryPeriod         =         3;
-		Msg::cmdcontrol.forceMode               =         1;
-		Msg::cmdcontrol.forceHeading            =         22;
+		Msg::cmdcontrol.telemetryPeriod         =         2;
+		Msg::cmdcontrol.forceMode               =         0;
+		Msg::cmdcontrol.forceHeading            =         0;
 		Msg::cmdcontrol.goalVoltage             =         0;
-		Msg::cmdcontrol.forceCurrentWaypointIndex =       2;
+		Msg::cmdcontrol.forceCurrentWaypointIndex =       1;
 		Msg::cmdcontrol.waypointID1             =         0;
 		Msg::cmdcontrol.waypointRadius1         =         0;
 		Msg::cmdcontrol.waypointLat1            =         0.0f;

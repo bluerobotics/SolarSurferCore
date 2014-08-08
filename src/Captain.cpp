@@ -66,8 +66,7 @@ namespace Captain {
 	  current.location.latitude = GPS_UBX::latitude;
 	  current.location.longitude = GPS_UBX::longitude;
 	  
-	  // TEMPORARILY DISABLE COURSE CONTROL
-	  desiredCourse = DCM::yaw; //Navigator::getHeadingToLocation(&current.location,&waypoint.location);
+	  desiredCourse = Navigator::getHeadingToLocation(&current.location,&waypoint.location);
 
 	  if (waypoint.location.latitude != 0.0f && waypoint.location.latitude != 0.0f) {
 	  	static const float desiredVoltage = 13.2;

@@ -14,15 +14,15 @@ namespace Persistant {
 	}
 
 	void writeDefaults() {
-		data.currentWaypointIndex        =        0;
+		data.currentWaypointIndex        =        1;
 		data.lastWaypointIndex           =        0;
-                data.commandCount                =        0;
-                data.telemetryCount              =        0;
-                data.telemetryEnum               =        2;
-                data.telemetryPeriod             =        10*60000;
+    data.commandCount                =        0;
+    data.telemetryCount              =        0;
+    data.telemetryEnum               =        2;
+    data.telemetryPeriod             =        10*60000;
 		data.forceMode                   =        0;
 		data.forceHeading                =        0.0f;
-                data.goalVoltage                 =        13.2f;
+    data.goalVoltage                 =        13.2f;
 		write();
-        }
+	}
 }

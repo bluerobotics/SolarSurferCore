@@ -225,9 +225,16 @@ void diagnosticCommunication() {
     telemTransfer.send(&Msg::tlmdiagnostic);
     
     if ( telemTransfer.receive(&Msg::cmdcontrol) ) {
-      MessageManager::processCommand();
-      delay(100);
-      telemTransfer.send(&Msg::cmdcontrol);
+      // Serialize and deserialize the message to mimic what happens with the Satcom
+      for ( uint8_t i = 0 ; i < sizeof(MessageType::cmdcontrol) ; i++ ) {
+        MessageManager::getRXBuffer()[i] = reinterpret_cast<uint8_t*>(&Msg::cmdcontrol)[i];
+        reinterpret_cast<uint8_t*>(&Msg::cmdcontrol)[i] = 0;
+      }
+      if ( MessageManager::deserialize(&Msg::cmdcontrol) ) {
+        MessageManager::processCommand();
+        delay(100);
+        telemTransfer.send(&Msg::cmdcontrol);
+      }
     }
   } 
 }
@@ -275,7 +282,7 @@ void loop() {
   // try to send tons of messages.
   
   const static uint32_t initialTimeout = 360000;
-  if (millis()-satcomTimer>satcomPeriod && millis() > initialTimeout ) {
+  if ( millis()-satcomTimer>satcomPeriod && millis() > initialTimeout ) {
   	satcomTimer = millis();
 
   	MessageManager::updateFields();

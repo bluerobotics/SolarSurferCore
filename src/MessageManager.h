@@ -54,8 +54,8 @@ namespace MessageManager {
 			return false;
 		}
 		// If successful, continue to copy buffer to struct
-		for ( uint8_t i = 0 ; i < rxLength ; i++ ) {
-			reinterpret_cast<uint8_t*>(&commandStruct)[i] = rxBuffer[i];
+		for ( uint8_t i = 0 ; i < sizeof(T) ; i++ ) {
+			reinterpret_cast<uint8_t*>(commandStruct)[i] = rxBuffer[i];
 		}
 		return true;
 	}

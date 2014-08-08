@@ -56,11 +56,16 @@ namespace Helmsman {
 		float steeringOutput = steeringController(steeringError,dt);
 		float powerOutput = powerController(desiredPower-power,dt);
 		
-		steeringOutput = constrain(steeringOutput,-maxSteering,maxSteering);
 		powerOutput = constrain(powerOutput,0,maxPower);
+		steeringOutput = constrain(steeringOutput,-maxSteering,maxSteering);
+
+		steeringOutput = steeringOutput*powerOutput/maxPower*1.25;
 
 		float thrusterLeft  = powerOutput+steeringOutput;
 		float thrusterRight = powerOutput-steeringOutput;
+
+		thrusterLeft = constrain(thrusterLeft,0,500);
+		thrusterRight = constrain(thrusterRight,0,500);
 
 		// The following variables and statements provide hysteresis between turning motors
 		// on and off to avoid jumping between the two.
