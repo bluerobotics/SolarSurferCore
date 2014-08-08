@@ -105,9 +105,9 @@ namespace MessageManager {
 		Msg::tlmstatus.status2									=					0x00;
 		Msg::tlmstatus.currentWaypointIndex			=					Captain::waypoint.index;
 		Msg::tlmstatus.currentWaypointChecksum	=					2;
-		Msg::tlmstatus.commandCount							=					0;
-		Msg::tlmstatus.telemetryCount		        =					1;
-		Msg::tlmstatus.extra1										=					1;
+		Msg::tlmstatus.commandCount							=					Persistant::data.commandCount;
+		Msg::tlmstatus.telemetryCount		        =					Persistant::data.telemetryCount;
+		Msg::tlmstatus.extra1										=					0;
 
 		Msg::tlmdiagnostic.version						=					1;
 		Msg::tlmdiagnostic.format							=					5;
