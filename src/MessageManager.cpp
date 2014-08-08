@@ -74,7 +74,7 @@ namespace MessageManager {
 #else		
 
 		Msg::tlmstatus.version									=					1;
-		Msg::tlmstatus.format										=					3;
+		Msg::tlmstatus.format										=					2;
 		Msg::tlmstatus.latitude									=					GPS_UBX::latitude;
 		Msg::tlmstatus.longitude 								=					GPS_UBX::longitude;
 		Msg::tlmstatus.fix											=					GPS_UBX::fix;
@@ -147,7 +147,7 @@ namespace MessageManager {
                 Msg::tlmdiagnostic.cmdgoalVoltage     =         Persistant::data.goalVoltage*1000;
                 Msg::tlmdiagnostic.cmdforceCurrentWaypointIndex = Persistant::data.currentWaypointIndex;
 		Msg::tlmdiagnostic.inCallback         =         NonPersistant::data.inCallback;
-		Msg::tlmdiagnostic.satcomErrCode      =         NonPersistant::data.lastISBDError;
+		Msg::tlmdiagnostic.satcomErrorCode    =         NonPersistant::data.lastISBDError;
 #endif
 	}
 

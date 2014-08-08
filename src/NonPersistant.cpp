@@ -1,5 +1,5 @@
 #include "NonPersistant.h"
 
-namespace NonPesistant {
+namespace NonPersistant {
 	NonPersistantData data;
 }

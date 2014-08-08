@@ -26,7 +26,7 @@ long timer;
 long outputTimer;
 long diagnosticTimer;
 
-#define ISBD_CONNECTED 0
+#define ISBD_CONNECTED 1
 
 IridiumSBD isbd(Serial2, -1);
 Transfer telemTransfer;
