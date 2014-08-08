@@ -40,11 +40,7 @@ namespace Captain {
 		bldc = _bldcMonitor;
 		power = _powerMonitor;
 
-		// Get the current waypoint.
-		Persistant::read();
-		// TEMPORARY RESET WAYPOINTS UPON RESTART::
-		Persistant::data.currentWaypointIndex = 0;
-		// ::::::::::::::::::::::::::::::::::::::::
+		// Get the current waypoint
 		WaypointList::read(&waypoint,Persistant::data.currentWaypointIndex);
 
 		//waypoint.location.latitude = 33.870696; // The house across from me
@@ -60,7 +56,6 @@ namespace Captain {
 		if (distanceToWaypoint < waypointAchievedRadius) {
 			getNextWaypoint();
 		}
-	
 	}
 	
 	void determineCourseAndPower() {
@@ -106,5 +101,16 @@ namespace Captain {
 
 	void refreshWaypoint() {
 		WaypointList::read(&waypoint,Persistant::data.currentWaypointIndex);	
+	}
+
+	uint8_t getStatus(uint8_t index) {
+		switch(index) {
+			case 1:
+				return 0;
+			case 2:
+				return 0;
+			default:
+				return 0;
+		}
 	}
 }

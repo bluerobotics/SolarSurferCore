@@ -24,6 +24,8 @@ namespace Captain {
 	void getNextWaypoint();
 
 	void refreshWaypoint();
+
+	uint8_t getStatus(uint8_t index);
 }
 
 #endif

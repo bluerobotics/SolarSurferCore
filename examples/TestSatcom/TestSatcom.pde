@@ -55,7 +55,7 @@ void setup() {
   isbd.useMSSTMWorkaround(false);
   isbd.setPowerProfile(1); // 1 == low power
   isbd.setMinimumSignalQuality(2); // 2+ is recommended for sending
-  isbd.begin();
+  //isbd.begin();
   
   Serial.println("Setup done");
 
@@ -75,7 +75,7 @@ void setup() {
 void loop() {
 
 	MessageManager::updateFields();
-	MessageManager::serialize(&Msg::tlmstatus);
+	MessageManager::serialize(&Msg::cmdcontrol);
 	uint16_t length = MessageManager::getTXBufferLength();
 	const uint8_t *data = MessageManager::getTXBuffer();
 

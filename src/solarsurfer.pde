@@ -51,6 +51,8 @@ void setup() {
   // Set barometer CS pin high so it doesn't hog the bus. How frustrating.  
   pinMode(40,OUTPUT);
   digitalWrite(40,HIGH);
+
+  Persistant::read();
   
   APM::init();
   MPU6000::init();
@@ -224,6 +226,8 @@ void diagnosticCommunication() {
     
     if ( telemTransfer.receive(&Msg::cmdcontrol) ) {
       MessageManager::processCommand();
+      delay(100);
+      telemTransfer.send(&Msg::cmdcontrol);
     }
   } 
 }

@@ -71,6 +71,30 @@ namespace MessageManager {
 		Msg::tlmstatus.telemetryCount		        =					1;
 		Msg::tlmstatus.extra1										=					1;
 
+		Msg::cmdcontrol.version                 =         1;
+		Msg::cmdcontrol.format                  =         3;
+		Msg::cmdcontrol.telemetryPeriod         =         3;
+		Msg::cmdcontrol.forceMode               =         1;
+		Msg::cmdcontrol.forceHeading            =         22;
+		Msg::cmdcontrol.goalVoltage             =         0;
+		Msg::cmdcontrol.forceCurrentWaypointIndex =       2;
+		Msg::cmdcontrol.waypointID1             =         0;
+		Msg::cmdcontrol.waypointRadius1         =         0;
+		Msg::cmdcontrol.waypointLat1            =         0.0f;
+		Msg::cmdcontrol.waypointLon1            =         0.0f;
+		Msg::cmdcontrol.waypointID2             =         0;
+		Msg::cmdcontrol.waypointRadius2         =         0;
+		Msg::cmdcontrol.waypointLat2            =         0.0f;
+		Msg::cmdcontrol.waypointLon2            =         0.0f;
+		Msg::cmdcontrol.waypointID3             =         0;
+		Msg::cmdcontrol.waypointRadius3         =         0;
+		Msg::cmdcontrol.waypointLat3            =         0.0f;
+		Msg::cmdcontrol.waypointLon3            =         0.0f;
+		Msg::cmdcontrol.waypointID4             =         0;
+		Msg::cmdcontrol.waypointRadius4         =         0;
+		Msg::cmdcontrol.waypointLat4            =         0.0f;
+		Msg::cmdcontrol.waypointLon4            =         0.0f;
+
 #else		
 
 		Msg::tlmstatus.version									=					1;
@@ -89,8 +113,8 @@ namespace MessageManager {
 		Msg::tlmstatus.p_left										=					0;
 		Msg::tlmstatus.p_right									=					0;
 		Msg::tlmstatus.rotations								=					0;
-		Msg::tlmstatus.rpm_left									=					0;
-		Msg::tlmstatus.rpm_right								=					0;
+		Msg::tlmstatus.rpm_left									=					Thruster::get(Thruster::left);
+		Msg::tlmstatus.rpm_right								=					Thruster::get(Thruster::right);
 		Msg::tlmstatus.rollPitchRange						=					0;
 		Msg::tlmstatus.swellPeriod							=					0;
 		Msg::tlmstatus.swellHeight							=					0;
@@ -101,10 +125,10 @@ namespace MessageManager {
 		Msg::tlmstatus.salinity									=					0;
 		Msg::tlmstatus.windSpeed								=					0;
 		Msg::tlmstatus.windDirection						=					0;
-		Msg::tlmstatus.status1									=					0x00;
-		Msg::tlmstatus.status2									=					0x00;
+		Msg::tlmstatus.status1									=					Captain::getStatus(1);
+		Msg::tlmstatus.status2									=					Captain::getStatus(2);
 		Msg::tlmstatus.currentWaypointIndex			=					Captain::waypoint.index;
-		Msg::tlmstatus.currentWaypointChecksum	=					2;
+		Msg::tlmstatus.currentWaypointChecksum	=					WaypointList::getChecksum(&Captain::waypoint);
 		Msg::tlmstatus.commandCount							=					Persistant::data.commandCount;
 		Msg::tlmstatus.telemetryCount		        =					Persistant::data.telemetryCount;
 		Msg::tlmstatus.extra1										=					0;
@@ -118,6 +142,7 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.gpsGroundSpeed			=					GPS_UBX::groundSpeed;
 		Msg::tlmdiagnostic.gpsCourse					=					degrees(GPS_UBX::course);
 		Msg::tlmdiagnostic.wpIndex						=					Captain::waypoint.index;
+		Msg::tlmdiagnostic.waypointRadius 		=					Captain::waypoint.radius;
 		Msg::tlmdiagnostic.wpLatitude					=					Captain::waypoint.location.latitude;
 		Msg::tlmdiagnostic.wpLongitude				=					Captain::waypoint.location.longitude;
 		Msg::tlmdiagnostic.roll								=					degrees(DCM::roll);
@@ -144,8 +169,8 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.cmdtelemetryPeriod =         Persistant::data.telemetryEnum;
 		Msg::tlmdiagnostic.cmdforceMode       =         Persistant::data.forceMode;
 		Msg::tlmdiagnostic.cmdforceHeading    =         Persistant::data.forceHeading*128/180;
-                Msg::tlmdiagnostic.cmdgoalVoltage     =         Persistant::data.goalVoltage*1000;
-                Msg::tlmdiagnostic.cmdforceCurrentWaypointIndex = Persistant::data.currentWaypointIndex;
+    Msg::tlmdiagnostic.cmdgoalVoltage     =         Persistant::data.goalVoltage*1000;
+    Msg::tlmdiagnostic.cmdforceCurrentWaypointIndex = Persistant::data.currentWaypointIndex;
 		Msg::tlmdiagnostic.inCallback         =         NonPersistant::data.inCallback;
 		Msg::tlmdiagnostic.satcomErrorCode    =         NonPersistant::data.lastISBDError;
 #endif
@@ -206,6 +231,8 @@ namespace MessageManager {
 			Persistant::data.currentWaypointIndex = Msg::cmdcontrol.forceCurrentWaypointIndex;
 			Captain::refreshWaypoint();
 		}
+
+		Persistant::write();
 
 		// Update waypoints if necessary
 		Location tempLoc;
