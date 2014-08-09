@@ -79,6 +79,11 @@ python diagnostic.py -p /dev/ttyUSBXXXX -o filename.csv
 
 This project uses [semantic versioning](http://semver.org/).
 
+### v0.2.0 - 2014/08/08
+
+* Fully functional navigation and communication.
+* Used on Santa Monica Canyon Test.
+
 ### v0.1.0 - 2014/07/17
 
 * Initial release
