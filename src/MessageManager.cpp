@@ -77,7 +77,7 @@ namespace MessageManager {
 		Msg::cmdcontrol.forceMode               =         0;
 		Msg::cmdcontrol.forceHeading            =         0;
 		Msg::cmdcontrol.goalVoltage             =         0;
-		Msg::cmdcontrol.forceCurrentWaypointIndex =       1;
+		Msg::cmdcontrol.forceCurrentWaypointIndex =       6;
 		Msg::cmdcontrol.waypointID1             =         0;
 		Msg::cmdcontrol.waypointRadius1         =         0;
 		Msg::cmdcontrol.waypointLat1            =         0.0f;

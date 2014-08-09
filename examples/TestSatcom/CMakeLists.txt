@@ -74,6 +74,7 @@ add_definitions(-ffunction-sections)
 add_definitions(-fdata-sections)
 add_definitions(-std=c++0x)
 add_definitions(-DMM_TEST_ONLY)
+add_definitions(-D__AVR_LIBC_DEPRECATED_ENABLE__)
 
 ###############################################################################
 #                           TARGETS, COMMANDS, ETC.                           #

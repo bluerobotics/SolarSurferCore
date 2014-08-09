@@ -27,9 +27,7 @@ namespace {
   }
 }
 
-namespace Captain {
-	static const float waypointAchievedRadius = 3.0f;
-	
+namespace Captain {	
   float desiredCourse;
   float desiredPower;
   float distanceToWaypoint;
@@ -53,7 +51,7 @@ namespace Captain {
 
 		// Determine state of the mission
 		distanceToWaypoint = Navigator::getDistanceToLocation(&current.location,&waypoint.location);
-		if (distanceToWaypoint < waypointAchievedRadius) {
+		if (distanceToWaypoint < waypoint.radius) {
 			getNextWaypoint();
 		}
 	}

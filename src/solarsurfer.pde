@@ -273,6 +273,7 @@ void loop() {
       isbd.setPowerProfile(1); // 1 == low power
       isbd.setMinimumSignalQuality(2);
       isbd.useMSSTMWorkaround(false);
+      isbd.adjustSendReceiveTimeout(120);
       isbd.begin();
     }
   }
@@ -281,8 +282,8 @@ void loop() {
   // after powering up so that if it is browning-out for some reason it won't
   // try to send tons of messages.
   
-  const static uint32_t initialTimeout = 360000;
-  if ( millis()-satcomTimer>satcomPeriod && millis() > initialTimeout ) {
+  const static uint32_t initialTimeout = 360000/4;
+  if ( millis()-satcomTimer>satcomPeriod/4 && millis() > initialTimeout ) {
   	satcomTimer = millis();
 
   	MessageManager::updateFields();
