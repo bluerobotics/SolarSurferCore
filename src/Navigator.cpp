@@ -25,4 +25,25 @@ namespace Navigator {
 		c = 2*atan2(sqrt(a),sqrt(1-a));
 		return radiusEarth*c;
 	}
+
+	float getAngleBetweenHeadings(float a1, float a2, bool isRad) {
+		float angle = a1 - a2;
+
+		// Unwrap angle to -180 to 180, -pi to pi
+		if ( isRad ) {
+			if ( angle > PI ) {
+				angle -= 2*PI;
+			} else if ( angle < -PI ) {
+				angle += 2*PI;
+			}
+		} else {
+			if ( angle > 180 ) {
+				angle -= 360;
+			} else if ( angle < -180 ) {
+				angle += 360;
+			}
+		}
+
+		return angle;
+	}
 }

@@ -77,11 +77,11 @@ namespace MessageManager {
 		Msg::cmdcontrol.forceMode               =         0;
 		Msg::cmdcontrol.forceHeading            =         0;
 		Msg::cmdcontrol.goalVoltage             =         0;
-		Msg::cmdcontrol.forceCurrentWaypointIndex =       6;
-		Msg::cmdcontrol.waypointID1             =         0;
-		Msg::cmdcontrol.waypointRadius1         =         0;
-		Msg::cmdcontrol.waypointLat1            =         0.0f;
-		Msg::cmdcontrol.waypointLon1            =         0.0f;
+		Msg::cmdcontrol.forceCurrentWaypointIndex =       8;
+		Msg::cmdcontrol.waypointID1             =         8;
+		Msg::cmdcontrol.waypointRadius1         =         6;
+		Msg::cmdcontrol.waypointLat1            =         33.95224f;
+		Msg::cmdcontrol.waypointLon1            =         -118.51777f;
 		Msg::cmdcontrol.waypointID2             =         0;
 		Msg::cmdcontrol.waypointRadius2         =         0;
 		Msg::cmdcontrol.waypointLat2            =         0.0f;
@@ -228,6 +228,7 @@ namespace MessageManager {
 
 		// Force current waypoint index
 		if ( Msg::cmdcontrol.forceCurrentWaypointIndex > 0 ) {
+			Persistant::data.lastWaypointIndex = Msg::cmdcontrol.forceCurrentWaypointIndex; // Prevents tracking weird vectors.
 			Persistant::data.currentWaypointIndex = Msg::cmdcontrol.forceCurrentWaypointIndex;
 			Captain::refreshWaypoint();
 		}

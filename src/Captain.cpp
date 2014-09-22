@@ -32,6 +32,7 @@ namespace Captain {
   float desiredPower;
   float distanceToWaypoint;
   Waypoint current;
+  Waypoint previous;
   Waypoint waypoint;
 
 	void init(BLDCMonitor *_bldcMonitor,PowerMonitor *_powerMonitor) {
@@ -40,6 +41,7 @@ namespace Captain {
 
 		// Get the current waypoint
 		WaypointList::read(&waypoint,Persistant::data.currentWaypointIndex);
+		WaypointList::read(&previous,Persistant::data.lastWaypointIndex);
 
 		//waypoint.location.latitude = 33.870696; // The house across from me
 		//waypoint.location.longitude = -118.368667; // The house across from me	
@@ -57,14 +59,31 @@ namespace Captain {
 	}
 	
 	void determineCourseAndPower() {
+		static const float trackingCorrectionGain = 2.0; // degrees of correction per degree of error (constrained)
+		static const float maxTrackingCorrectionAngle = PI/9; // rad
+
 		static uint32_t lastTime;
 		float dt = (millis()-lastTime)/1000.0f;
 		lastTime = millis();
 
 	  current.location.latitude = GPS_UBX::latitude;
 	  current.location.longitude = GPS_UBX::longitude;
+
+	  // New navigation code
+	  float headingPrevToNext = Navigator::getHeadingToLocation(&previous.location,&waypoint.location);
+	  float headingHereToNext = Navigator::getHeadingToLocation(&current.location,&waypoint.location);
+
+	  float trackingCorrectionAngle = trackingCorrectionGain*Navigator::getAngleBetweenHeadings(headingHereToNext,headingPrevToNext);
+	  trackingCorrectionAngle = constrain(trackingCorrectionAngle,-maxTrackingCorrectionAngle,maxTrackingCorrectionAngle);
+
+	  if (previous.location.latitude == 0.0f && previous.location.latitude == 0.0f) {
+	  	trackingCorrectionAngle = 0;
+	  }
+
+	  desiredCourse = headingHereToNext + trackingCorrectionAngle;
 	  
-	  desiredCourse = Navigator::getHeadingToLocation(&current.location,&waypoint.location);
+	  // Old navigation code
+	  //desiredCourse = Navigator::getHeadingToLocation(&current.location,&waypoint.location);
 
 	  if (waypoint.location.latitude != 0.0f && waypoint.location.latitude != 0.0f) {
 	  	static const float desiredVoltage = 13.2;
@@ -91,13 +110,16 @@ namespace Captain {
 	}
 
 	void getNextWaypoint() {
+		Persistant::data.lastWaypointIndex = Persistant::data.currentWaypointIndex;
 		Persistant::data.currentWaypointIndex += 1;
 		Persistant::write();
 		WaypointList::read(&waypoint,Persistant::data.currentWaypointIndex);
+		WaypointList::read(&previous,Persistant::data.lastWaypointIndex);
 	}
 
 	void refreshWaypoint() {
-		WaypointList::read(&waypoint,Persistant::data.currentWaypointIndex);	
+		WaypointList::read(&waypoint,Persistant::data.currentWaypointIndex);
+		WaypointList::read(&previous,Persistant::data.lastWaypointIndex);		
 	}
 
 	uint8_t getStatus(uint8_t index) {

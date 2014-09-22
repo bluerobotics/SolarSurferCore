@@ -14,6 +14,10 @@ namespace Navigator {
 	 * between two points. This will be used to determine if a waypoint has been achieved
 	 * or not. */
 	float getDistanceToLocation(Location *current, Location *waypoint);
+
+	/** This function calculates the angle between two headings and corrects it to
+	 * -180 deg to 180 deg. */
+	float getAngleBetweenHeadings(float a1, float a2, bool isRad=true);
 }
 
 #endif
