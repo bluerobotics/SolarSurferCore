@@ -59,7 +59,7 @@ namespace Captain {
 	}
 	
 	void determineCourseAndPower() {
-		static const float trackingCorrectionGain = 2.0; // degrees of correction per degree of error (constrained)
+		static const float trackingCorrectionGain = 4.0; // degrees of correction per degree of error (constrained)
 		static const float maxTrackingCorrectionAngle = PI/9; // rad
 
 		static uint32_t lastTime;
