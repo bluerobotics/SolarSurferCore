@@ -17,6 +17,7 @@
 #include "PowerMonitor.h"
 #include "BLDCMonitor.h"
 #include "Airmar100WX.h"
+#include "DS18XXX.h"
 #include "WaypointWriter.h"
 #include "Persistant.h"
 #include "NonPersistant.h"
@@ -59,6 +60,7 @@ void setup() {
   HMC5883::init();
   DCM::init();
   GPS_UBX::init();
+  DS18XXX::init();
   Airmar100WX::init(&nssAirmar);
   Thruster::init();
   RemoteControl::init();
@@ -184,7 +186,8 @@ void updateNavigationSensors() {
   static uint32_t WTempReadTimer;
   if ( millis() - WTempReadTimer > WTempReadPeriodMS ) {
   	WTempReadTimer = millis();
-  	// Insert code here.
+  	
+    DS18XXX::read();
   }
 
   // Update pH sensor

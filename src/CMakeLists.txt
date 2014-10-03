@@ -29,13 +29,14 @@ cmake_minimum_required (VERSION 2.6)
 # as well as the project's name.                                              #
 ###############################################################################
 project (solarsurfer)
-set(arduino_libs NewSoftSerial EEPROM SPI Wire Wire/utility TinyGPSPlus)
+set(arduino_libs NewSoftSerial EEPROM SPI Wire Wire/utility TinyGPSPlus Arduino-Temperature-Control-Library OneWire)
 set(sources Airmar100WX.cpp
 			APM.cpp
 			Atlas_pH.cpp
 	    BLDCMonitor.cpp
 	  	Captain.cpp
 	    DCM.cpp
+	    DS18XXX.cpp
 	    GPS_UBX.cpp
 	    Helmsman.cpp
 	    HMC5883.cpp

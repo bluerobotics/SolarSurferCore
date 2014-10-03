@@ -9,6 +9,7 @@
 #include "APM.h"
 #include "Persistant.h"
 #include "NonPersistant.h"
+#include "DS18XXX.h"
 
 namespace {
 	BLDCMonitor *bldc;
@@ -119,7 +120,7 @@ namespace MessageManager {
 		Msg::tlmstatus.swellPeriod							=					0;
 		Msg::tlmstatus.swellHeight							=					0;
 		Msg::tlmstatus.tempAir									=					0;
-		Msg::tlmstatus.tempWater			        	=					0;
+		Msg::tlmstatus.tempWater			        	=					DS18XXX::temperature*6;
 		Msg::tlmstatus.pressure				        	=					0;
 		Msg::tlmstatus.pH								        =					0;
 		Msg::tlmstatus.salinity									=					0;
