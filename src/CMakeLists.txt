@@ -51,6 +51,7 @@ set(sources Airmar100WX.cpp
 	    Satcom.cpp
 	    Transfer.cpp
 	    Thruster.cpp
+	    WaveMotion.cpp
 	    WaypointList.cpp
 	    )
 

@@ -10,6 +10,7 @@
 #include "Persistant.h"
 #include "NonPersistant.h"
 #include "DS18XXX.h"
+#include "WaveMotion.h"
 
 namespace {
 	BLDCMonitor *bldc;
@@ -116,9 +117,9 @@ namespace MessageManager {
 		Msg::tlmstatus.rotations								=					0;
 		Msg::tlmstatus.rpm_left									=					Thruster::get(Thruster::left);
 		Msg::tlmstatus.rpm_right								=					Thruster::get(Thruster::right);
-		Msg::tlmstatus.rollPitchRange						=					0;
-		Msg::tlmstatus.swellPeriod							=					0;
-		Msg::tlmstatus.swellHeight							=					0;
+		Msg::tlmstatus.rollPitchRange						=					WaveMotion::rollPitchRange*5;
+		Msg::tlmstatus.swellPeriod							=					WaveMotion::swellPeriod;
+		Msg::tlmstatus.swellHeight							=					WaveMotion::swellHeight*4;
 		Msg::tlmstatus.tempAir									=					0;
 		Msg::tlmstatus.tempWater			        	=					DS18XXX::temperature*6;
 		Msg::tlmstatus.pressure				        	=					0;

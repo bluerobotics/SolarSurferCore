@@ -21,6 +21,7 @@
 #include "WaypointWriter.h"
 #include "Persistant.h"
 #include "NonPersistant.h"
+#include "WaveMotion.h"
 
 float dt;
 long timer;
@@ -64,6 +65,7 @@ void setup() {
   Airmar100WX::init(&nssAirmar);
   Thruster::init();
   RemoteControl::init();
+  WaveMotion::init();
   Captain::init(&bldcMonitor,&powerMonitor);
   MessageManager::init(&bldcMonitor,&powerMonitor);
 
@@ -197,6 +199,8 @@ void updateNavigationSensors() {
   	pHReadTimer = millis();
   	// Insert code here.
   }
+
+  WaveMotion::calculate();
 }
 
 void controlLoop() {
