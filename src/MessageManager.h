@@ -11,7 +11,8 @@
 #define MM_RX_BUFFER_SIZE 270
 
 namespace Msg {
-	extern MessageType::tlmstatus tlmstatus;
+	extern MessageType::tlmshortStatus tlmshortStatus;
+	extern MessageType::tlmlongStatus tlmlongStatus;
 	extern MessageType::tlmdiagnostic tlmdiagnostic;
 	extern MessageType::cmdcontrol cmdcontrol;
 }

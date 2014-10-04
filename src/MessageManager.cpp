@@ -18,7 +18,8 @@ namespace {
 }
 
 namespace Msg {
-	MessageType::tlmstatus tlmstatus;
+	MessageType::tlmshortStatus tlmshortStatus;
+	MessageType::tlmlongStatus tlmlongStatus;
 	MessageType::tlmdiagnostic tlmdiagnostic;
 	MessageType::cmdcontrol cmdcontrol;
 }
@@ -99,41 +100,33 @@ namespace MessageManager {
 
 #else		
 
-		Msg::tlmstatus.version									=					1;
-		Msg::tlmstatus.format										=					2;
-		Msg::tlmstatus.latitude									=					GPS_UBX::latitude;
-		Msg::tlmstatus.longitude 								=					GPS_UBX::longitude;
-		Msg::tlmstatus.fix											=					GPS_UBX::fix;
-		Msg::tlmstatus.time											=					GPS_UBX::time/1000/60;
-		Msg::tlmstatus.altitude									=					GPS_UBX::altitude/2;
-		Msg::tlmstatus.course										=					GPS_UBX::course*128/180;
-		Msg::tlmstatus.heading									=					degrees(DCM::yaw)*128/180;
-		Msg::tlmstatus.v_load										=         APM::getCorrectedVoltage()*1000;
-		Msg::tlmstatus.v_solar        				  =         0.0*1000;
-		Msg::tlmstatus.p_solar									=					0;
-		Msg::tlmstatus.p_load 									=					APM::getPower();
-		Msg::tlmstatus.p_left										=					0;
-		Msg::tlmstatus.p_right									=					0;
-		Msg::tlmstatus.rotations								=					0;
-		Msg::tlmstatus.rpm_left									=					Thruster::get(Thruster::left);
-		Msg::tlmstatus.rpm_right								=					Thruster::get(Thruster::right);
-		Msg::tlmstatus.rollPitchRange						=					WaveMotion::rollPitchRange*5;
-		Msg::tlmstatus.swellPeriod							=					WaveMotion::swellPeriod;
-		Msg::tlmstatus.swellHeight							=					WaveMotion::swellHeight*4;
-		Msg::tlmstatus.tempAir									=					0;
-		Msg::tlmstatus.tempWater			        	=					DS18XXX::temperature*6;
-		Msg::tlmstatus.pressure				        	=					0;
-		Msg::tlmstatus.pH								        =					0;
-		Msg::tlmstatus.salinity									=					0;
-		Msg::tlmstatus.windSpeed								=					0;
-		Msg::tlmstatus.windDirection						=					0;
-		Msg::tlmstatus.status1									=					Captain::getStatus(1);
-		Msg::tlmstatus.status2									=					Captain::getStatus(2);
-		Msg::tlmstatus.currentWaypointIndex			=					Captain::waypoint.index;
-		Msg::tlmstatus.currentWaypointChecksum	=					WaypointList::getChecksum(&Captain::waypoint);
-		Msg::tlmstatus.commandCount							=					Persistant::data.commandCount;
-		Msg::tlmstatus.telemetryCount		        =					Persistant::data.telemetryCount;
-		Msg::tlmstatus.extra1										=					0;
+		Msg::tlmshortStatus.version												=					1;
+		Msg::tlmshortStatus.format												=					2;
+		Msg::tlmshortStatus.time													=					GPS_UBX::time;
+		Msg::tlmshortStatus.fix														=					GPS_UBX::fix;
+		Msg::tlmshortStatus.latitude											=					GPS_UBX::latitude;
+		Msg::tlmshortStatus.longitude 										=					GPS_UBX::longitude;
+		Msg::tlmshortStatus.altitude											=					GPS_UBX::altitude/2;
+		Msg::tlmshortStatus.course												=					GPS_UBX::course*128/180;
+		Msg::tlmshortStatus.heading												=					degrees(DCM::yaw)*128/180;
+		Msg::tlmshortStatus.currentWaypointIndex					=					Captain::waypoint.index;
+		Msg::tlmshortStatus.currentWaypointLatitude				=					Captain::waypoint.location.latitude;
+		Msg::tlmshortStatus.currentWaypointLongitude			=					Captain::waypoint.location.longitude;
+		Msg::tlmshortStatus.status1												=					Captain::getStatus(1);
+		Msg::tlmshortStatus.status2												=					Captain::getStatus(2);		
+		Msg::tlmshortStatus.commandCount									=					Persistant::data.commandCount;
+		Msg::tlmshortStatus.telemetryCount		       			=					Persistant::data.telemetryCount;
+		Msg::tlmshortStatus.v_load												=         APM::getCorrectedVoltage()*1000;
+		Msg::tlmshortStatus.p_load 												=					APM::getPower();
+		Msg::tlmshortStatus.p_left												=					0;
+		Msg::tlmshortStatus.p_right												=					0;
+		Msg::tlmshortStatus.rpm_left											=					Thruster::get(Thruster::left);
+		Msg::tlmshortStatus.rpm_right											=					Thruster::get(Thruster::right);
+		Msg::tlmshortStatus.rollPitchRange								=					WaveMotion::rollPitchRange*5;
+		Msg::tlmshortStatus.swellPeriod										=					WaveMotion::swellPeriod;
+		Msg::tlmshortStatus.swellHeight										=					WaveMotion::swellHeight*4;
+		Msg::tlmshortStatus.tempWater			    			    	=					DS18XXX::temperature*6;
+		//Msg::tlmshortStatus.extra													=					{0,0,0,0};
 
 		Msg::tlmdiagnostic.version						=					1;
 		Msg::tlmdiagnostic.format							=					5;

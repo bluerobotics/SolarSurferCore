@@ -294,7 +294,7 @@ void loop() {
   	satcomTimer = millis();
 
   	MessageManager::updateFields();
-		MessageManager::serialize(&Msg::tlmstatus);	
+		MessageManager::serialize(&Msg::tlmshortStatus);	
 
 		// Send/receive message
     size_t rxBufferSize;

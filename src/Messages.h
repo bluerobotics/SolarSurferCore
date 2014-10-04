@@ -23,23 +23,57 @@ struct testmixed {
 	int8_t test_convert; // undefined, undefined, 0,1
 	uint16_t checksum; // 
 };
-struct tlmstatus {
+struct tlmshortStatus {
 	uint8_t version; // 
 	uint8_t format; // 
+	uint32_t time; // undefined, undefined, 0,1
+	uint8_t fix; // 0: No Fix; 1: Dead Reckoning Only; 2: 2D-Fix; 3: 3D-Fix; 4: GPS+Dead Reckoning; 5: Time Only; 
 	float latitude; // undefined, undefined, 0,1
 	float longitude; // undefined, undefined, 0,1
-	uint8_t fix; // 0: No Fix; 1: Dead Reckoning Only; 2: 2D-Fix; 3: 3D-Fix; 4: GPS+Dead Reckoning; 5: Time Only; 
-	uint16_t time; // undefined, undefined, 0,1
 	int8_t altitude; // undefined, undefined, 0,2
 	int8_t course; // undefined, undefined, 0,1.40625
 	int8_t heading; // undefined, undefined, 0,1.40625
+	uint8_t currentWaypointIndex; // undefined, undefined, 0,1
+	float currentWaypointLatitude; // undefined, undefined, 0,1
+	float currentWaypointLongitude; // undefined, undefined, 0,1
+	uint8_t status1; // 
+	uint8_t status2; // 
+	uint16_t commandCount; // undefined, undefined, 0,1
+	uint16_t telemetryCount; // undefined, undefined, 0,1
 	uint16_t v_load; // undefined, undefined, 0,0.001
-	uint16_t v_solar; // undefined, undefined, 0,0.001
-	int8_t p_solar; // undefined, undefined, 0,1
-	int8_t p_load; // undefined, undefined, 0,1
+	uint8_t p_load; // undefined, undefined, 0,1
 	uint8_t p_left; // undefined, undefined, 0,1
 	uint8_t p_right; // undefined, undefined, 0,1
-	uint16_t rotations; // undefined, undefined, 0,100000
+	uint8_t rpm_left; // undefined, undefined, 0,25
+	uint8_t rpm_right; // undefined, undefined, 0,25
+	uint8_t rollPitchRange; // undefined, undefined, 0,0.2
+	uint8_t swellPeriod; // undefined, undefined, 0,1
+	uint8_t swellHeight; // undefined, undefined, 0,0.25
+	uint8_t tempWater; // undefined, undefined, 0,0.1666666667
+	uint8_t extra[4]; // 
+	uint16_t checksum; // 
+};
+struct tlmlongStatus {
+	uint8_t version; // 
+	uint8_t format; // 
+	uint32_t time; // undefined, undefined, 0,1
+	uint8_t fix; // 0: No Fix; 1: Dead Reckoning Only; 2: 2D-Fix; 3: 3D-Fix; 4: GPS+Dead Reckoning; 5: Time Only; 
+	float latitude; // undefined, undefined, 0,1
+	float longitude; // undefined, undefined, 0,1
+	int8_t altitude; // undefined, undefined, 0,2
+	int8_t course; // undefined, undefined, 0,1.40625
+	int8_t heading; // undefined, undefined, 0,1.40625
+	uint8_t currentWaypointIndex; // undefined, undefined, 0,1
+	float currentWaypointLatitude; // undefined, undefined, 0,1
+	float currentWaypointLongitude; // undefined, undefined, 0,1
+	uint8_t status1; // 
+	uint8_t status2; // 
+	uint16_t commandCount; // undefined, undefined, 0,1
+	uint16_t telemetryCount; // undefined, undefined, 0,1
+	uint16_t v_load; // undefined, undefined, 0,0.001
+	uint8_t p_load; // undefined, undefined, 0,1
+	uint8_t p_left; // undefined, undefined, 0,1
+	uint8_t p_right; // undefined, undefined, 0,1
 	uint8_t rpm_left; // undefined, undefined, 0,25
 	uint8_t rpm_right; // undefined, undefined, 0,25
 	uint8_t rollPitchRange; // undefined, undefined, 0,0.2
@@ -52,13 +86,7 @@ struct tlmstatus {
 	int8_t salinity; // undefined, undefined, 27.5,0.1
 	uint16_t windSpeed; // undefined, undefined, 0,0.01
 	int8_t windDirection; // undefined, undefined, 0,1.40625
-	uint8_t status1; // 
-	uint8_t status2; // 
-	uint8_t currentWaypointIndex; // undefined, undefined, 0,1
-	uint8_t currentWaypointChecksum; // undefined, undefined, 0,1
-	uint16_t commandCount; // undefined, undefined, 0,1
-	uint16_t telemetryCount; // undefined, undefined, 0,1
-	uint8_t extra1; // undefined, undefined, 0,1
+	uint8_t extra[47]; // 
 	uint16_t checksum; // 
 };
 struct cmdcontrol {
