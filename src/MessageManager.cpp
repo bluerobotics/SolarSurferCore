@@ -118,10 +118,10 @@ namespace MessageManager {
 		Msg::tlmshortStatus.telemetryCount		       			=					Persistant::data.telemetryCount;
 		Msg::tlmshortStatus.v_load												=         APM::getCorrectedVoltage()*1000;
 		Msg::tlmshortStatus.p_load 												=					APM::getPower();
-		Msg::tlmshortStatus.p_left												=					0;
-		Msg::tlmshortStatus.p_right												=					0;
-		Msg::tlmshortStatus.rpm_left											=					Thruster::get(Thruster::left);
-		Msg::tlmshortStatus.rpm_right											=					Thruster::get(Thruster::right);
+		Msg::tlmshortStatus.p_left												=					bldc->getPower(0);
+		Msg::tlmshortStatus.p_right												=					bldc->getPower(1);
+		Msg::tlmshortStatus.rpm_left											=					bldc->getRPM(0)/25;
+		Msg::tlmshortStatus.rpm_right											=					bldc->getRPM(0)/25;
 		Msg::tlmshortStatus.rollPitchRange								=					WaveMotion::rollPitchRange*5;
 		Msg::tlmshortStatus.swellPeriod										=					WaveMotion::swellPeriod;
 		Msg::tlmshortStatus.swellHeight										=					WaveMotion::swellHeight*4;

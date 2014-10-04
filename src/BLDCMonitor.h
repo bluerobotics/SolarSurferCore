@@ -23,6 +23,10 @@ class BLDCMonitor {
 	
 	void read();
 
+	float getPower(uint8_t index);
+
+	int16_t getRPM(uint8_t index);
+
 	float getTotalPower();
 };
 
