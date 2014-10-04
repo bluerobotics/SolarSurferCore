@@ -19,7 +19,7 @@
 
 namespace GPS_UBX {
 
-extern long time;
+extern uint32_t time;
 extern float longitude;
 extern float latitude;
 extern float altitude;

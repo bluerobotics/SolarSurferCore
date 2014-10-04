@@ -16,7 +16,7 @@ namespace {
 
 namespace GPS_UBX {
 
-long time;
+uint32_t time;
 float longitude;
 float latitude;
 float altitude;

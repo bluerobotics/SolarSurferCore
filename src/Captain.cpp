@@ -14,6 +14,9 @@ namespace {
 	BLDCMonitor* bldc;
   PowerMonitor* power;
 
+  uint8_t status1;
+  uint8_t status2;
+
   float desiredPowerErrorIntegral;
 
   float desiredPowerController(float error,float dt) {
@@ -49,6 +52,79 @@ namespace Captain {
 	
 	void determineState() {
 		// Determine state of the vessel
+
+		status1 = 0;
+		status2 = 0;
+
+		// Status 1:
+		// 0 - Null
+		// 1 - GPS Okay
+		// 2 - IMU Okay
+		// 3 - Compass Okay
+		// 4 - BLDC Monitor Okay
+		// 5 - Satcom Okay
+		// 6 - RC Radio Connected
+
+		// GPS
+		static uint32_t lastGPSTime;
+		static uint32_t lastGPSCheck;
+		static bool gpsLost;
+		if ( millis() - lastGPSCheck > 10000 ) {
+			lastGPSCheck = millis();
+			if ( GPS_UBX::time == lastGPSTime ) {
+				gpsLost = true;
+			} else {
+				gpsLost = false;
+			}
+			lastGPSTime = GPS_UBX::time;
+		}
+		if ( !gpsLost ) {
+			status1 |= (1 << 1);
+		}
+
+		// IMU
+		static float lastAccel;
+		static uint32_t lastIMUCheck;
+		static bool imuLost;
+		if ( millis() - lastIMUCheck > 10000 ) {
+			lastIMUCheck = millis();
+			if ( MPU6000::accelX == lastAccel ) {
+				imuLost = true;
+			} else {
+				imuLost = false;
+			}
+			lastAccel = MPU6000::accelX;
+		}
+		if ( !imuLost ) {
+			status1 |= (1 << 2);
+		}
+
+		// Compass
+		static float lastMagX;
+		static uint32_t lastMagCheck;
+		static bool magLost;
+		if ( millis() - lastMagCheck > 10000 ) {
+			lastMagCheck = millis();
+			if ( HMC5883::mag_x == lastMagX ) {
+				magLost = true;
+			} else {
+				magLost = false;
+			}
+			lastMagX = HMC5883::mag_x;
+		}
+		if ( !magLost ) {
+			status1 |= (1 << 3);
+		}
+
+		// Status 2:
+		// 0 - Null
+		// 1 - Thruster 1 Okay
+		// 2 - Thruster 2 Okay
+		// 3 - Thruster 3 Okay
+		// 4 - Thruster 4 Okay
+		// 5 - Navigation Box Dry
+		// 6 - Battery Box Dry
+		// 7 - 
 
 
 		// Determine state of the mission
@@ -125,9 +201,9 @@ namespace Captain {
 	uint8_t getStatus(uint8_t index) {
 		switch(index) {
 			case 1:
-				return 0;
+				return status1;
 			case 2:
-				return 0;
+				return status2;
 			default:
 				return 0;
 		}
