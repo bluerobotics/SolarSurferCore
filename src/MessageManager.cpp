@@ -232,22 +232,22 @@ namespace MessageManager {
 
 		// Update waypoints if necessary
 		Location tempLoc;
-		if ( Msg::cmdcontrol.waypointID1 > 0 && Msg::cmdcontrol.waypointRadius1 > 0 ) {
+		if ( Msg::cmdcontrol.waypointID1 > 0 ) {
 			tempLoc.latitude      = Msg::cmdcontrol.waypointLat1;
 			tempLoc.longitude     = Msg::cmdcontrol.waypointLon1;
 			WaypointList::write(Msg::cmdcontrol.waypointID1,Msg::cmdcontrol.waypointRadius1,tempLoc);
 		}
-		if ( Msg::cmdcontrol.waypointID2 > 0 && Msg::cmdcontrol.waypointRadius2 > 0 ) {
+		if ( Msg::cmdcontrol.waypointID2 > 0 ) {
 			tempLoc.latitude      = Msg::cmdcontrol.waypointLat2;
 			tempLoc.longitude     = Msg::cmdcontrol.waypointLon2;
 			WaypointList::write(Msg::cmdcontrol.waypointID2,Msg::cmdcontrol.waypointRadius2,tempLoc);
 		}
-		if ( Msg::cmdcontrol.waypointID3 > 0 && Msg::cmdcontrol.waypointRadius3 > 0 ) {
+		if ( Msg::cmdcontrol.waypointID3 > 0 ) {
 			tempLoc.latitude      = Msg::cmdcontrol.waypointLat3;
 			tempLoc.longitude     = Msg::cmdcontrol.waypointLon3;
 			WaypointList::write(Msg::cmdcontrol.waypointID3,Msg::cmdcontrol.waypointRadius3,tempLoc);
 		}
-		if ( Msg::cmdcontrol.waypointID4 > 0 && Msg::cmdcontrol.waypointRadius4 > 0 ) {
+		if ( Msg::cmdcontrol.waypointID4 > 0 ) {
 			tempLoc.latitude      = Msg::cmdcontrol.waypointLat4;
 			tempLoc.longitude     = Msg::cmdcontrol.waypointLon4;
 			WaypointList::write(Msg::cmdcontrol.waypointID4,Msg::cmdcontrol.waypointRadius4,tempLoc);
