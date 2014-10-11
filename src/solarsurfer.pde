@@ -239,8 +239,9 @@ void diagnosticCommunication() {
       }
       if ( MessageManager::deserialize(&Msg::cmdcontrol) ) {
         MessageManager::processCommand();
-        delay(100);
+        delay(1000);
         telemTransfer.send(&Msg::cmdcontrol);
+        delay(1000);
       }
     }
   } 
@@ -289,16 +290,26 @@ void loop() {
   // after powering up so that if it is browning-out for some reason it won't
   // try to send tons of messages.
   
-  const static uint32_t initialTimeout = 360000/4;
-  if ( millis()-satcomTimer>satcomPeriod/4 && millis() > initialTimeout ) {
+  const static uint32_t initialTimeout = 150000l;
+  if ( millis()-satcomTimer>satcomPeriod && millis() > initialTimeout ) {
   	satcomTimer = millis();
 
   	MessageManager::updateFields();
 		MessageManager::serialize(&Msg::tlmshortStatus);	
 
+    int16_t err = 0;
+
+    // Check signal strength
+    int16_t signalQuality = -1;
+    err = isbd.getSignalQuality(signalQuality);
+    if (err == 0) {
+      NonPersistant::data.lastSignalStrength = signalQuality;
+    } else {
+      NonPersistant::data.lastISBDError = err;
+    }
+
 		// Send/receive message
     size_t rxBufferSize;
-    int16_t err = 0;
     if (ISBD_CONNECTED) {
       err = isbd.sendReceiveSBDBinary(MessageManager::getTXBuffer(),
                                       MessageManager::getTXBufferLength(),

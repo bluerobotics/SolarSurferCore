@@ -17,6 +17,8 @@ namespace {
 namespace GPS_UBX {
 
 uint32_t time;
+uint32_t iTOW;
+int16_t week;
 float longitude;
 float latitude;
 float altitude;
@@ -41,6 +43,7 @@ void init() {
   enableMsg(SOL_MSG, false);       // Enable soluton messages
   enableMsg(DOP_MSG, false);       // Enable DOP messages
   enableMsg(DGPS_MSG, false);     // Disable DGPS messages
+  enableMsg(TIMEGPS_MSG, true);   // Enable time message
 }
 
 void read() {
@@ -104,7 +107,7 @@ void read() {
           switch (code) {
             case 0x01:      // NAV-
               // Add blank line between time groups
-              time = ULONG(0);
+              iTOW = ULONG(0);
               /*if (lastTime != ULONG(0)) {
                 lastTime = ULONG(0);
                 Serial.print("\nTime: ");
@@ -173,6 +176,9 @@ void read() {
                   Serial.print(" deg, cAcc = ");
                   Serial.print((float) LONG(32) / 100000, 2);
                   Serial.print(" deg");*/
+                  break;
+                case TIMEGPS_MSG:
+                  week = INT(8);
                   break;
                 case 0x31:  // NAV-DGPS
                   Serial.print("DGPS:   age = ");
@@ -251,6 +257,9 @@ void read() {
               Serial.println();*/
               break;
           }
+
+          // Calculate time in UTC seconds
+          time = week*604800l + iTOW/1000l + 315964800l;
         }
         state = 0;
         break;

@@ -19,6 +19,8 @@ namespace {
 
   float desiredPowerErrorIntegral;
 
+  uint32_t positionHoldingTimer;
+
   float desiredPowerController(float error,float dt) {
 		static const float Kp = 50.0;
 		static const float Ki = 10.0;
@@ -34,9 +36,15 @@ namespace Captain {
   float desiredCourse;
   float desiredPower;
   float distanceToWaypoint;
+  float headingToWaypoint;
   Waypoint current;
   Waypoint previous;
   Waypoint waypoint;
+  Waypoint holding;
+
+  bool forceThrustersOff;
+  bool forceHeading;
+  bool forcePositionHold;
 
 	void init(BLDCMonitor *_bldcMonitor,PowerMonitor *_powerMonitor) {
 		bldc = _bldcMonitor;
@@ -51,6 +59,34 @@ namespace Captain {
 	}
 	
 	void determineState() {
+		// Determine mode
+
+		if ( Persistant::data.forceMode & (1<<0) ) {
+			// Thrusters off
+			forceThrustersOff = true;
+		} else {
+			forceThrustersOff = false;
+		}
+
+		if ( Persistant::data.forceMode & (1<<1) ) {
+			// Force Heading
+			forceHeading = true;
+		} else {
+			forceHeading = false;
+		}
+
+		if ( Persistant::data.forceMode & (1<<2) ) {
+			// Force Hold Position
+			if ( !forcePositionHold ) {
+				// Set current position as holding position
+				holding = current;
+				positionHoldingTimer = millis();
+			}
+			forcePositionHold = true;
+		} else {
+			forcePositionHold = false;
+		}
+
 		// Determine state of the vessel
 
 		status1 = 0;
@@ -132,11 +168,13 @@ namespace Captain {
 		if (distanceToWaypoint < waypoint.radius) {
 			getNextWaypoint();
 		}
+
+		headingToWaypoint = Navigator::getHeadingToLocation(&current.location,&waypoint.location);
 	}
 	
 	void determineCourseAndPower() {
-		static const float trackingCorrectionGain = 4.0; // degrees of correction per degree of error (constrained)
-		static const float maxTrackingCorrectionAngle = PI/9; // rad
+		static const float trackingCorrectionGain = 4.0; // degrees/rad of correction per degree/rad of error (constrained)
+		static const float maxTrackingCorrectionAngle = radians(20); // 20 deg
 
 		static uint32_t lastTime;
 		float dt = (millis()-lastTime)/1000.0f;
@@ -152,7 +190,7 @@ namespace Captain {
 	  float trackingCorrectionAngle = trackingCorrectionGain*Navigator::getAngleBetweenHeadings(headingHereToNext,headingPrevToNext);
 	  trackingCorrectionAngle = constrain(trackingCorrectionAngle,-maxTrackingCorrectionAngle,maxTrackingCorrectionAngle);
 
-	  if (previous.location.latitude == 0.0f && previous.location.latitude == 0.0f) {
+	  if (previous.index == 0) {
 	  	trackingCorrectionAngle = 0;
 	  }
 
@@ -167,6 +205,28 @@ namespace Captain {
 	  	desiredPower = -desiredPowerController(desiredVoltage-APM::getCorrectedVoltage(),dt);
 	  } else {
 	  	desiredPowerErrorIntegral = 0;
+	  	desiredPower = 0;
+	  }
+
+	  // Force cases
+	  static const uint32_t positionHoldPause = 120000; // ms
+	  static const uint32_t positionHoldRadius = 6; // m
+
+	  if ( forcePositionHold ) {
+	  	if ( millis() - positionHoldingTimer < positionHoldPause ) {
+	  		desiredPower = 0;
+	  	} else {
+	  		if ( Navigator::getDistanceToLocation(&current.location,&holding.location) < positionHoldRadius ) {
+	  			positionHoldingTimer = millis();
+	  		}
+	  	}
+	  }
+
+	  if ( forceHeading ) {
+	  	desiredCourse = Persistant::data.forceHeading;
+	  }
+
+	  if ( forceThrustersOff ) {
 	  	desiredPower = 0;
 	  }
 

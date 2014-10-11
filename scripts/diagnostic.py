@@ -79,11 +79,17 @@ formatString = "=" # The equal sign in the format string eliminate C-struct padd
 if __name__ == '__main__':
 	signal.signal(signal.SIGINT, sigint_handler)
 
+	import pprint
+
 	with open(options.formatFile) as format_file:
 		formats = json.load(format_file)
-		diag = formats["formats"]["5"]["payload"]
+		diag = formats["formats"]["6"]["payload"]
+		#shared = formats["shared"]
 
 	for item in diag:
+		#pprint.pprint(str(item))
+		#if str(item) in shared:
+		#	pprint.pprint(shared[item])
 		if item == 'version':
 			headers.append(item)
 			formatString += 'B'

@@ -16,6 +16,7 @@
 #define  SOL_MSG     0x06
 #define  DOP_MSG     0x04
 #define  DGPS_MSG    0x31
+#define  TIMEGPS_MSG 0x20
 
 namespace GPS_UBX {
 

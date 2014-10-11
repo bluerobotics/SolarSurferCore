@@ -8,24 +8,24 @@
 namespace MessageType {
 
 struct teststring {
-	uint8_t version; // 
-	uint8_t format; // 
+	uint8_t _version; // 
+	uint8_t _format; // 
 	char message[46]; // 
-	uint16_t checksum; // 
+	uint16_t _checksum; // 
 };
 struct testmixed {
-	uint8_t version; // 
-	uint8_t format; // 
+	uint8_t _version; // 
+	uint8_t _format; // 
 	uint8_t test_uint8_t; // 
 	int8_t test_int8_t; // 
 	uint8_t test_enum; // 0: this; 1: that; 
 	uint8_t test_bitmap; // 
 	int8_t test_convert; // undefined, undefined, 0,1
-	uint16_t checksum; // 
+	uint16_t _checksum; // 
 };
 struct tlmshortStatus {
-	uint8_t version; // 
-	uint8_t format; // 
+	uint8_t _version; // 
+	uint8_t _format; // 
 	uint32_t time; // undefined, undefined, 0,1
 	uint8_t fix; // 0: No Fix; 1: Dead Reckoning Only; 2: 2D-Fix; 3: 3D-Fix; 4: GPS+Dead Reckoning; 5: Time Only; 
 	float latitude; // undefined, undefined, 0,1
@@ -51,11 +51,11 @@ struct tlmshortStatus {
 	uint8_t swellHeight; // undefined, undefined, 0,0.25
 	uint8_t tempWater; // undefined, undefined, 0,0.1666666667
 	uint8_t extra[4]; // 
-	uint16_t checksum; // 
+	uint16_t _checksum; // 
 };
 struct tlmlongStatus {
-	uint8_t version; // 
-	uint8_t format; // 
+	uint8_t _version; // 
+	uint8_t _format; // 
 	uint32_t time; // undefined, undefined, 0,1
 	uint8_t fix; // 0: No Fix; 1: Dead Reckoning Only; 2: 2D-Fix; 3: 3D-Fix; 4: GPS+Dead Reckoning; 5: Time Only; 
 	float latitude; // undefined, undefined, 0,1
@@ -87,12 +87,12 @@ struct tlmlongStatus {
 	uint16_t windSpeed; // undefined, undefined, 0,0.01
 	int8_t windDirection; // undefined, undefined, 0,1.40625
 	uint8_t extra[47]; // 
-	uint16_t checksum; // 
+	uint16_t _checksum; // 
 };
 struct cmdcontrol {
-	uint8_t version; // 
-	uint8_t format; // 
-	uint8_t telemetryPeriod; // 0: No Change; 1: 5; 2: 10; 3: 20; 4: 30; 5: 45; 6: 60; 7: 90; 8: 120; 9: 180; 10: 360; 11: 720; 12: 1440; 13: 2880; 
+	uint8_t _version; // 
+	uint8_t _format; // 
+	uint8_t telemetryPeriod; // 0: No Change; 1: 2.5; 2: 5; 3: 10; 4: 20; 5: 30; 6: 45; 7: 60; 8: 90; 9: 120; 10: 180; 11: 360; 12: 720; 13: 1440; 14: 2880; 
 	uint8_t forceMode; // 
 	int8_t forceHeading; // undefined, undefined, 0,1.40625
 	uint16_t goalVoltage; // undefined, undefined, 0,0.001
@@ -113,19 +113,19 @@ struct cmdcontrol {
 	uint8_t waypointRadius4; // undefined, undefined, 0,1
 	float waypointLat4; // undefined, undefined, 0,1
 	float waypointLon4; // undefined, undefined, 0,1
-	uint16_t checksum; // 
+	uint16_t _checksum; // 
 };
 struct tlmimage {
-	uint8_t version; // 
-	uint8_t format; // 
+	uint8_t _version; // 
+	uint8_t _format; // 
 	uint8_t num; // 
 	uint8_t total; // 
 	uint8_t data[294]; // 
-	uint16_t checksum; // 
+	uint16_t _checksum; // 
 };
 struct tlmdiagnostic {
-	uint8_t version; // 
-	uint8_t format; // 
+	uint8_t _version; // 
+	uint8_t _format; // 
 	uint32_t gpsTime; // 
 	float gpsLatitude; // 
 	float gpsLongitude; // 
@@ -133,14 +133,18 @@ struct tlmdiagnostic {
 	float gpsGroundSpeed; // 
 	float gpsCourse; // 
 	uint8_t wpIndex; // 
-	uint8_t waypointRadius; // 
 	float wpLatitude; // 
 	float wpLongitude; // 
+	uint8_t waypointRadius; // 
+	float distanceToWaypoint; // 
+	float headingToWaypoint; // 
+	float heading; // 
+	float desiredCourse; // 
+	uint8_t prevIndex; // 
+	float prevLatitude; // 
+	float prevLongitude; // 
 	float roll; // 
 	float pitch; // 
-	float heading; // 
-	float distanceToWaypoint; // 
-	float desiredCourse; // 
 	float desiredPower; // 
 	uint16_t leftThruster; // 
 	uint16_t rightThruster; // 
@@ -149,22 +153,32 @@ struct tlmdiagnostic {
 	int16_t rcSteering; // 
 	int16_t rcPower; // 
 	float voltageAPM; // 
-	float voltageSolar; // 
-	float voltageBattery; // 
-	float voltageThrusters; // 
 	float powerAPM; // 
 	float powerThrusters; // 
-	float powerSolar; // 
-	float powerCharge; // 
-	float powerLoad; // 
-	uint8_t cmdtelemetryPeriod; // 0: No Change; 1: 5; 2: 10; 3: 20; 4: 30; 5: 45; 6: 60; 7: 90; 8: 120; 9: 180; 10: 360; 11: 720; 12: 1440; 13: 2880; 
+	uint8_t cmdtelemetryPeriod; // 0: No Change; 1: 2.5; 2: 5; 3: 10; 4: 20; 5: 30; 6: 45; 7: 60; 8: 90; 9: 120; 10: 180; 11: 360; 12: 720; 13: 1440; 14: 2880; 
 	uint8_t cmdforceMode; // 
+	uint8_t forceThrustersOff; // 
+	uint8_t forceHeading; // 
+	uint8_t forceHoldPosition; // 
 	int8_t cmdforceHeading; // undefined, undefined, 0,1.40625
 	uint16_t cmdgoalVoltage; // undefined, undefined, 0,0.001
 	uint8_t cmdforceCurrentWaypointIndex; // 
 	uint8_t inCallback; // 
-	uint8_t satcomErrorCode; // 
-	uint16_t checksum; // 
+	uint8_t satcomSignal; // 
+	uint8_t satcomErrorCode; // 0: SUCCESS; 1: ALREADY AWAKE; 2: SERIAL FAILURE; 3: PROTOCOL ERROR; 4: CANCELLED; 5: NO MODEM DETECTED; 6: SBDIX FATAL ERROR; 7: SEND/RECEIVE TIMEOUT; 8: RX OVERFLOW; 9: REENTRANT; 10: IS ASLEEP; 11: NO SLEEP PIN; 
+	uint8_t status1; // 
+	uint8_t status2; // 
+	float rollPitchRange; // 
+	float swellPeriod; // 
+	float swellHeight; // 
+	float tempAir; // 
+	float tempWater; // 
+	float pressure; // 
+	float pH; // 
+	float salinity; // 
+	float windSpeed; // 
+	float windDirection; // 
+	uint16_t _checksum; // 
 };
 
 }

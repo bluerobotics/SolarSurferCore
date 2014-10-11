@@ -10,8 +10,14 @@ namespace Captain {
   extern float desiredCourse;
   extern float desiredPower;
   extern float distanceToWaypoint;
+  extern float headingToWaypoint;
   extern Waypoint current;
   extern Waypoint waypoint;
+  extern Waypoint previous;
+
+  extern bool forceThrustersOff;
+  extern bool forceHeading;
+  extern bool forcePositionHold;
 
 	void init(BLDCMonitor *_bldcMonitor,PowerMonitor *_powerMonitor);
 	
