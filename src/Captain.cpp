@@ -21,6 +21,9 @@ namespace {
 
   uint32_t positionHoldingTimer;
 
+  bool removalManueverPerformed;
+  uint32_t seaweedRemovalTimer;
+
   float desiredPowerController(float error,float dt) {
 		static const float Kp = 50.0;
 		static const float Ki = 10.0;
@@ -45,6 +48,7 @@ namespace Captain {
   bool forceThrustersOff;
   bool forceHeading;
   bool forcePositionHold;
+  bool forceSeaweedRemoval;
 
 	void init(BLDCMonitor *_bldcMonitor,PowerMonitor *_powerMonitor) {
 		bldc = _bldcMonitor;
@@ -85,6 +89,20 @@ namespace Captain {
 			forcePositionHold = true;
 		} else {
 			forcePositionHold = false;
+		}
+
+		if ( Persistant::data.forceMode & (1<<3) ) {
+			// Force Seaweed Removal Maneuver
+			if ( !forceSeaweedRemoval ) {
+				removalManueverPerformed = false;
+				seaweedRemovalTimer = millis();
+			} 
+			if ( removalManueverPerformed ) {
+				Persistant::data.forceMode &= ~(1<<3);
+			}
+			forceSeaweedRemoval = true;
+		} else {
+			forceSeaweedRemoval = false;
 		}
 
 		// Determine state of the vessel
@@ -184,8 +202,16 @@ namespace Captain {
 	  current.location.longitude = GPS_UBX::longitude;
 
 	  // New navigation code
-	  float headingPrevToNext = Navigator::getHeadingToLocation(&previous.location,&waypoint.location);
-	  float headingHereToNext = Navigator::getHeadingToLocation(&current.location,&waypoint.location);
+	  float headingPrevToNext;
+	  float headingHereToNext;
+
+	  if ( forcePositionHold ) {
+	  	headingPrevToNext = Navigator::getHeadingToLocation(&previous.location,&holding.location);
+	  	headingHereToNext = Navigator::getHeadingToLocation(&current.location,&holding.location);
+	  } else {
+	  	headingPrevToNext = Navigator::getHeadingToLocation(&previous.location,&waypoint.location);
+	  	headingHereToNext = Navigator::getHeadingToLocation(&current.location,&waypoint.location);
+	  }
 
 	  float trackingCorrectionAngle = trackingCorrectionGain*Navigator::getAngleBetweenHeadings(headingHereToNext,headingPrevToNext);
 	  trackingCorrectionAngle = constrain(trackingCorrectionAngle,-maxTrackingCorrectionAngle,maxTrackingCorrectionAngle);
@@ -223,7 +249,7 @@ namespace Captain {
 	  }
 
 	  if ( forceHeading ) {
-	  	desiredCourse = Persistant::data.forceHeading;
+	  	desiredCourse = radians(Persistant::data.forceHeading);
 	  }
 
 	  if ( forceThrustersOff ) {
@@ -240,7 +266,40 @@ namespace Captain {
 		Helmsman::setPower(desiredPower);
 		if ( RemoteControl::isManual() ) {
 			Helmsman::executeManual(RemoteControl::getSteering(),RemoteControl::getPower());
-		} else {
+		} else if ( forceSeaweedRemoval ) {
+			if ( !removalManueverPerformed ) {
+		  	uint32_t elapsedTime = (millis() - seaweedRemovalTimer)/1000;
+		  	if ( elapsedTime < 10 ) {
+		  		Helmsman::executeManual(0,0);
+		  	} else if ( elapsedTime < 18 ) {
+		  		Helmsman::executeManual(0,-350);
+		  	} else if ( elapsedTime < 20 ) {
+		  		Helmsman::executeManual(0,0);
+		  	} else if ( elapsedTime < 28 ) {
+		  		Helmsman::executeManual(0,350);
+		  	} else if ( elapsedTime < 30 ) {
+		  		Helmsman::executeManual(0,0);
+		  	} else if ( elapsedTime < 38 ) {
+		  		Helmsman::executeManual(0,-350);
+		  	} else if ( elapsedTime < 40 ) {
+		  		Helmsman::executeManual(0,0);
+		  	} else if ( elapsedTime < 48 ) {
+		  		Helmsman::executeManual(0,350);
+		  	} else if ( elapsedTime < 50 ) {
+		  		Helmsman::executeManual(0,0);
+		  	} else if ( elapsedTime < 58 ) {
+		  		Helmsman::executeManual(0,-350);
+		  	} else if ( elapsedTime < 60 ) {
+		  		Helmsman::executeManual(0,0);
+		  	} else if ( elapsedTime < 68 ) {
+		  		Helmsman::executeManual(0,350);
+		  	} else if ( elapsedTime < 70 ) {
+		  		Helmsman::executeManual(0,0);
+		  	} else {
+		  		removalManueverPerformed = true;
+		  	}
+		  }
+	  } else {
 			Helmsman::execute(degrees(DCM::yaw),bldc->getTotalPower());
 		}
 	}

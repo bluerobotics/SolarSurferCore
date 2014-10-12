@@ -155,11 +155,14 @@ struct tlmdiagnostic {
 	float voltageAPM; // 
 	float powerAPM; // 
 	float powerThrusters; // 
+	int16_t rpmLeft; // 
+	int16_t rpmRight; // 
 	uint8_t cmdtelemetryPeriod; // 0: No Change; 1: 2.5; 2: 5; 3: 10; 4: 20; 5: 30; 6: 45; 7: 60; 8: 90; 9: 120; 10: 180; 11: 360; 12: 720; 13: 1440; 14: 2880; 
 	uint8_t cmdforceMode; // 
 	uint8_t forceThrustersOff; // 
 	uint8_t forceHeading; // 
 	uint8_t forceHoldPosition; // 
+	uint8_t forceSeaweedRemoval; // 
 	int8_t cmdforceHeading; // undefined, undefined, 0,1.40625
 	uint16_t cmdgoalVoltage; // undefined, undefined, 0,0.001
 	uint8_t cmdforceCurrentWaypointIndex; // 

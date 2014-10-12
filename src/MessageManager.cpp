@@ -45,21 +45,21 @@ namespace MessageManager {
 		Msg::cmdcontrol.goalVoltage             =         13200;
 		Msg::cmdcontrol.forceCurrentWaypointIndex =       0;
 		Msg::cmdcontrol.waypointID1             =         0;
-		Msg::cmdcontrol.waypointRadius1         =         0;
-		Msg::cmdcontrol.waypointLat1            =         0.0f;
-		Msg::cmdcontrol.waypointLon1            =         0.0f;
-		Msg::cmdcontrol.waypointID2             =         2;
+		Msg::cmdcontrol.waypointRadius1         =         3;
+		Msg::cmdcontrol.waypointLat1            =         33.962725f;
+		Msg::cmdcontrol.waypointLon1            =         -118.454250f;
+		Msg::cmdcontrol.waypointID2             =         0;
 		Msg::cmdcontrol.waypointRadius2         =         3;
-		Msg::cmdcontrol.waypointLat2            =         33.871126;
-		Msg::cmdcontrol.waypointLon2            =         -118.369778f;
+		Msg::cmdcontrol.waypointLat2            =         33.962018f;
+		Msg::cmdcontrol.waypointLon2            =         -118.455902f;
 		Msg::cmdcontrol.waypointID3             =         0;
-		Msg::cmdcontrol.waypointRadius3         =         0;
-		Msg::cmdcontrol.waypointLat3            =         0.0f;
-		Msg::cmdcontrol.waypointLon3            =         0.0f;
+		Msg::cmdcontrol.waypointRadius3         =         3;
+		Msg::cmdcontrol.waypointLat3            =         33.962725f;
+		Msg::cmdcontrol.waypointLon3            =         -118.454250f;
 		Msg::cmdcontrol.waypointID4             =         0;
-		Msg::cmdcontrol.waypointRadius4         =         0;
-		Msg::cmdcontrol.waypointLat4            =         0.0f;
-		Msg::cmdcontrol.waypointLon4            =         0.0f;
+		Msg::cmdcontrol.waypointRadius4         =         3;
+		Msg::cmdcontrol.waypointLat4            =         33.962018f;
+		Msg::cmdcontrol.waypointLon4            =         -118.455902f;
 
 #else		
 
@@ -84,7 +84,7 @@ namespace MessageManager {
 		Msg::tlmshortStatus.p_left												=					bldc->getPower(0);
 		Msg::tlmshortStatus.p_right												=					bldc->getPower(1);
 		Msg::tlmshortStatus.rpm_left											=					bldc->getRPM(0)/25;
-		Msg::tlmshortStatus.rpm_right											=					bldc->getRPM(0)/25;
+		Msg::tlmshortStatus.rpm_right											=					bldc->getRPM(1)/25;
 		Msg::tlmshortStatus.rollPitchRange								=					WaveMotion::rollPitchRange*5;
 		Msg::tlmshortStatus.swellPeriod										=					WaveMotion::swellPeriod;
 		Msg::tlmshortStatus.swellHeight										=					WaveMotion::swellHeight*4;
@@ -122,8 +122,14 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.voltageAPM         =         APM::getCorrectedVoltage();
 		Msg::tlmdiagnostic.powerAPM           =         APM::getPower();
 		Msg::tlmdiagnostic.powerThrusters     =         bldc->getTotalPower();
+		Msg::tlmdiagnostic.rpmLeft            =         bldc->getRPM(0);
+		Msg::tlmdiagnostic.rpmRight           =         bldc->getRPM(0);
 		Msg::tlmdiagnostic.cmdtelemetryPeriod =         Persistant::data.telemetryEnum;
 		Msg::tlmdiagnostic.cmdforceMode       =         Persistant::data.forceMode;
+		Msg::tlmdiagnostic.forceThrustersOff	=					Captain::forceThrustersOff;
+		Msg::tlmdiagnostic.forceHeading				=					Captain::forceHeading;
+		Msg::tlmdiagnostic.forceHoldPosition	=					Captain::forcePositionHold;
+		Msg::tlmdiagnostic.forceSeaweedRemoval=					Captain::forceSeaweedRemoval;
 		Msg::tlmdiagnostic.cmdforceHeading    =         Persistant::data.forceHeading*128/180;
     Msg::tlmdiagnostic.cmdgoalVoltage     =         Persistant::data.goalVoltage*1000;
     Msg::tlmdiagnostic.cmdforceCurrentWaypointIndex = Persistant::data.currentWaypointIndex;
@@ -147,7 +153,9 @@ namespace MessageManager {
 
 	void processCommand() {
 		// Telemetry period
-		Persistant::data.telemetryEnum = Msg::cmdcontrol.telemetryPeriod;
+		if ( Msg::cmdcontrol.telemetryPeriod > 0 ) {
+			Persistant::data.telemetryEnum = Msg::cmdcontrol.telemetryPeriod;
+		}
 		switch ( Msg::cmdcontrol.telemetryPeriod ) {
 			case 0:
 				break;

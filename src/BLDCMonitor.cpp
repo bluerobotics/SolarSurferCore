@@ -15,9 +15,9 @@ void BLDCMonitor::read() {
 float BLDCMonitor::getPower(uint8_t index) {
 	switch(index) {
 		case 0:
-			return data.voltage*data.currentLeft;
+			return data.voltage*data.currentA;
 		case 1:
-			return data.voltage*data.currentRight;
+			return data.voltage*data.currentB;
 	}
 	return 0;
 }
@@ -25,13 +25,13 @@ float BLDCMonitor::getPower(uint8_t index) {
 int16_t BLDCMonitor::getRPM(uint8_t index) {
 	switch(index) {
 		case 0:
-			return data.rpmLeft;
+			return data.rpmA;
 		case 1:
-			return data.rpmRight;
+			return data.rpmB;
 	}
 	return 0;
 }
 
 float BLDCMonitor::getTotalPower() {
-	return (data.currentLeft+data.currentRight)*data.voltage;
+	return (data.currentA+data.currentB)*data.voltage;
 }

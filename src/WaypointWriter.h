@@ -60,7 +60,9 @@ namespace WaypointWriter {
 			}
 			
 		}
+	}
 
+	void print() {
 		Serial.println("Confirming Waypoints:");
 		for (uint16_t i = 0 ; i < WaypointList::maxWaypoints ; i++) {
 			Waypoint wp;
@@ -72,8 +74,7 @@ namespace WaypointWriter {
 			delay(20);
 		}
 
-		Serial.println("Done. Must reprogram.");
-		for(;;);
+		Serial.println("Done.");
 	}
 }
 

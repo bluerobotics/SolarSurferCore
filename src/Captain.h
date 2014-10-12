@@ -18,6 +18,7 @@ namespace Captain {
   extern bool forceThrustersOff;
   extern bool forceHeading;
   extern bool forcePositionHold;
+  extern bool forceSeaweedRemoval;
 
 	void init(BLDCMonitor *_bldcMonitor,PowerMonitor *_powerMonitor);
 	

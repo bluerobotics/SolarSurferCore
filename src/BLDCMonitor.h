@@ -5,11 +5,14 @@
 #include "Transfer.h"
 
 struct BLDCMonitorStruct {
-	int16_t rpmLeft;
-	int16_t rpmRight;
-	float currentLeft;
-	float currentRight;
-	float voltage;
+  int16_t rpmA;
+  int16_t rpmB;
+  float currentA;
+  float currentB;
+  float voltage;
+  float thrust;
+  int16_t pwmA;
+  int16_t pwmB;
 };
 
 class BLDCMonitor {

@@ -33,7 +33,9 @@ long diagnosticTimer;
 IridiumSBD isbd(Serial2, -1);
 Transfer telemTransfer;
 
-NewSoftSerial nssBLDC(150,151);
+// Remember, only these pins can be used for RX:
+// 10, 11, 12, 13, 14, 15, 50, 51, 52, 53, A8 (62), A9 (63), A10 (64), A11 (65), A12 (66), A13 (67), A14 (68), A15 (69).
+NewSoftSerial nssBLDC(A8,A7);
 NewSoftSerial nssPM(152,153);
 NewSoftSerial nssAirmar(154,155);
 NewSoftSerial nssPH(156,157);
@@ -78,6 +80,8 @@ void setup() {
 
 	if (false) {
 		WaypointWriter::write();
+    WaypointWriter::print();
+    for (;;);
 	}
   if (false) {
     Serial.println("writing defaults...");
@@ -155,7 +159,7 @@ void updateNavigationSensors() {
   	BLDCReadTimer = millis();
   	// Listen on software serial here
   	nssBLDC.listen();
-    //delay(50);
+    delay(50);
   	bldcMonitor.read();
   }
 
@@ -294,9 +298,6 @@ void loop() {
   if ( millis()-satcomTimer>satcomPeriod && millis() > initialTimeout ) {
   	satcomTimer = millis();
 
-  	MessageManager::updateFields();
-		MessageManager::serialize(&Msg::tlmshortStatus);	
-
     int16_t err = 0;
 
     // Check signal strength
@@ -307,6 +308,9 @@ void loop() {
     } else {
       NonPersistant::data.lastISBDError = err;
     }
+
+    MessageManager::updateFields();
+    MessageManager::serialize(&Msg::tlmshortStatus);  
 
 		// Send/receive message
     size_t rxBufferSize;
