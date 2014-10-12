@@ -261,7 +261,8 @@ bool ISBDCallback()
 
 void loop() {
 	const static uint32_t printPeriod			=			500;
-  uint32_t satcomPeriod                 =     Persistant::data.telemetryPeriod;
+
+  uint32_t satcomPeriod = Persistant::data.telemetryPeriod;
 
 	static uint32_t printTimer;
 	static uint32_t satcomTimer;
@@ -293,6 +294,7 @@ void loop() {
   // This sends the Satcom message. It won't send a message until 5 minutes
   // after powering up so that if it is browning-out for some reason it won't
   // try to send tons of messages.
+  NonPersistant::data.timeTillNextSatcom = (satcomPeriod - (millis()-satcomTimer))/1000l;
   
   const static uint32_t initialTimeout = 150000l;
   if ( millis()-satcomTimer>satcomPeriod && millis() > initialTimeout ) {
@@ -335,7 +337,7 @@ void loop() {
       }
     }
 
-    if ( rxBufferSize > 0 && MessageManager::deserialize(&Msg::cmdcontrol) ) {
+    if ( err == 0 && rxBufferSize > 0 && MessageManager::deserialize(&Msg::cmdcontrol) ) {
       // If a message is received, update command count
       Persistant::data.commandCount++;
       Persistant::write();

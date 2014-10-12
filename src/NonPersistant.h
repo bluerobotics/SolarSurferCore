@@ -7,6 +7,7 @@ struct NonPersistantData {
 	uint8_t inCallback;
 	uint8_t lastSignalStrength;
 	uint8_t lastISBDError;
+	uint16_t timeTillNextSatcom;
 };
 
 namespace NonPersistant {

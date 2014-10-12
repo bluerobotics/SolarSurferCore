@@ -136,6 +136,9 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.inCallback         =         NonPersistant::data.inCallback;
 		Msg::tlmdiagnostic.satcomSignal       =         NonPersistant::data.lastSignalStrength;
 		Msg::tlmdiagnostic.satcomErrorCode    =         NonPersistant::data.lastISBDError;
+		Msg::tlmdiagnostic.telemetryCount			=					Persistant::data.telemetryCount;
+		Msg::tlmdiagnostic.commandCount				=					Persistant::data.commandCount;
+		Msg::tlmdiagnostic.timeTillNextSatcom =         NonPersistant::data.timeTillNextSatcom;
 		Msg::tlmdiagnostic.status1						=					Captain::getStatus(1);
 		Msg::tlmdiagnostic.status2						=					Captain::getStatus(2);
 		Msg::tlmdiagnostic.rollPitchRange     =         WaveMotion::rollPitchRange;
@@ -161,6 +164,7 @@ namespace MessageManager {
 				break;
 			case 1:
 				Persistant::data.telemetryPeriod = 2.5*60000;
+				break;
 			case 2:
 			  Persistant::data.telemetryPeriod = 5*60000;
 			  break;
@@ -236,6 +240,7 @@ namespace MessageManager {
 			tempLoc.longitude     = Msg::cmdcontrol.waypointLon4;
 			WaypointList::write(Msg::cmdcontrol.waypointID4,Msg::cmdcontrol.waypointRadius4,tempLoc);
 		}
+		Captain::refreshWaypoint();
 	}
 	
 	uint8_t* getRXBuffer() {
