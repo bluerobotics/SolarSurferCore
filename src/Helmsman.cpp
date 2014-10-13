@@ -18,7 +18,7 @@ namespace {
 	}
 	
 	float powerController(float error, float dt) {
-		static const float Kp = 4.0;
+		static const float Kp = 5.0;
 		static const float Ki = 0.0;
 		static const float iMax = 1000;
 		

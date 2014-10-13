@@ -123,7 +123,7 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.powerAPM           =         APM::getPower();
 		Msg::tlmdiagnostic.powerThrusters     =         bldc->getTotalPower();
 		Msg::tlmdiagnostic.rpmLeft            =         bldc->getRPM(0);
-		Msg::tlmdiagnostic.rpmRight           =         bldc->getRPM(0);
+		Msg::tlmdiagnostic.rpmRight           =         bldc->getRPM(1);
 		Msg::tlmdiagnostic.cmdtelemetryPeriod =         Persistant::data.telemetryEnum;
 		Msg::tlmdiagnostic.cmdforceMode       =         Persistant::data.forceMode;
 		Msg::tlmdiagnostic.forceThrustersOff	=					Captain::forceThrustersOff;

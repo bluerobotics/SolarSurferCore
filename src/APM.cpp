@@ -160,7 +160,7 @@ namespace APM {
 	}
 
 	float getCorrectedVoltage() {
-		static const float R_supply = 0.11; // ohms
+		static const float R_supply = 0.09; // ohms
 
 	  // Correct the voltage measurement for voltage drop due to current draw
 	  return getVoltage() + getCurrent()*R_supply;

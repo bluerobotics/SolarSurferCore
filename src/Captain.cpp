@@ -24,6 +24,8 @@ namespace {
   bool removalManueverPerformed;
   uint32_t seaweedRemovalTimer;
 
+  bool bootTimeoutComplete;
+
   float desiredPowerController(float error,float dt) {
 		static const float Kp = 50.0;
 		static const float Ki = 10.0;
@@ -256,6 +258,13 @@ namespace Captain {
 	  	desiredPower = 0;
 	  }
 
+	  if ( !bootTimeoutComplete ) {
+	  	desiredPower = 0;
+	  	if ( millis() > 10000 ) {
+	  		bootTimeoutComplete = true;
+	  	}
+	  }
+
 	  if ( RemoteControl::isManual() ) {
 	  	desiredPowerErrorIntegral = 0;
 	  }
@@ -300,7 +309,7 @@ namespace Captain {
 		  	}
 		  }
 	  } else {
-			Helmsman::execute(degrees(DCM::yaw),bldc->getTotalPower());
+			Helmsman::execute(degrees(DCM::yaw),0); //bldc->getTotalPower());
 		}
 	}
 
