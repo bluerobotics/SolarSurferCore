@@ -9,6 +9,7 @@
 #include "DCM.h"
 #include "APM.h"
 #include "RemoteControl.h"
+#include "Thruster.h"
 
 namespace {
 	BLDCMonitor* bldc;
@@ -172,6 +173,12 @@ namespace Captain {
 			status1 |= (1 << 3);
 		}
 
+		// BLDC Monitor
+		status1 |= (1 << 4);
+
+		// Satcom (inherently okay if this message is received ;-)
+		status1 |= (1 << 5);
+
 		// Status 2:
 		// 0 - Null
 		// 1 - Thruster 1 Okay
@@ -182,6 +189,29 @@ namespace Captain {
 		// 6 - Battery Box Dry
 		// 7 - 
 
+		// Thruster 1
+		if ( bldc->getRPM(0) < 100 && Thruster::get(Thruster::left) > 1600 ) {
+			// Failed, remain zero
+		} else {
+			status2 |= (1 << 1);
+		}
+
+		// Thruster 2
+		if ( bldc->getRPM(1) < 100 && Thruster::get(Thruster::right) > 1600 ) {
+			// Failed, remain zero
+		} else {
+			status2 |= (1 << 2);
+		}
+
+		// Thruster 3 & 4 (Not used)
+		status2 |= (1 << 3);
+		status2 |= (1 << 4);
+
+		// Navigation Box
+		status2 |= (1 << 5);
+
+		// Battery Box
+		status2 |= (1 << 6);
 
 		// Determine state of the mission
 		distanceToWaypoint = Navigator::getDistanceToLocation(&current.location,&waypoint.location);

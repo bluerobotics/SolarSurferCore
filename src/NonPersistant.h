@@ -8,6 +8,7 @@ struct NonPersistantData {
 	uint8_t lastSignalStrength;
 	uint8_t lastISBDError;
 	uint16_t timeTillNextSatcom;
+	uint8_t sbdRingReceived;
 };
 
 namespace NonPersistant {

@@ -92,7 +92,7 @@ struct tlmlongStatus {
 struct cmdcontrol {
 	uint8_t _version; // 
 	uint8_t _format; // 
-	uint8_t telemetryPeriod; // undefined, undefined, 0,10: No Change; 1: 2.5; 2: 5; 3: 10; 4: 20; 5: 30; 6: 45; 7: 60; 8: 90; 9: 120; 10: 180; 11: 360; 12: 720; 13: 1440; 14: 2880; 
+	uint8_t telemetryPeriod; // undefined, undefined, undefined0: No Change; 1: 2.5; 2: 5; 3: 10; 4: 20; 5: 30; 6: 45; 7: 60; 8: 90; 9: 120; 10: 180; 11: 360; 12: 720; 13: 1440; 14: 2880; 
 	uint8_t forceMode; // 
 	int8_t forceHeading; // undefined, undefined, 0,1.40625
 	uint16_t goalVoltage; // undefined, undefined, 0,0.001
@@ -169,6 +169,7 @@ struct tlmdiagnostic {
 	uint8_t inCallback; // 
 	uint8_t satcomSignal; // 
 	uint8_t satcomErrorCode; // 0: SUCCESS; 1: ALREADY AWAKE; 2: SERIAL FAILURE; 3: PROTOCOL ERROR; 4: CANCELLED; 5: NO MODEM DETECTED; 6: SBDIX FATAL ERROR; 7: SEND/RECEIVE TIMEOUT; 8: RX OVERFLOW; 9: REENTRANT; 10: IS ASLEEP; 11: NO SLEEP PIN; 
+	uint8_t satcomRingReceived; // 
 	uint16_t telemetryCount; // 
 	uint16_t commandCount; // 
 	uint16_t timeTillNextSatcom; // 

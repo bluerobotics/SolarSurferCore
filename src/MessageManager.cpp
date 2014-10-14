@@ -130,12 +130,13 @@ namespace MessageManager {
 		Msg::tlmdiagnostic.forceHeading				=					Captain::forceHeading;
 		Msg::tlmdiagnostic.forceHoldPosition	=					Captain::forcePositionHold;
 		Msg::tlmdiagnostic.forceSeaweedRemoval=					Captain::forceSeaweedRemoval;
-		Msg::tlmdiagnostic.cmdforceHeading    =         Persistant::data.forceHeading*128/180;
+		Msg::tlmdiagnostic.cmdforceHeading    =         Persistant::data.forceHeading;
     Msg::tlmdiagnostic.cmdgoalVoltage     =         Persistant::data.goalVoltage*1000;
     Msg::tlmdiagnostic.cmdforceCurrentWaypointIndex = Persistant::data.currentWaypointIndex;
 		Msg::tlmdiagnostic.inCallback         =         NonPersistant::data.inCallback;
 		Msg::tlmdiagnostic.satcomSignal       =         NonPersistant::data.lastSignalStrength;
 		Msg::tlmdiagnostic.satcomErrorCode    =         NonPersistant::data.lastISBDError;
+		Msg::tlmdiagnostic.satcomRingReceived =         NonPersistant::data.sbdRingReceived;
 		Msg::tlmdiagnostic.telemetryCount			=					Persistant::data.telemetryCount;
 		Msg::tlmdiagnostic.commandCount				=					Persistant::data.commandCount;
 		Msg::tlmdiagnostic.timeTillNextSatcom =         NonPersistant::data.timeTillNextSatcom;

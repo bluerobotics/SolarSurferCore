@@ -30,6 +30,7 @@ long diagnosticTimer;
 
 #define ISBD_CONNECTED 1
 
+static const uint8_t sbdRingPin = A2;
 IridiumSBD isbd(Serial2, -1);
 Transfer telemTransfer;
 
@@ -55,6 +56,9 @@ void setup() {
   // Set barometer CS pin high so it doesn't hog the bus. How frustrating.  
   pinMode(40,OUTPUT);
   digitalWrite(40,HIGH);
+
+  // Set up SBD ring pin
+  pinMode(sbdRingPin,INPUT);
 
   Persistant::read();
   
@@ -295,6 +299,17 @@ void loop() {
   // after powering up so that if it is browning-out for some reason it won't
   // try to send tons of messages.
   NonPersistant::data.timeTillNextSatcom = (satcomPeriod - (millis()-satcomTimer))/1000l;
+
+  static uint32_t ringTimer;
+  if ( digitalRead(sbdRingPin) == 0 && millis() - ringTimer > 60000 ) {
+    ringTimer = millis();
+    NonPersistant::data.sbdRingReceived = true;
+    satcomTimer = 0;
+  } 
+
+  if ( millis() - ringTimer > 10000 ) {
+    NonPersistant::data.sbdRingReceived = false;
+  }
   
   const static uint32_t initialTimeout = 150000l;
   if ( millis()-satcomTimer>satcomPeriod && millis() > initialTimeout ) {
