@@ -310,29 +310,21 @@ namespace Captain {
 		  	uint32_t elapsedTime = (millis() - seaweedRemovalTimer)/1000;
 		  	if ( elapsedTime < 10 ) {
 		  		Helmsman::executeManual(0,0);
-		  	} else if ( elapsedTime < 18 ) {
-		  		Helmsman::executeManual(0,-350);
-		  	} else if ( elapsedTime < 20 ) {
-		  		Helmsman::executeManual(0,0);
 		  	} else if ( elapsedTime < 28 ) {
-		  		Helmsman::executeManual(0,350);
-		  	} else if ( elapsedTime < 30 ) {
-		  		Helmsman::executeManual(0,0);
-		  	} else if ( elapsedTime < 38 ) {
 		  		Helmsman::executeManual(0,-350);
-		  	} else if ( elapsedTime < 40 ) {
+		  	} else if ( elapsedTime < 30 ) {
 		  		Helmsman::executeManual(0,0);
 		  	} else if ( elapsedTime < 48 ) {
 		  		Helmsman::executeManual(0,350);
 		  	} else if ( elapsedTime < 50 ) {
 		  		Helmsman::executeManual(0,0);
-		  	} else if ( elapsedTime < 58 ) {
-		  		Helmsman::executeManual(0,-350);
-		  	} else if ( elapsedTime < 60 ) {
-		  		Helmsman::executeManual(0,0);
 		  	} else if ( elapsedTime < 68 ) {
-		  		Helmsman::executeManual(0,350);
+		  		Helmsman::executeManual(0,-350);
 		  	} else if ( elapsedTime < 70 ) {
+		  		Helmsman::executeManual(0,0);
+		  	} else if ( elapsedTime < 88 ) {
+		  		Helmsman::executeManual(0,350);
+		  	} else if ( elapsedTime < 90 ) {
 		  		Helmsman::executeManual(0,0);
 		  	} else {
 		  		removalManueverPerformed = true;

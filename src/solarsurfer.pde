@@ -83,7 +83,7 @@ void setup() {
 	HMC5883::set_offset(108, 6, 96);
 
 	if (false) {
-		WaypointWriter::write();
+		//WaypointWriter::write();
     WaypointWriter::print();
     for (;;);
 	}
@@ -301,7 +301,7 @@ void loop() {
   NonPersistant::data.timeTillNextSatcom = (satcomPeriod - (millis()-satcomTimer))/1000l;
 
   static uint32_t ringTimer;
-  if ( digitalRead(sbdRingPin) == 0 && millis() - ringTimer > 60000 ) {
+  if ( digitalRead(sbdRingPin) == 0 && millis() - ringTimer > 120000 ) {
     ringTimer = millis();
     NonPersistant::data.sbdRingReceived = true;
     satcomTimer = 0;

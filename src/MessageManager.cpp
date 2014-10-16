@@ -204,7 +204,7 @@ namespace MessageManager {
 		Persistant::data.forceMode = Msg::cmdcontrol.forceMode;
 
 		// Force heading and voltage
-		Persistant::data.forceHeading = Msg::cmdcontrol.forceHeading*180.0f/128.0f;
+		Persistant::data.forceHeading = float(Msg::cmdcontrol.forceHeading)*180.0f/128.0f;
 
 		if ( Msg::cmdcontrol.goalVoltage > 1000 ) {
 			Persistant::data.goalVoltage = Msg::cmdcontrol.goalVoltage*0.001;
